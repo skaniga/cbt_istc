@@ -1,0 +1,42 @@
+name: Supabase Keep Alive
+
+on:
+  schedule:
+    # Berjalan otomatis setiap 3 hari (jam 00:00 UTC)
+    - cron: '0 0 */3 * *'
+  # Izinkan trigger manual dari GitHub UI
+  workflow_dispatch:
+
+jobs:
+  ping:
+    name: Ping Supabase Database
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Ping Supabase REST API
+        env:
+          SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+          SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY }}
+        run: |
+          # Sanitasi variabel dari karakter nyasar (spasi, \r, \n, kutip)
+          # akibat copy-paste di UI GitHub Secrets
+          CLEAN_URL=$(echo "$SUPABASE_URL" | tr -d '"\r\n ')
+          CLEAN_KEY=$(echo "$SUPABASE_ANON_KEY" | tr -d '"\r\n ')
+
+          echo "Pinging Supabase at: ${CLEAN_URL}"
+
+          RESPONSE=$(curl -s -o /dev/null -w "%{http_code}" \
+            -X POST "${CLEAN_URL}/rest/v1/keep_alives" \
+            -H "apikey: ${CLEAN_KEY}" \
+            -H "Authorization: Bearer ${CLEAN_KEY}" \
+            -H "Content-Type: application/json" \
+            -d '{"method": "cron"}')
+
+          echo "HTTP Response: $RESPONSE"
+
+          if [ "$RESPONSE" -ge 200 ] && [ "$RESPONSE" -lt 300 ]; then
+            echo "✅ Supabase ping berhasil (HTTP $RESPONSE)"
+          else
+            echo "❌ Supabase ping gagal (HTTP $RESPONSE)"
+            exit 1
+          fi

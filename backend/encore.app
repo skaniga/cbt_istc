@@ -1,1 +1,0 @@
-{"id": "computer-service-shop-o2k2", "lang": "typescript"}
