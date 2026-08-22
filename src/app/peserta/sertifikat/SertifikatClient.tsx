@@ -18,8 +18,27 @@ export default function SertifikatClient({
   winnerData?: { peringkat: number, apresiasi: string } | null
 }) {
   const certRef = useRef<HTMLDivElement>(null)
+  const containerRef = useRef<HTMLDivElement>(null)
   const [isGenerating, setIsGenerating] = useState(false)
+  const [scale, setScale] = useState(1)
   const { t } = useLanguage()
+
+  useEffect(() => {
+    const updateScale = () => {
+      if (containerRef.current) {
+        const availableWidth = containerRef.current.clientWidth
+        const targetWidth = 1122
+        if (availableWidth < targetWidth) {
+          setScale(availableWidth / targetWidth)
+        } else {
+          setScale(1)
+        }
+      }
+    }
+    updateScale()
+    window.addEventListener('resize', updateScale)
+    return () => window.removeEventListener('resize', updateScale)
+  }, [])
 
   const downloadPdf = async () => {
     if (!certRef.current) return
@@ -28,11 +47,18 @@ export default function SertifikatClient({
     try {
       await document.fonts.ready
 
+      // Backup current transform
+      const originalTransform = certRef.current.style.transform
+      certRef.current.style.transform = 'none'
+
       const canvas = await html2canvas(certRef.current, {
         scale: 3, 
         useCORS: true,
         backgroundColor: '#FAFAF8',
       })
+
+      // Restore transform
+      certRef.current.style.transform = originalTransform
 
       const imgData = canvas.toDataURL('image/jpeg', 1.0)
       
@@ -85,29 +111,39 @@ export default function SertifikatClient({
   }
 
   return (
-    <div style={{ width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+    <div style={{ width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', overflowX: 'hidden' }}>
       
-      <div style={{ 
-        width: '100%', maxWidth: '1122px', overflowX: 'auto', 
-        boxShadow: 'var(--shadow-lg)', marginBottom: '3rem', background: '#FAFAF8'
-      }}>
-        <p className="sertifikat-scroll-hint" style={{ 
-          display: 'none', fontSize: '0.8rem', color: 'var(--muted-fg)', 
-          textAlign: 'center', padding: '0.75rem', background: 'var(--bg-alt)',
-          borderBottom: '1px solid var(--border)', fontStyle: 'italic'
-        }}>Geser ke kiri/kanan untuk melihat sertifikat lengkap</p>
-        
-        <div 
-          ref={certRef}
-          style={{
-            width: '1122px', 
-            height: '793px', 
-            background: '#FAFAF8',
-            position: 'relative',
-            padding: '40px',
-            boxSizing: 'border-box'
-          }}
-        >
+      <div 
+        ref={containerRef}
+        style={{ 
+          width: '100%', 
+          maxWidth: '1122px',
+          display: 'flex',
+          justifyContent: 'center',
+          marginBottom: '3rem'
+        }}
+      >
+        <div style={{
+          width: '1122px',
+          height: '793px',
+          transform: `scale(${scale})`,
+          transformOrigin: 'top center',
+          marginBottom: scale < 1 ? `-${793 * (1 - scale)}px` : '0',
+          boxShadow: 'var(--shadow-lg)',
+          background: '#FAFAF8',
+          transition: 'transform 0.2s ease-out',
+        }}>
+          <div 
+            ref={certRef}
+            style={{
+              width: '1122px', 
+              height: '793px', 
+              background: '#FAFAF8',
+              position: 'relative',
+              padding: '40px',
+              boxSizing: 'border-box'
+            }}
+          >
           {/* Ornate Border Dalam */}
           <div style={{
             position: 'absolute', inset: '40px',
@@ -203,6 +239,7 @@ export default function SertifikatClient({
 
           </div>
         </div>
+      </div>
       </div>
 
       <button 
