@@ -47,20 +47,19 @@ export default function SertifikatClient({
     try {
       await document.fonts.ready
 
-      // Backup current transform
-      const originalTransform = certRef.current.style.transform
-      certRef.current.style.transform = 'none'
-
       const canvas = await html2canvas(certRef.current, {
-        scale: 3, 
+        scale: 2, // reduced from 3 to avoid mobile memory limits
         useCORS: true,
         backgroundColor: '#FAFAF8',
+        onclone: (clonedDoc) => {
+          const parent = clonedDoc.getElementById('cert-parent')
+          if (parent) {
+            parent.style.transform = 'none'
+          }
+        }
       })
 
-      // Restore transform
-      certRef.current.style.transform = originalTransform
-
-      const imgData = canvas.toDataURL('image/jpeg', 1.0)
+      const imgData = canvas.toDataURL('image/jpeg', 0.9) // slightly compressed for mobile
       
       const pdf = new jsPDF({
         orientation: 'landscape',
@@ -123,7 +122,9 @@ export default function SertifikatClient({
           marginBottom: '3rem'
         }}
       >
-        <div style={{
+        <div 
+          id="cert-parent"
+          style={{
           width: '1122px',
           height: '793px',
           transform: `scale(${scale})`,
