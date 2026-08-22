@@ -56,7 +56,7 @@ export default function SertifikatClient({
     }
   }
 
-  const today = new Date().toLocaleDateString('id-ID', {
+  const today = new Date(participant.created_at || new Date('2025-03-15')).toLocaleDateString('id-ID', {
     day: 'numeric', month: 'long', year: 'numeric'
   })
 

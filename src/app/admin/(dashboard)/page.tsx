@@ -75,10 +75,7 @@ export default async function AdminDashboardPage() {
           <KeepAliveForm />
         </div>
         
-        <p style={{ fontSize: '0.9rem', color: 'var(--muted-fg)', marginBottom: '1rem' }}>
-          Free tier Supabase akan menonaktifkan database jika tidak ada aktivitas selama 7 hari.
-          Sistem (melalui Cron Vercel/GitHub Actions) akan memanggil endpoint Keep Alive untuk memastikan DB tetap aktif.
-        </p>
+
 
         <div style={{ background: 'var(--bg-alt)', borderRadius: '4px', overflow: 'hidden' }}>
           <table style={{ width: '100%', textAlign: 'left', borderCollapse: 'collapse', fontSize: '0.9rem' }}>
