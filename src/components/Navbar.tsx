@@ -2,10 +2,13 @@
 
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
+import { useLanguage } from '@/lib/i18n/LanguageContext'
+import { Locale } from '@/lib/i18n/translations'
 
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false)
   const [menuOpen, setMenuOpen] = useState(false)
+  const { t, locale, setLocale } = useLanguage()
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 40)
@@ -27,23 +30,43 @@ export default function Navbar() {
           {/* Desktop Nav */}
           <ul className="navbar__nav" role="list">
             <li>
-              <Link href="/#tentang" className="navbar__link">Tentang</Link>
+              <Link href="/#tentang" className="navbar__link">{t('nav_about')}</Link>
             </li>
             <li>
-              <Link href="/#alur" className="navbar__link">Alur Lomba</Link>
+              <Link href="/#alur" className="navbar__link">{t('nav_flow')}</Link>
             </li>
             <li>
-              <Link href="/#arsip" className="navbar__link">Arsip</Link>
+              <Link href="/#arsip" className="navbar__link">{t('nav_archive')}</Link>
             </li>
           </ul>
 
           {/* Actions */}
-          <div className="navbar__actions">
+          <div className="navbar__actions" style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+            
+            <select 
+              value={locale} 
+              onChange={(e) => setLocale(e.target.value as Locale)}
+              style={{
+                background: 'transparent',
+                border: '1px solid var(--border)',
+                color: 'var(--fg)',
+                padding: '0.25rem 0.5rem',
+                borderRadius: '4px',
+                fontFamily: 'var(--font-body)',
+                fontSize: '0.875rem',
+                cursor: 'pointer'
+              }}
+            >
+              <option value="en">EN</option>
+              <option value="id">ID</option>
+              <option value="ms">MS</option>
+            </select>
+
             <Link href="/login" className="btn btn--secondary" id="nav-login-btn">
-              Login Peserta
+              {t('nav_login')}
             </Link>
             <Link href="/daftar" className="btn btn--primary" id="nav-daftar-btn">
-              Daftar
+              {t('nav_register')}
             </Link>
           </div>
 
@@ -96,12 +119,33 @@ export default function Navbar() {
             backdropFilter: 'blur(12px)',
           }}
         >
-          <Link href="/#tentang"  className="navbar__link" onClick={() => setMenuOpen(false)}>Tentang</Link>
-          <Link href="/#alur"     className="navbar__link" onClick={() => setMenuOpen(false)}>Alur Lomba</Link>
-          <Link href="/#arsip"    className="navbar__link" onClick={() => setMenuOpen(false)}>Arsip</Link>
+          <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+            <select 
+              value={locale} 
+              onChange={(e) => {
+                setLocale(e.target.value as Locale)
+                setMenuOpen(false)
+              }}
+              style={{
+                background: 'transparent',
+                border: '1px solid var(--border)',
+                color: 'var(--fg)',
+                padding: '0.5rem',
+                borderRadius: '4px',
+                fontFamily: 'var(--font-body)',
+              }}
+            >
+              <option value="en">English</option>
+              <option value="id">Indonesia</option>
+              <option value="ms">Melayu</option>
+            </select>
+          </div>
+          <Link href="/#tentang"  className="navbar__link" onClick={() => setMenuOpen(false)}>{t('nav_about')}</Link>
+          <Link href="/#alur"     className="navbar__link" onClick={() => setMenuOpen(false)}>{t('nav_flow')}</Link>
+          <Link href="/#arsip"    className="navbar__link" onClick={() => setMenuOpen(false)}>{t('nav_archive')}</Link>
           <div style={{ display: 'flex', gap: '0.75rem', paddingTop: '0.5rem' }}>
-            <Link href="/login"  className="btn btn--secondary" onClick={() => setMenuOpen(false)} style={{ flex: 1, justifyContent: 'center' }}>Login</Link>
-            <Link href="/daftar" className="btn btn--primary"   onClick={() => setMenuOpen(false)} style={{ flex: 1, justifyContent: 'center' }}>Daftar</Link>
+            <Link href="/login"  className="btn btn--secondary" onClick={() => setMenuOpen(false)} style={{ flex: 1, justifyContent: 'center' }}>{t('nav_login')}</Link>
+            <Link href="/daftar" className="btn btn--primary"   onClick={() => setMenuOpen(false)} style={{ flex: 1, justifyContent: 'center' }}>{t('nav_register')}</Link>
           </div>
         </div>
       )}

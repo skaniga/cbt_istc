@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import { LanguageProvider } from '@/lib/i18n/LanguageContext'
 import './globals.css'
 
 export const metadata: Metadata = {
@@ -36,7 +37,11 @@ export default function RootLayout({
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
       </head>
-      <body>{children}</body>
+      <body>
+        <LanguageProvider>
+          {children}
+        </LanguageProvider>
+      </body>
     </html>
   )
 }

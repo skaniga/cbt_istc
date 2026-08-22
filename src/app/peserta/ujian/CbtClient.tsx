@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { saveAnswer, finishExam } from './actions'
+import { useLanguage } from '@/lib/i18n/LanguageContext'
 
 type Question = {
   id: string
@@ -30,6 +31,7 @@ export default function CbtClient({
   const [timeLeft, setTimeLeft] = useState<number | null>(null)
   const [isFinishing, setIsFinishing] = useState(false)
   const [navOpen, setNavOpen] = useState(false)
+  const { t } = useLanguage()
 
   // Timer logic
   useEffect(() => {
@@ -95,9 +97,9 @@ export default function CbtClient({
             onClick={() => setNavOpen(!navOpen)}
             style={{ display: 'none', padding: '0.5rem', background: 'var(--border)', borderRadius: '4px' }}
           >
-            ☰ Soal
+            ☰ {t('exam_question')}
           </button>
-          <span className="label" style={{ margin: 0 }}>Soal {currentIndex + 1} dari {questions.length}</span>
+          <span className="label" style={{ margin: 0 }}>{t('exam_question')} {currentIndex + 1} {t('exam_of')} {questions.length}</span>
         </div>
         
         <div style={{ 
@@ -171,13 +173,13 @@ export default function CbtClient({
                 className="btn btn--primary" 
                 style={{ background: 'var(--crimson)', color: '#fff', textShadow: 'none' }}
                 onClick={() => {
-                  if (confirm('Apakah Anda yakin ingin menyelesaikan ujian? Anda tidak dapat mengubah jawaban setelah ini.')) {
+                  if (confirm(t('exam_confirm_submit'))) {
                     handleFinish()
                   }
                 }}
                 disabled={isFinishing}
               >
-                {isFinishing ? 'Menyimpan...' : 'Selesai Ujian'}
+                {isFinishing ? t('exam_saving') : t('exam_submit')}
               </button>
             ) : (
               <button 

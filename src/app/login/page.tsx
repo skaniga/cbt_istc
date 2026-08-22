@@ -4,10 +4,12 @@ import { useState } from 'react'
 import Link from 'next/link'
 import Navbar from '@/components/Navbar'
 import { loginParticipant } from './actions'
+import { useLanguage } from '@/lib/i18n/LanguageContext'
 
 export default function LoginPage() {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const { t } = useLanguage()
 
   async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
@@ -39,8 +41,8 @@ export default function LoginPage() {
           <div className="card ornate-frame" style={{ maxWidth: '28rem', margin: '0 auto' }}>
             
             <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
-              <p className="label" style={{ marginBottom: '0.5rem' }}>Login Peserta</p>
-              <h2>Masuk ke Sistem</h2>
+              <p className="label" style={{ marginBottom: '0.5rem' }}>{t('login_title')}</p>
+              <h2>{t('login_subtitle')}</h2>
             </div>
 
             {error && (
@@ -55,21 +57,21 @@ export default function LoginPage() {
             <form onSubmit={onSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
               
               <div>
-                <label htmlFor="nomor_peserta" className="label-text">Nomor Peserta / No Passport</label>
-                <input type="text" id="nomor_peserta" name="nomor_peserta" className="input" required placeholder="Contoh: IPE-2025-0001" />
+                <label htmlFor="nomor_peserta" className="label-text">{t('login_number')}</label>
+                <input type="text" id="nomor_peserta" name="nomor_peserta" className="input" required placeholder={t('login_number_placeholder')} />
               </div>
 
               <div>
-                <label htmlFor="password" className="label-text">Kata Sandi</label>
-                <input type="password" id="password" name="password" className="input" required />
+                <label htmlFor="password" className="label-text">{t('login_password')}</label>
+                <input type="password" id="password" name="password" className="input" required placeholder={t('login_password_placeholder')} />
               </div>
 
               <button type="submit" className="btn btn--primary" style={{ marginTop: '1.5rem', width: '100%' }} disabled={loading}>
-                {loading ? 'Memverifikasi...' : 'Masuk Ujian'}
+                {loading ? t('login_loading') : t('login_submit')}
               </button>
 
               <div style={{ textAlign: 'center', marginTop: '1.5rem', fontSize: '0.9rem', color: 'var(--muted-fg)' }}>
-                Belum mendaftar? <Link href="/daftar" style={{ color: 'var(--brass)', textDecoration: 'underline' }}>Daftar sekarang</Link>
+                {t('login_no_account')} <Link href="/daftar" style={{ color: 'var(--brass)', textDecoration: 'underline' }}>{t('login_register_here')}</Link>
               </div>
               <div style={{ textAlign: 'center', marginTop: '0.5rem', fontSize: '0.9rem', color: 'var(--muted-fg)' }}>
                 Atau login sebagai <Link href="/admin/login" style={{ textDecoration: 'underline' }}>Admin</Link>

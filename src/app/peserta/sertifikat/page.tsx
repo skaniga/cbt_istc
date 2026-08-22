@@ -31,6 +31,13 @@ export default async function SertifikatPage() {
     redirect('/peserta')
   }
 
+  // Cek apakah peserta adalah pemenang
+  const { data: winnerData } = await supabase
+    .from('winners')
+    .select('peringkat, apresiasi')
+    .eq('peserta_id', participant.id)
+    .maybeSingle()
+
   // Ambil metadata dari config
   const { data: configRows } = await supabase
     .from('system_config')
@@ -52,6 +59,7 @@ export default async function SertifikatPage() {
 
         <SertifikatClient 
           participant={participant} 
+          winnerData={winnerData}
           namaLomba={config['nama_lomba'] || 'International Photography Exhibition'}
           tahun={config['tahun_aktif'] || '2025'}
         />

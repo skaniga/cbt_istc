@@ -153,6 +153,8 @@ CREATE TABLE public.winners (
   skor            integer,
   apresiasi       text,                                -- "Medali Emas", "Trofi", "Piagam"
   foto_karya_url  text,
+  bukti_hadiah_url text,                               -- Bukti pemberian hadiah
+  dokumentasi_penyerahan_url text,                     -- Dokumentasi serah terima
   created_at      timestamptz DEFAULT now()
 );
 
