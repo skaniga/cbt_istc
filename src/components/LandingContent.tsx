@@ -269,9 +269,13 @@ export default function LandingContent({
         <div className="container">
           <div className="footer__grid">
             <div>
-              <p className="footer__brand">
-                IPE <span>—</span> International Photography Exhibition
-              </p>
+              <div className="footer__brand" style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '1rem' }}>
+                <img src="/logo.jpg" alt="IPE Logo" style={{ width: '40px', height: '40px', borderRadius: '50%', objectFit: 'cover' }} />
+                <div style={{ display: 'flex', flexDirection: 'column' }}>
+                  <span style={{ fontWeight: 700, fontSize: '1.25rem', lineHeight: 1 }}>IPE</span>
+                  <span style={{ fontSize: '0.65rem', textTransform: 'uppercase', letterSpacing: '0.05em', color: 'var(--muted-fg)' }}>International Photography Exhibition</span>
+                </div>
+              </div>
               <p className="footer__desc">
                 {t('footer_tagline')}
               </p>

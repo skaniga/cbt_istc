@@ -32,7 +32,7 @@ export async function loginAdmin(formData: FormData) {
 
   if (error) {
     console.error('Admin Login Error:', error.message)
-    return { error: 'Kredensial tidak valid atau akun tidak ditemukan. (Gunakan admin@example.com / admin123)' }
+    return { error: 'Kredensial tidak valid atau akun tidak ditemukan.' }
   }
 
   redirect('/admin')

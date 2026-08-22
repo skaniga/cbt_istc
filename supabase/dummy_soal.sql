@@ -1,11 +1,57 @@
--- Menambahkan 5 soal dummy untuk keperluan testing CBT
--- Jalankan di Supabase SQL Editor
+-- ============================================================
+-- SEED DATA: Bank Soal Ujian Fotografi (50 Soal)
+-- ============================================================
 
-INSERT INTO public.questions (nomor_soal, pertanyaan, pilihan_a, pilihan_b, pilihan_c, pilihan_d, kunci_jawaban)
-VALUES 
-  (1, 'Teknik mengatur lamanya sensor kamera terpapar cahaya disebut?', 'Aperture', 'ISO', 'Shutter Speed', 'White Balance', 'C'),
-  (2, 'Lensa dengan sudut pandang sangat luas yang sering menyebabkan distorsi cembung disebut?', 'Telephoto', 'Fisheye', 'Macro', 'Prime', 'B'),
-  (3, 'Nilai ISO yang lebih tinggi pada kamera akan menghasilkan foto yang...', 'Lebih gelap dan halus', 'Lebih terang namun rentan noise', 'Lebih tajam dan kontras', 'Lebih blur (bokeh)', 'B'),
-  (4, 'Aturan komposisi dimana bidang foto dibagi menjadi 9 bagian yang sama besar disebut?', 'Golden Ratio', 'Rule of Thirds', 'Leading Lines', 'Symmetry', 'B'),
-  (5, 'Siapakah tokoh yang dikenal sebagai penemu proses fotografi Daguerreotype?', 'Ansel Adams', 'Louis Daguerre', 'Henri Cartier-Bresson', 'Thomas Edison', 'B')
-ON CONFLICT DO NOTHING;
+DELETE FROM public.questions;
+
+INSERT INTO public.questions (nomor_soal, pertanyaan, pilihan_a, pilihan_b, pilihan_c, pilihan_d, kunci_jawaban, kategori) VALUES
+(1, 'Apa fungsi utama dari aperture (bukaan) pada lensa kamera?', 'Mengatur seberapa cepat rana menutup', 'Mengatur jumlah cahaya yang masuk dan kedalaman ruang (depth of field)', 'Mengubah warna cahaya menjadi hitam putih', 'Menyimpan metadata foto', 'B', 'teknik'),
+(2, 'Manakah dari ISO berikut yang paling sensitif terhadap cahaya?', 'ISO 100', 'ISO 400', 'ISO 800', 'ISO 3200', 'D', 'teknik'),
+(3, 'Apa itu "Rule of Thirds" dalam komposisi fotografi?', 'Aturan di mana foto harus dicetak dalam 3 ukuran', 'Aturan membagi frame menjadi 9 bagian untuk menempatkan subjek', 'Aturan menggunakan 3 warna utama saja', 'Aturan memotret 3 objek dalam satu frame', 'B', 'estetika'),
+(4, 'Kecepatan rana (shutter speed) yang sangat lambat (misal 5 detik) paling cocok digunakan untuk:', 'Memotret balapan mobil', 'Memotret air terjun agar terlihat lembut/halus', 'Memotret potret wajah tajam', 'Memotret anak-anak bermain', 'B', 'teknik'),
+(5, 'Format file gambar mana yang menyimpan data mentah tanpa kompresi, memberikan fleksibilitas tertinggi saat diedit?', 'JPEG', 'PNG', 'RAW', 'GIF', 'C', 'umum'),
+(6, 'Siapa tokoh yang dikenal luas atas sistem "Zone System" dalam fotografi film?', 'Ansel Adams', 'Henri Cartier-Bresson', 'Annie Leibovitz', 'Steve McCurry', 'A', 'sejarah'),
+(7, 'Focal length lensa 50mm pada sensor full-frame sering disebut sebagai:', 'Lensa Ultra-Wide', 'Lensa Normal (Standard)', 'Lensa Telephoto', 'Lensa Makro', 'B', 'teknik'),
+(8, 'Dalam segitiga eksposur (exposure triangle), ketiga elemen utamanya adalah:', 'Aperture, Shutter Speed, ISO', 'Contrast, Brightness, Saturation', 'White Balance, Tint, Temperature', 'Highlight, Shadow, Midtone', 'A', 'teknik'),
+(9, 'Istilah "Bokeh" berasal dari bahasa Jepang yang berarti:', 'Tajam', 'Kabur (Blur) pada latar belakang', 'Terang benderang', 'Gelap gulita', 'B', 'estetika'),
+(10, 'White Balance digunakan dalam kamera digital untuk:', 'Membuat foto menjadi hitam putih', 'Menetralkan warna agar putih terlihat benar-benar putih', 'Menambah kontras pada gambar', 'Menyeimbangkan kecerahan layar', 'B', 'teknik'),
+(11, 'Kamera pertama yang sukses secara komersial dan diperkenalkan oleh George Eastman pada tahun 1888 dinamakan:', 'Leica', 'Hasselblad', 'Kodak', 'Polaroid', 'C', 'sejarah'),
+(12, 'Lensa makro paling ideal digunakan untuk memotret:', 'Pemandangan gunung', 'Detail kecil seperti serangga atau perhiasan', 'Pertandingan sepak bola dari jauh', 'Foto grup besar', 'B', 'umum'),
+(13, 'Apa efek dari menggunakan aperture besar (angka f-stop kecil, seperti f/1.8)?', 'Latar belakang sangat fokus', 'Latar belakang menjadi blur (Depth of Field sempit)', 'Gambar menjadi lebih gelap', 'ISO otomatis naik', 'B', 'teknik'),
+(14, 'Jenis pencahayaan yang paling diminati untuk potret karena kelembutannya disebut:', 'Hard Light', 'Soft Light', 'Direct Sunlight', 'Flashlight', 'B', 'estetika'),
+(15, '"Golden Hour" dalam fotografi mengacu pada waktu:', 'Tepat pukul 12 siang', 'Sesaat setelah matahari terbit dan sebelum terbenam', 'Tengah malam', 'Pukul 10 pagi', 'B', 'estetika'),
+(16, 'Apa nama teknik fotografi di mana subjek utama berupa siluet hitam dengan latar belakang yang sangat terang?', 'High Key', 'Low Key', 'Silhouette', 'HDR', 'C', 'estetika'),
+(17, 'Fungsi dari filter ND (Neutral Density) pada lensa adalah:', 'Mengubah warna foto menjadi biru', 'Melindungi lensa dari goresan', 'Mengurangi jumlah cahaya yang masuk tanpa mengubah warna', 'Membuat efek bintang pada lampu', 'C', 'teknik'),
+(18, 'Kapan foto berwarna pertama (color photograph) yang permanen dibuat?', '1861 oleh James Clerk Maxwell', '1935 oleh Kodak', '1990 oleh Adobe', '1800 oleh Thomas Wedgwood', 'A', 'sejarah'),
+(19, 'Histogram pada kamera digital berguna untuk:', 'Melihat resolusi gambar', 'Melihat distribusi tonal (kecerahan) gambar', 'Mengecek sisa memori', 'Mengatur timer', 'B', 'teknik'),
+(20, 'Teknik menggerakkan kamera mengikuti subjek yang bergerak sambil menekan rana disebut:', 'Zooming', 'Panning', 'Tilting', 'Dodging', 'B', 'teknik'),
+(21, 'Lensa dengan focal length 14mm-24mm termasuk kategori:', 'Lensa Standar', 'Lensa Telephoto', 'Lensa Ultra-Wide', 'Lensa Fix', 'C', 'teknik'),
+(22, 'Dalam fotografi jurnalistik, prinsip utama yang harus dipegang adalah:', 'Merekam kejadian secara jujur tanpa manipulasi konten', 'Membuat foto seindah mungkin dengan Photoshop', 'Selalu menggunakan model', 'Harus berwarna hitam putih', 'A', 'umum'),
+(23, 'Jika hasil foto Anda memiliki banyak "noise" atau bintik-bintik kasar, kemungkinan penyebab terbesarnya adalah:', 'Shutter speed terlalu cepat', 'Aperture terlalu kecil', 'ISO terlalu tinggi', 'Lensa kurang bersih', 'C', 'teknik'),
+(24, 'Bapak foto jurnalisme modern yang mempopulerkan konsep "The Decisive Moment" adalah:', 'Robert Capa', 'Henri Cartier-Bresson', 'Richard Avedon', 'Sebastião Salgado', 'B', 'sejarah'),
+(25, 'Mode pemotretan "Aperture Priority" (biasanya A atau Av pada kamera) berarti:', 'Kamera mengatur semuanya secara otomatis', 'Fotografer mengatur aperture, kamera mengatur shutter speed', 'Fotografer mengatur shutter speed, kamera mengatur aperture', 'Fotografer harus memfokuskan lensa secara manual', 'B', 'teknik'),
+(26, 'Tujuan utama menggunakan reflektor saat memotret potret di luar ruangan adalah:', 'Menutupi lensa dari hujan', 'Memantulkan cahaya untuk mengisi bayangan gelap pada wajah subjek', 'Menambah kontras pada langit', 'Mengubah warna pakaian subjek', 'B', 'teknik'),
+(27, 'File gambar berformat PNG mendukung fitur utama yang tidak dimiliki JPEG, yaitu:', 'Ukuran file lebih kecil', 'Transparansi latar belakang (Alpha Channel)', 'Merekam video pendek', 'Metadata GPS yang lebih akurat', 'B', 'umum'),
+(28, 'Berapa jarak fokus terdekat yang umumnya dimiliki lensa makro sejati?', '1 meter', '1:1 pembesaran (reproduction ratio)', 'Tak terhingga', '50 centimeter', 'B', 'teknik'),
+(29, 'Teknik fotografi "Light Painting" biasanya membutuhkan:', 'Shutter speed yang sangat cepat', 'Flash eksternal yang banyak', 'Shutter speed lambat (long exposure) di tempat gelap', 'Lensa telephoto super panjang', 'C', 'estetika'),
+(30, 'Kamera Mirrorless berbeda dengan DSLR utamanya dalam hal:', 'Tidak menggunakan memori card', 'Tidak menggunakan cermin pantul di dalam bodi kamera', 'Tidak bisa ganti lensa', 'Hanya bisa merekam video', 'B', 'umum'),
+(31, 'Garis bayangan keras yang tajam menunjukkan jenis cahaya:', 'Soft Light', 'Hard Light', 'Diffused Light', 'Ambient Light', 'B', 'estetika'),
+(32, 'Pengertian Megapixel adalah:', 'Satu miliar pixel', 'Satu juta pixel', 'Seribu pixel', 'Ukuran fisik sensor kamera', 'B', 'teknik'),
+(33, 'Untuk menghindari foto goyang (blur) saat memotret dengan tangan menggunakan lensa 200mm (full-frame), shutter speed minimum amannya adalah sekitar:', '1/10 detik', '1/50 detik', '1/200 detik atau lebih cepat', '5 detik', 'C', 'teknik'),
+(34, 'Adobe Lightroom utamanya digunakan fotografer untuk:', 'Membuat animasi 3D', 'Manajemen katalog foto dan pengeditan warna/eksposur (Color Grading)', 'Membuat desain logo', 'Mengedit video durasi panjang', 'B', 'umum'),
+(35, 'Gaya fotografi jalanan (Street Photography) paling sering menggunakan lensa:', 'Telephoto 400mm', 'Super Wide 10mm', 'Prime 35mm atau 50mm', 'Makro 100mm', 'C', 'umum'),
+(36, 'Format sensor APS-C (Crop Sensor) memiliki crop factor sekitar berapa dibandingkan Full Frame?', 'Tidak ada bedanya', '1.5x - 1.6x', '2.0x', '0.5x', 'B', 'teknik'),
+(37, 'Apa singkatan dari HDR dalam fotografi?', 'High Definition Resolution', 'High Dynamic Range', 'Hyper Digital Ratio', 'High Density RAM', 'B', 'teknik'),
+(38, 'Di manakah letak sensor gambar pada kamera digital?', 'Di dalam lensa', 'Di belakang cermin / tirai rana', 'Di dalam kartu memori', 'Di layar LCD', 'B', 'teknik'),
+(39, 'Efek "Red Eye" pada foto manusia biasanya disebabkan oleh:', 'Kurang tidur', 'Pantulan cahaya flash pada retina mata yang kaya pembuluh darah', 'Salah setting white balance', 'Lensa berjamur', 'B', 'umum'),
+(40, 'Memotret dengan "Leading Lines" bertujuan untuk:', 'Menambah warna pada foto', 'Mengarahkan mata penikmat foto menuju subjek utama', 'Membuat foto menjadi persegi', 'Menghindari distorsi lensa', 'B', 'estetika'),
+(41, 'Polarizer filter paling berguna untuk:', 'Membuat efek bintang pada malam hari', 'Menghilangkan pantulan pada air/kaca dan membirukan langit', 'Menurunkan shutter speed', 'Mengubah foto menjadi sephia', 'B', 'teknik'),
+(42, '"Depth of Field" (DoF) ditentukan oleh tiga faktor utama, yaitu:', 'Aperture, Focal Length, dan Jarak ke Subjek', 'ISO, Shutter Speed, dan Baterai', 'Flash, Reflektor, dan Tripod', 'Megapixel, Format File, dan Sensor', 'A', 'teknik'),
+(43, 'Foto pertama yang pernah terekam sejarah (View from the Window at Le Gras) dibuat pada tahun 1826 oleh:', 'Louis Daguerre', 'Joseph Nicéphore Niépce', 'Thomas Edison', 'Guglielmo Marconi', 'B', 'sejarah'),
+(44, 'Mode M (Manual) pada kamera memberikan fotografer kendali penuh atas:', 'Hanya Fokus Lensa', 'Hanya Kecerahan Layar', 'Aperture, Shutter Speed, dan ISO', 'Hanya Flash', 'C', 'teknik'),
+(45, 'Teknik HDR biasanya membutuhkan:', 'Satu foto gelap', 'Tiga atau lebih foto dengan eksposur berbeda (under, normal, over) yang digabungkan', 'Lensa yang sangat mahal', 'Kamera tahan air', 'B', 'teknik'),
+(46, 'Sudut pengambilan gambar dari bawah melihat ke atas subjek disebut:', 'Bird Eye View', 'Worm Eye View (Low Angle)', 'Eye Level', 'High Angle', 'B', 'estetika'),
+(47, 'Lampu kilat (Flash) yang diarahkan ke langit-langit alih-alih langsung ke wajah subjek disebut teknik:', 'Direct Flash', 'Bounce Flash', 'Fill Flash', 'Strobe Flash', 'B', 'teknik'),
+(48, 'File berformat TIFF biasanya digunakan untuk:', 'Bagi hasil cepat ke WhatsApp', 'Pencetakan kualitas tinggi (Lossless)', 'Membuat stiker', 'Video Timelapse', 'B', 'umum'),
+(49, 'Apa itu "Aberasi Kromatik" (Chromatic Aberration) pada lensa?', 'Lensa yang bisa berubah warna', 'Viñet hitam di sudut gambar', 'Viñet putih di tengah gambar', 'Garis pinggiran warna (biasanya ungu/hijau) pada tepi subjek yang kontras', 'D', 'teknik'),
+(50, 'Prinsip desain di mana subjek diletakkan dengan bobot visual yang sama di sisi kiri dan kanan disebut:', 'Asimetris', 'Simetris', 'Rule of Odds', 'Negative Space', 'B', 'estetika');

@@ -22,9 +22,12 @@ export default function Navbar() {
         <nav className="navbar__inner" aria-label="Navigasi utama">
 
           {/* Logo */}
-          <Link href="/" className="navbar__logo" aria-label="International Photography Exhibition – Beranda">
-            IPE
-            <span>International Photography Exhibition</span>
+          <Link href="/" className="navbar__logo" aria-label="International Photography Exhibition – Beranda" style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+            <img src="/logo.jpg" alt="IPE Logo" style={{ width: '40px', height: '40px', borderRadius: '50%', objectFit: 'cover' }} />
+            <div style={{ display: 'flex', flexDirection: 'column' }}>
+              <span style={{ fontWeight: 700, fontSize: '1.25rem', lineHeight: 1 }}>IPE</span>
+              <span style={{ fontSize: '0.65rem', textTransform: 'uppercase', letterSpacing: '0.05em', color: 'var(--muted-fg)' }}>International Photography Exhibition</span>
+            </div>
           </Link>
 
           {/* Desktop Nav */}

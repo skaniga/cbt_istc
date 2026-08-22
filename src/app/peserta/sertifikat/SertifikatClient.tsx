@@ -174,17 +174,17 @@ export default function SertifikatClient({
               {t('cert_issued')}: {today}
             </p>
 
-            {/* Wax Seal Imitation */}
+            {/* Logo IPE */}
             <div style={{
               position: 'absolute', bottom: '4rem', right: '6rem',
-              width: '100px', height: '100px', borderRadius: '50%',
-              background: isWinner ? `radial-gradient(circle at 35% 35%, ${accentColor}, ${primaryColor} 55%, #000)` : 'radial-gradient(circle at 35% 35%, #A83040, var(--crimson) 55%, #6B1A28)',
+              width: '110px', height: '110px', borderRadius: '50%',
               display: 'flex', alignItems: 'center', justifyContent: 'center',
-              boxShadow: '0 4px 10px rgba(0,0,0,0.15)',
-              color: 'rgba(255,255,255,0.8)',
-              fontFamily: 'var(--font-display)', fontSize: '1.5rem', fontWeight: 600
+              boxShadow: '0 4px 10px rgba(0,0,0,0.2)',
+              border: `2px solid ${primaryColor}`,
+              overflow: 'hidden',
+              background: 'var(--bg)'
             }}>
-              IPE
+              <img src="/logo.jpg" alt="IPE Logo" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
             </div>
 
             {/* Tanda Tangan */}
