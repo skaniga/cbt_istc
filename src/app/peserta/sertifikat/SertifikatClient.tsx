@@ -1,8 +1,7 @@
 'use client'
 
 import { useRef, useState, useEffect } from 'react'
-import html2canvas from 'html2canvas'
-import { jsPDF } from 'jspdf'
+// html2canvas & jsPDF are lazy-loaded on demand to reduce initial bundle size
 import { Participant } from '@/lib/types'
 import { useLanguage } from '@/lib/i18n/LanguageContext'
 
@@ -46,6 +45,12 @@ export default function SertifikatClient({
 
     try {
       await document.fonts.ready
+
+      // Lazy load libraries only when user clicks download
+      const [{ default: html2canvas }, { jsPDF }] = await Promise.all([
+        import('html2canvas'),
+        import('jspdf'),
+      ])
 
       const canvas = await html2canvas(certRef.current, {
         scale: 2, // reduced from 3 to avoid mobile memory limits
@@ -221,7 +226,7 @@ export default function SertifikatClient({
               overflow: 'hidden',
               background: 'var(--bg)'
             }}>
-              <img src="/logo.jpg" alt="IPE Logo" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+              <img src="/logo.webp" alt="IPE Logo" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
             </div>
 
             {/* Tanda Tangan */}

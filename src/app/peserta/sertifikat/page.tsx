@@ -3,7 +3,7 @@ import { getSession } from '@/lib/session'
 import { redirect } from 'next/navigation'
 import SertifikatClient from './SertifikatClient'
 
-export const revalidate = 0
+export const revalidate = 60
 
 export default async function SertifikatPage() {
   const session = await getSession()

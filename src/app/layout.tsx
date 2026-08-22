@@ -36,7 +36,7 @@ export default function RootLayout({
         {/* Preconnect Google Fonts */}
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        {/* Google Fonts */}
+        {/* Google Fonts — loaded once here, @import in CSS removed */}
         <link
           href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Crimson+Pro:ital,wght@0,400;0,600;1,400&family=Cinzel:wght@400;500;600&display=swap"
           rel="stylesheet"
@@ -50,3 +50,4 @@ export default function RootLayout({
     </html>
   )
 }
+
