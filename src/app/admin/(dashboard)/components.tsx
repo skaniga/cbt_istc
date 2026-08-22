@@ -22,8 +22,8 @@ export function ToggleAksesForm({ currentStatus }: { currentStatus: string }) {
         }}
       >
         {pending 
-          ? 'Memproses...' 
-          : isAksesTerbuka ? 'Tutup Akses Ujian' : 'Buka Akses Ujian'
+          ? 'Processing...' 
+          : isAksesTerbuka ? 'Close Exam Access' : 'Open Exam Access'
         }
       </button>
     </form>
@@ -40,7 +40,7 @@ export function KeepAliveForm() {
         className="btn btn--secondary" 
         disabled={pending}
       >
-        {pending ? 'Menyimpan log...' : 'Trigger Keep Alive (Ping DB)'}
+        {pending ? 'Saving log...' : 'Trigger Keep Alive (Ping DB)'}
       </button>
     </form>
   )

@@ -11,6 +11,16 @@ type Question = {
   pilihan_b: string
   pilihan_c: string
   pilihan_d: string
+  pertanyaan_en?: string
+  pilihan_a_en?: string
+  pilihan_b_en?: string
+  pilihan_c_en?: string
+  pilihan_d_en?: string
+  pertanyaan_ms?: string
+  pilihan_a_ms?: string
+  pilihan_b_ms?: string
+  pilihan_c_ms?: string
+  pilihan_d_ms?: string
 }
 
 type AnswerMap = Record<string, string>
@@ -31,7 +41,7 @@ export default function CbtClient({
   const [timeLeft, setTimeLeft] = useState<number | null>(null)
   const [isFinishing, setIsFinishing] = useState(false)
   const [navOpen, setNavOpen] = useState(false)
-  const { t } = useLanguage()
+  const { t, locale } = useLanguage()
 
   // Timer logic
   useEffect(() => {
@@ -76,7 +86,14 @@ export default function CbtClient({
   }
 
   const currentQ = questions[currentIndex]
-  if (!currentQ) return <div>Data soal tidak tersedia.</div>
+  if (!currentQ) return <div>{t('exam_data_unavailable')}</div>
+
+  // Helper to get translated field based on locale
+  const getTranslated = (q: Question, field: 'pertanyaan' | 'pilihan_a' | 'pilihan_b' | 'pilihan_c' | 'pilihan_d') => {
+    if (locale === 'en' && q[`${field}_en`]) return q[`${field}_en`];
+    if (locale === 'ms' && q[`${field}_ms`]) return q[`${field}_ms`];
+    return q[field]; // Fallback to Indonesian
+  }
 
   const isLastQuestion = currentIndex === questions.length - 1
   const isFirstQuestion = currentIndex === 0
@@ -118,12 +135,13 @@ export default function CbtClient({
           
           <div className="card ornate-frame" style={{ marginBottom: '2rem', minHeight: '300px' }}>
             <h2 style={{ fontSize: '1.5rem', lineHeight: 1.6, marginBottom: '2.5rem' }}>
-              {currentQ.pertanyaan}
+              {getTranslated(currentQ, 'pertanyaan')}
             </h2>
 
             <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
               {['A', 'B', 'C', 'D'].map(opt => {
-                const text = currentQ[`pilihan_${opt.toLowerCase()}` as keyof Question]
+                const fieldName = `pilihan_${opt.toLowerCase()}` as 'pilihan_a' | 'pilihan_b' | 'pilihan_c' | 'pilihan_d'
+                const text = getTranslated(currentQ, fieldName)
                 const isSelected = answers[currentQ.id] === opt
                 
                 return (
@@ -165,7 +183,7 @@ export default function CbtClient({
               disabled={isFirstQuestion}
               onClick={() => setCurrentIndex(prev => prev - 1)}
             >
-              ← Sebelumnya
+              ← {t('exam_prev')}
             </button>
             
             {isLastQuestion ? (
@@ -186,7 +204,7 @@ export default function CbtClient({
                 className="btn btn--primary" 
                 onClick={() => setCurrentIndex(prev => prev + 1)}
               >
-                Selanjutnya →
+                {t('exam_next')} →
               </button>
             )}
           </div>
@@ -195,7 +213,7 @@ export default function CbtClient({
         {/* Sidebar (Grid Soal) */}
         <aside className={`cbt-sidebar ${navOpen ? 'cbt-sidebar--open' : ''}`}>
           <div style={{ padding: '1.5rem', borderBottom: '1px solid var(--border)' }}>
-            <p className="label">Navigasi Soal</p>
+            <p className="label">{t('exam_nav')}</p>
           </div>
           <div style={{ 
             padding: '1.5rem', display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: '0.5rem',

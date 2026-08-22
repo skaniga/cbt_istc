@@ -52,8 +52,7 @@ export async function manualKeepAlive() {
   const { error } = await supabase
     .from('keep_alives')
     .insert({
-      status: 'success',
-      details: 'Manual trigger via Admin Dashboard'
+      method: 'manual'
     })
 
   if (error) {

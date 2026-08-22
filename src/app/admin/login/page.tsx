@@ -23,7 +23,7 @@ export default function AdminLoginPage() {
         setLoading(false)
       }
     } catch (err: any) {
-      setError(err.message || 'Terjadi kesalahan sistem')
+      setError(err.message || 'System error occurred')
       setLoading(false)
     }
   }
@@ -39,9 +39,9 @@ export default function AdminLoginPage() {
             
             <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
               <p className="label" style={{ marginBottom: '0.5rem', color: 'var(--brass)' }}>Administrator</p>
-              <h2>Login Admin</h2>
+              <h2>Admin Login</h2>
               <p style={{ color: 'var(--muted-fg)', marginTop: '0.5rem', fontSize: '0.9rem' }}>
-                Akses khusus panitia.
+                Committee access only.
               </p>
             </div>
 
@@ -57,21 +57,21 @@ export default function AdminLoginPage() {
             <form onSubmit={onSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
               
               <div>
-                <label htmlFor="email" className="label-text">Email Admin</label>
+                <label htmlFor="email" className="label-text">Admin Email</label>
                 <input type="email" id="email" name="email" className="input" required placeholder="admin@example.com" />
               </div>
 
               <div>
-                <label htmlFor="password" className="label-text">Kata Sandi</label>
+                <label htmlFor="password" className="label-text">Password</label>
                 <input type="password" id="password" name="password" className="input" required />
               </div>
 
               <button type="submit" className="btn btn--primary" style={{ marginTop: '1.5rem', width: '100%' }} disabled={loading}>
-                {loading ? 'Memverifikasi...' : 'Masuk Dashboard'}
+                {loading ? 'Verifying...' : 'Enter Dashboard'}
               </button>
 
               <div style={{ textAlign: 'center', marginTop: '1.5rem', fontSize: '0.9rem', color: 'var(--muted-fg)' }}>
-                Bukan admin? <Link href="/login" style={{ color: 'var(--brass)', textDecoration: 'underline' }}>Login sebagai Peserta</Link>
+                Not an admin? <Link href="/login" style={{ color: 'var(--brass)', textDecoration: 'underline' }}>Login as Participant</Link>
               </div>
 
             </form>

@@ -87,6 +87,13 @@ export const translations = {
     dashboard_exam_done: 'Exam Completed',
     dashboard_certificate: 'Download Certificate',
     dashboard_logout: 'Logout',
+    dashboard_cbt_status: 'CBT Exam Status',
+    dashboard_not_started: 'Not Started',
+    dashboard_exam_desc: 'The exam consists of 50 multiple-choice questions with a duration of 90 minutes. Ensure your internet connection is stable before starting.',
+    dashboard_access_closed: 'Exam Access is Closed',
+    dashboard_in_progress: 'In Progress',
+    dashboard_in_progress_desc: 'You have an unfinished exam session. Time is still running.',
+    dashboard_exam_done_desc: 'Thank you for completing the exam. You can download your digital certificate.',
 
     // Exam Page
     exam_title: 'CBT Exam',
@@ -98,6 +105,10 @@ export const translations = {
     exam_saving: 'Saving...',
     exam_answered: 'Answered',
     exam_unanswered: 'Unanswered',
+    exam_prev: 'Previous',
+    exam_next: 'Next',
+    exam_nav: 'Question Navigation',
+    exam_data_unavailable: 'Question data is unavailable.',
 
     // Sertifikat
     cert_title: 'Participant Certificate',
@@ -210,6 +221,13 @@ export const translations = {
     dashboard_exam_done: 'Ujian Selesai',
     dashboard_certificate: 'Unduh Sertifikat',
     dashboard_logout: 'Keluar',
+    dashboard_cbt_status: 'Status Ujian CBT',
+    dashboard_not_started: 'Belum Dimulai',
+    dashboard_exam_desc: 'Ujian terdiri dari 50 soal pilihan ganda dengan durasi 90 menit. Pastikan koneksi internet Anda stabil sebelum memulai.',
+    dashboard_access_closed: 'Akses Ujian Sedang Ditutup',
+    dashboard_in_progress: 'Sedang Berlangsung',
+    dashboard_in_progress_desc: 'Anda memiliki sesi ujian yang belum diselesaikan. Waktu terus berjalan.',
+    dashboard_exam_done_desc: 'Terima kasih telah menyelesaikan ujian. Anda dapat mengunduh sertifikat digital Anda.',
 
     // Exam Page
     exam_title: 'Ujian CBT',
@@ -221,6 +239,10 @@ export const translations = {
     exam_saving: 'Menyimpan...',
     exam_answered: 'Dijawab',
     exam_unanswered: 'Belum Dijawab',
+    exam_prev: 'Sebelumnya',
+    exam_next: 'Selanjutnya',
+    exam_nav: 'Navigasi Soal',
+    exam_data_unavailable: 'Data soal tidak tersedia.',
 
     // Sertifikat
     cert_title: 'Sertifikat Peserta',
@@ -333,6 +355,13 @@ export const translations = {
     dashboard_exam_done: 'Peperiksaan Selesai',
     dashboard_certificate: 'Muat Turun Sijil',
     dashboard_logout: 'Log Keluar',
+    dashboard_cbt_status: 'Status Peperiksaan CBT',
+    dashboard_not_started: 'Belum Bermula',
+    dashboard_exam_desc: 'Peperiksaan terdiri daripada 50 soalan aneka pilihan dengan tempoh 90 minit. Pastikan sambungan internet anda stabil sebelum bermula.',
+    dashboard_access_closed: 'Akses Peperiksaan Ditutup',
+    dashboard_in_progress: 'Sedang Berlangsung',
+    dashboard_in_progress_desc: 'Anda mempunyai sesi peperiksaan yang belum diselesaikan. Masa masih berjalan.',
+    dashboard_exam_done_desc: 'Terima kasih kerana melengkapkan peperiksaan. Anda boleh memuat turun sijil digital anda.',
 
     // Exam Page
     exam_title: 'Peperiksaan CBT',
@@ -344,6 +373,10 @@ export const translations = {
     exam_saving: 'Menyimpan...',
     exam_answered: 'Dijawab',
     exam_unanswered: 'Belum Dijawab',
+    exam_prev: 'Sebelumnya',
+    exam_next: 'Seterusnya',
+    exam_nav: 'Navigasi Soalan',
+    exam_data_unavailable: 'Data soalan tidak tersedia.',
 
     // Sertifikat
     cert_title: 'Sijil Peserta',

@@ -1,7 +1,9 @@
-import { getSession } from '@/lib/session'
+import { getSession, clearSession } from '@/lib/session'
 import { redirect } from 'next/navigation'
-import Link from 'next/link'
-import { logoutParticipant } from './actions'
+import { createClient } from '@/lib/supabase/server'
+import PesertaNavbar from './PesertaNavbar'
+
+export const revalidate = 0
 
 export default async function PesertaLayout({
   children,
@@ -14,26 +16,23 @@ export default async function PesertaLayout({
     redirect('/login')
   }
 
+  // Verifikasi peserta masih ada di DB (bukan hanya cek cookie)
+  const supabase = await createClient()
+  const { data: participant } = await supabase
+    .from('participants')
+    .select('id')
+    .eq('id', session.pesertaId)
+    .maybeSingle()
+
+  if (!participant) {
+    // Peserta sudah dihapus — hapus session dan redirect ke login
+    await clearSession()
+    redirect('/login')
+  }
+
   return (
     <>
-      <header className="navbar navbar--scrolled" role="banner">
-        <div className="container">
-          <nav className="navbar__inner" aria-label="Navigasi Peserta">
-            <Link href="/peserta" className="navbar__logo">
-              IPE
-              <span>Dashboard Peserta</span>
-            </Link>
-
-            <div className="navbar__actions">
-              <form action={logoutParticipant}>
-                <button type="submit" className="btn btn--secondary" style={{ padding: '0.6rem 1.5rem' }}>
-                  Keluar
-                </button>
-              </form>
-            </div>
-          </nav>
-        </div>
-      </header>
+      <PesertaNavbar />
       
       <main style={{ paddingTop: '5rem', minHeight: '100vh' }}>
         {children}
@@ -41,3 +40,4 @@ export default async function PesertaLayout({
     </>
   )
 }
+

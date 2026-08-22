@@ -33,6 +33,17 @@ export async function loginParticipant(formData: FormData) {
       return { error: 'Nomor peserta atau No Passport tidak ditemukan.' }
     }
 
+    // Double-check: pastikan peserta masih ada di DB (tidak dihapus admin)
+    const { data: participantExists } = await supabase
+      .from('participants')
+      .select('id')
+      .eq('id', participantId)
+      .maybeSingle()
+
+    if (!participantExists) {
+      return { error: 'Akun peserta ini tidak ditemukan atau telah dihapus.' }
+    }
+
     // Jika cocok, buat sesi cookie custom
     await createSession(participantId)
 

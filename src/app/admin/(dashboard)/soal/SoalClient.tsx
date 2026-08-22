@@ -1,10 +1,24 @@
 'use client';
 
 import { useState } from 'react';
-import { createQuestion, updateQuestion, deleteQuestion } from './actions';
+import { createQuestion, updateQuestion, deleteQuestion, updateExamSettings } from './actions';
 
-export default function SoalClient({ initialQuestions }: { initialQuestions: any[] }) {
+export default function SoalClient({ 
+  initialQuestions, 
+  initialBatasSoal, 
+  initialAcakSoal 
+}: { 
+  initialQuestions: any[], 
+  initialBatasSoal: string, 
+  initialAcakSoal: string 
+}) {
   const [questions, setQuestions] = useState(initialQuestions);
+  
+  // Exam Settings State
+  const [batasSoal, setBatasSoal] = useState(initialBatasSoal);
+  const [acakSoal, setAcakSoal] = useState(initialAcakSoal);
+  const [isSavingSettings, setIsSavingSettings] = useState(false);
+
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [formData, setFormData] = useState({
@@ -14,11 +28,22 @@ export default function SoalClient({ initialQuestions }: { initialQuestions: any
     pilihan_b: '',
     pilihan_c: '',
     pilihan_d: '',
+    pertanyaan_en: '',
+    pilihan_a_en: '',
+    pilihan_b_en: '',
+    pilihan_c_en: '',
+    pilihan_d_en: '',
+    pertanyaan_ms: '',
+    pilihan_a_ms: '',
+    pilihan_b_ms: '',
+    pilihan_c_ms: '',
+    pilihan_d_ms: '',
     kunci_jawaban: 'A',
     kategori: 'umum',
     bobot: '2',
     aktif: true
   });
+  const [activeLangTab, setActiveLangTab] = useState<'id' | 'en' | 'ms'>('id');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -31,11 +56,22 @@ export default function SoalClient({ initialQuestions }: { initialQuestions: any
       pilihan_b: '',
       pilihan_c: '',
       pilihan_d: '',
+      pertanyaan_en: '',
+      pilihan_a_en: '',
+      pilihan_b_en: '',
+      pilihan_c_en: '',
+      pilihan_d_en: '',
+      pertanyaan_ms: '',
+      pilihan_a_ms: '',
+      pilihan_b_ms: '',
+      pilihan_c_ms: '',
+      pilihan_d_ms: '',
       kunci_jawaban: 'A',
       kategori: 'umum',
       bobot: '2',
       aktif: true
     });
+    setActiveLangTab('id');
     setError(null);
     setIsModalOpen(true);
   };
@@ -48,12 +84,23 @@ export default function SoalClient({ initialQuestions }: { initialQuestions: any
       pilihan_a: q.pilihan_a,
       pilihan_b: q.pilihan_b,
       pilihan_c: q.pilihan_c,
-      pilihan_d: q.pilihan_d,
+      pilihan_d: q.pilihan_d || '',
+      pertanyaan_en: q.pertanyaan_en || '',
+      pilihan_a_en: q.pilihan_a_en || '',
+      pilihan_b_en: q.pilihan_b_en || '',
+      pilihan_c_en: q.pilihan_c_en || '',
+      pilihan_d_en: q.pilihan_d_en || '',
+      pertanyaan_ms: q.pertanyaan_ms || '',
+      pilihan_a_ms: q.pilihan_a_ms || '',
+      pilihan_b_ms: q.pilihan_b_ms || '',
+      pilihan_c_ms: q.pilihan_c_ms || '',
+      pilihan_d_ms: q.pilihan_d_ms || '',
       kunci_jawaban: q.kunci_jawaban,
       kategori: q.kategori,
       bobot: String(q.bobot),
       aktif: q.aktif
     });
+    setActiveLangTab('id');
     setError(null);
     setIsModalOpen(true);
   };
@@ -100,12 +147,52 @@ export default function SoalClient({ initialQuestions }: { initialQuestions: any
     <div>
       <div style={{ marginBottom: '2.5rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <div>
-          <h1 style={{ fontSize: '2.5rem', marginBottom: '0.5rem' }}>Manajemen Soal</h1>
-          <p style={{ color: 'var(--muted-fg)' }}>Kelola daftar bank soal untuk CBT.</p>
+          <h1 style={{ fontSize: '2.5rem', marginBottom: '0.5rem' }}>Question Management</h1>
+          <p style={{ color: 'var(--muted-fg)' }}>Manage the question bank for CBT.</p>
         </div>
         <button onClick={openCreate} className="btn btn--primary">
-          + Tambah Soal
+          + Add Question
         </button>
+      </div>
+
+      <div className="card" style={{ background: '#fff', marginBottom: '2rem' }}>
+        <h2 style={{ fontSize: '1.25rem', marginBottom: '1.5rem', fontFamily: 'var(--font-heading)' }}>Exam Settings</h2>
+        <div style={{ display: 'flex', gap: '2rem', alignItems: 'flex-end' }}>
+          <div>
+            <label className="label-text">Number of Questions to Display</label>
+            <input 
+              type="number" 
+              className="input" 
+              value={batasSoal} 
+              onChange={e => setBatasSoal(e.target.value)} 
+              style={{ width: '120px' }}
+            />
+          </div>
+          <div>
+            <label className="label-text">Randomize Questions</label>
+            <select 
+              className="input" 
+              value={acakSoal} 
+              onChange={e => setAcakSoal(e.target.value)}
+              style={{ width: '150px' }}
+            >
+              <option value="true">Yes</option>
+              <option value="false">No</option>
+            </select>
+          </div>
+          <button 
+            className="btn btn--secondary" 
+            onClick={async () => {
+              setIsSavingSettings(true);
+              await updateExamSettings(batasSoal, acakSoal);
+              setIsSavingSettings(false);
+              alert('Exam settings updated!');
+            }}
+            disabled={isSavingSettings}
+          >
+            {isSavingSettings ? 'Saving...' : 'Save Settings'}
+          </button>
+        </div>
       </div>
 
       <div className="card" style={{ background: '#fff', padding: 0, overflow: 'hidden' }}>
@@ -198,29 +285,92 @@ export default function SoalClient({ initialQuestions }: { initialQuestions: any
                 </div>
               </div>
 
-              <div>
-                <label className="label-text">Pertanyaan</label>
-                <textarea className="input" style={{ minHeight: '100px' }} value={formData.pertanyaan} onChange={e => setFormData({...formData, pertanyaan: e.target.value})} required />
+              <div style={{ display: 'flex', gap: '1rem', borderBottom: '1px solid var(--border)', paddingBottom: '0.5rem', marginBottom: '1rem' }}>
+                <button type="button" onClick={() => setActiveLangTab('id')} style={{ fontWeight: activeLangTab === 'id' ? 600 : 400, color: activeLangTab === 'id' ? 'var(--brass)' : 'inherit', background: 'none', border: 'none', cursor: 'pointer' }}>Indonesia (Default)</button>
+                <button type="button" onClick={() => setActiveLangTab('en')} style={{ fontWeight: activeLangTab === 'en' ? 600 : 400, color: activeLangTab === 'en' ? 'var(--brass)' : 'inherit', background: 'none', border: 'none', cursor: 'pointer' }}>English (EN)</button>
+                <button type="button" onClick={() => setActiveLangTab('ms')} style={{ fontWeight: activeLangTab === 'ms' ? 600 : 400, color: activeLangTab === 'ms' ? 'var(--brass)' : 'inherit', background: 'none', border: 'none', cursor: 'pointer' }}>Melayu (MS)</button>
               </div>
 
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
-                <div>
-                  <label className="label-text">Pilihan A</label>
-                  <textarea className="input" style={{ minHeight: '60px' }} value={formData.pilihan_a} onChange={e => setFormData({...formData, pilihan_a: e.target.value})} required />
-                </div>
-                <div>
-                  <label className="label-text">Pilihan B</label>
-                  <textarea className="input" style={{ minHeight: '60px' }} value={formData.pilihan_b} onChange={e => setFormData({...formData, pilihan_b: e.target.value})} required />
-                </div>
-                <div>
-                  <label className="label-text">Pilihan C</label>
-                  <textarea className="input" style={{ minHeight: '60px' }} value={formData.pilihan_c} onChange={e => setFormData({...formData, pilihan_c: e.target.value})} required />
-                </div>
-                <div>
-                  <label className="label-text">Pilihan D</label>
-                  <textarea className="input" style={{ minHeight: '60px' }} value={formData.pilihan_d} onChange={e => setFormData({...formData, pilihan_d: e.target.value})} required />
-                </div>
-              </div>
+              {activeLangTab === 'id' && (
+                <>
+                  <div>
+                    <label className="label-text">Pertanyaan (ID)</label>
+                    <textarea className="input" style={{ minHeight: '100px' }} value={formData.pertanyaan} onChange={e => setFormData({...formData, pertanyaan: e.target.value})} required />
+                  </div>
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+                    <div>
+                      <label className="label-text">Pilihan A</label>
+                      <textarea className="input" style={{ minHeight: '60px' }} value={formData.pilihan_a} onChange={e => setFormData({...formData, pilihan_a: e.target.value})} required />
+                    </div>
+                    <div>
+                      <label className="label-text">Pilihan B</label>
+                      <textarea className="input" style={{ minHeight: '60px' }} value={formData.pilihan_b} onChange={e => setFormData({...formData, pilihan_b: e.target.value})} required />
+                    </div>
+                    <div>
+                      <label className="label-text">Pilihan C</label>
+                      <textarea className="input" style={{ minHeight: '60px' }} value={formData.pilihan_c} onChange={e => setFormData({...formData, pilihan_c: e.target.value})} required />
+                    </div>
+                    <div>
+                      <label className="label-text">Pilihan D</label>
+                      <textarea className="input" style={{ minHeight: '60px' }} value={formData.pilihan_d} onChange={e => setFormData({...formData, pilihan_d: e.target.value})} required />
+                    </div>
+                  </div>
+                </>
+              )}
+
+              {activeLangTab === 'en' && (
+                <>
+                  <div>
+                    <label className="label-text">Pertanyaan (EN)</label>
+                    <textarea className="input" style={{ minHeight: '100px' }} value={formData.pertanyaan_en} onChange={e => setFormData({...formData, pertanyaan_en: e.target.value})} />
+                  </div>
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+                    <div>
+                      <label className="label-text">Pilihan A (EN)</label>
+                      <textarea className="input" style={{ minHeight: '60px' }} value={formData.pilihan_a_en} onChange={e => setFormData({...formData, pilihan_a_en: e.target.value})} />
+                    </div>
+                    <div>
+                      <label className="label-text">Pilihan B (EN)</label>
+                      <textarea className="input" style={{ minHeight: '60px' }} value={formData.pilihan_b_en} onChange={e => setFormData({...formData, pilihan_b_en: e.target.value})} />
+                    </div>
+                    <div>
+                      <label className="label-text">Pilihan C (EN)</label>
+                      <textarea className="input" style={{ minHeight: '60px' }} value={formData.pilihan_c_en} onChange={e => setFormData({...formData, pilihan_c_en: e.target.value})} />
+                    </div>
+                    <div>
+                      <label className="label-text">Pilihan D (EN)</label>
+                      <textarea className="input" style={{ minHeight: '60px' }} value={formData.pilihan_d_en} onChange={e => setFormData({...formData, pilihan_d_en: e.target.value})} />
+                    </div>
+                  </div>
+                </>
+              )}
+
+              {activeLangTab === 'ms' && (
+                <>
+                  <div>
+                    <label className="label-text">Pertanyaan (MS)</label>
+                    <textarea className="input" style={{ minHeight: '100px' }} value={formData.pertanyaan_ms} onChange={e => setFormData({...formData, pertanyaan_ms: e.target.value})} />
+                  </div>
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+                    <div>
+                      <label className="label-text">Pilihan A (MS)</label>
+                      <textarea className="input" style={{ minHeight: '60px' }} value={formData.pilihan_a_ms} onChange={e => setFormData({...formData, pilihan_a_ms: e.target.value})} />
+                    </div>
+                    <div>
+                      <label className="label-text">Pilihan B (MS)</label>
+                      <textarea className="input" style={{ minHeight: '60px' }} value={formData.pilihan_b_ms} onChange={e => setFormData({...formData, pilihan_b_ms: e.target.value})} />
+                    </div>
+                    <div>
+                      <label className="label-text">Pilihan C (MS)</label>
+                      <textarea className="input" style={{ minHeight: '60px' }} value={formData.pilihan_c_ms} onChange={e => setFormData({...formData, pilihan_c_ms: e.target.value})} />
+                    </div>
+                    <div>
+                      <label className="label-text">Pilihan D (MS)</label>
+                      <textarea className="input" style={{ minHeight: '60px' }} value={formData.pilihan_d_ms} onChange={e => setFormData({...formData, pilihan_d_ms: e.target.value})} />
+                    </div>
+                  </div>
+                </>
+              )}
 
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
                 <div>

@@ -76,13 +76,13 @@ export default function SertifikatClient({
 
     } catch (error) {
       console.error('Error generating PDF:', error)
-      alert('Terjadi kesalahan saat membuat PDF. Silakan coba lagi.')
+      alert('An error occurred while generating the PDF. Please try again.')
     } finally {
       setIsGenerating(false)
     }
   }
 
-  const today = new Date(participant.created_at || new Date('2025-03-15')).toLocaleDateString('id-ID', {
+  const today = new Date(participant.created_at || new Date('2025-03-15')).toLocaleDateString('en-US', {
     day: 'numeric', month: 'long', year: 'numeric'
   })
 
@@ -194,7 +194,7 @@ export default function SertifikatClient({
                 ) : (
                   <>
                     {t('cert_desc_standard')} <strong>{participant.skor}</strong><br/>
-                    {t('cert_desc_passed')} <strong>{participant.lulus ? t('dashboard_passed') : t('dashboard_failed')}</strong> pada
+                    {t('cert_desc_passed')} <strong>{participant.lulus ? t('dashboard_passed') : t('dashboard_failed')}</strong> on
                   </>
                 )}
               </p>

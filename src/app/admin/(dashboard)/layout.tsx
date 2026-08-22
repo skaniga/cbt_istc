@@ -38,27 +38,27 @@ export default async function AdminLayout({
             Dashboard (Toggle & Status)
           </Link>
           <Link href="/admin/peserta" style={{ padding: '0.75rem 1rem', borderRadius: '4px', color: 'var(--muted-fg)' }}>
-            Manajemen Peserta
+            Participant Management
           </Link>
           <Link href="/admin/soal" style={{ padding: '0.75rem 1rem', borderRadius: '4px', color: 'var(--muted-fg)' }}>
-            Manajemen Soal
+            Question Management
           </Link>
           <div style={{ marginTop: '1rem', marginBottom: '0.5rem' }}>
             <p style={{ fontFamily: 'var(--font-display)', fontSize: '0.75rem', letterSpacing: '0.1em', color: 'var(--muted)' }}>
-              MODUL TAMBAHAN
+              ADDITIONAL MODULES
             </p>
           </div>
           <Link href="/admin/dokumen" style={{ padding: '0.75rem 1rem', borderRadius: '4px', color: 'var(--muted-fg)' }}>
-            Dokumen & Seleksi
+            Documents & Selection
           </Link>
           <Link href="/admin/arsip" style={{ padding: '0.75rem 1rem', borderRadius: '4px', color: 'var(--muted-fg)' }}>
-            Arsip Penyelenggaraan
+            Event Archive
           </Link>
           <Link href="/admin/sarana" style={{ padding: '0.75rem 1rem', borderRadius: '4px', color: 'var(--muted-fg)' }}>
-            Sarana & Prasarana
+            Facilities & Infrastructure
           </Link>
           <Link href="/admin/pemenang" style={{ padding: '0.75rem 1rem', borderRadius: '4px', color: 'var(--muted-fg)' }}>
-            Penghargaan & Pemenang
+            Awards & Winners
           </Link>
         </nav>
 
@@ -68,7 +68,7 @@ export default async function AdminLayout({
             border: '1px solid var(--border-dark)', color: 'var(--muted)', borderRadius: '4px',
             cursor: 'pointer'
           }}>
-            Keluar (Logout)
+            Logout
           </button>
         </form>
       </aside>

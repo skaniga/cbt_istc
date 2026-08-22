@@ -53,8 +53,8 @@ export default async function SertifikatPage() {
       <div className="container" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
         
         <div style={{ textAlign: 'center', marginBottom: '3rem' }}>
-          <p className="label" style={{ marginBottom: '0.5rem' }}>Dokumen Resmi</p>
-          <h1 style={{ fontSize: '2.5rem' }}>Sertifikat Peserta</h1>
+          <p className="label" style={{ marginBottom: '0.5rem' }}>Official Document</p>
+          <h1 style={{ fontSize: '2.5rem' }}>Participant Certificate</h1>
         </div>
 
         <SertifikatClient 

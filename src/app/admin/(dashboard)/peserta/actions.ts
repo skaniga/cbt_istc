@@ -1,10 +1,10 @@
 'use server';
 
-import { createClient } from '@/lib/supabase/server';
+import { createAdminClient } from '@/lib/supabase/admin';
 import { revalidatePath } from 'next/cache';
 
 export async function updateParticipant(id: string, formData: FormData) {
-  const supabase = await createClient();
+  const supabase = createAdminClient();
   const nama_lengkap = formData.get('nama_lengkap') as string;
   const no_passport = formData.get('no_passport') as string;
   
@@ -26,7 +26,7 @@ export async function updateParticipant(id: string, formData: FormData) {
 }
 
 export async function deleteParticipant(id: string) {
-  const supabase = await createClient();
+  const supabase = createAdminClient();
   const { error } = await supabase.from('participants').delete().eq('id', id);
 
   if (error) {

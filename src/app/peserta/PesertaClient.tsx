@@ -32,14 +32,13 @@ export default function PesertaClient({
           <div className="peserta-card-inner" style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: '2rem', flexWrap: 'wrap' }}>
             
             <div style={{ flex: 1, minWidth: '280px' }}>
-              <p className="label" style={{ marginBottom: '1rem', color: 'var(--brass)' }}>Status Ujian CBT</p>
+              <p className="label" style={{ marginBottom: '1rem', color: 'var(--brass)' }}>{t('dashboard_cbt_status')}</p>
               
               {!examSession && (
                 <>
-                  <h2 style={{ fontSize: '1.75rem', marginBottom: '1rem' }}>Belum Dimulai</h2>
+                  <h2 style={{ fontSize: '1.75rem', marginBottom: '1rem' }}>{t('dashboard_not_started')}</h2>
                   <p style={{ color: 'var(--muted-fg)', marginBottom: '1.5rem', lineHeight: 1.6 }}>
-                    Ujian terdiri dari 50 soal pilihan ganda dengan durasi 90 menit. 
-                    Pastikan koneksi internet Anda stabil sebelum memulai.
+                    {t('dashboard_exam_desc')}
                   </p>
                   {isAksesTerbuka ? (
                     <StartExamForm buttonLabel={t('dashboard_exam_start')} />
@@ -49,7 +48,7 @@ export default function PesertaClient({
                       background: 'var(--muted)', borderRadius: '4px',
                       color: 'var(--muted-fg)', fontSize: '0.9rem', fontWeight: 500
                     }}>
-                      Akses Ujian Sedang Ditutup
+                      {t('dashboard_access_closed')}
                     </div>
                   )}
                 </>
@@ -57,9 +56,9 @@ export default function PesertaClient({
 
               {examSession?.status === 'in_progress' && (
                 <>
-                  <h2 style={{ fontSize: '1.75rem', marginBottom: '1rem' }}>Sedang Berlangsung</h2>
+                  <h2 style={{ fontSize: '1.75rem', marginBottom: '1rem' }}>{t('dashboard_in_progress')}</h2>
                   <p style={{ color: 'var(--muted-fg)', marginBottom: '1.5rem', lineHeight: 1.6 }}>
-                    Anda memiliki sesi ujian yang belum diselesaikan. Waktu terus berjalan.
+                    {t('dashboard_in_progress_desc')}
                   </p>
                   <StartExamForm buttonLabel={t('dashboard_exam_continue')} />
                 </>
@@ -69,7 +68,7 @@ export default function PesertaClient({
                 <>
                   <h2 style={{ fontSize: '1.75rem', marginBottom: '1rem' }}>{t('dashboard_exam_done')}</h2>
                   <p style={{ color: 'var(--muted-fg)', marginBottom: '1.5rem', lineHeight: 1.6 }}>
-                    Terima kasih telah menyelesaikan ujian. Anda dapat mengunduh sertifikat digital Anda.
+                    {t('dashboard_exam_done_desc')}
                   </p>
                   
                   <div style={{ display: 'flex', alignItems: 'center', gap: '2rem', marginTop: '2rem' }}>
