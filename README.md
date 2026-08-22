@@ -196,8 +196,13 @@ VALUES
 
 1. Buka **Supabase Dashboard** → **Authentication** → **Users**
 2. Klik **Add User** → **Create New User**
-3. Masukkan **Email** (misal: `admin@ipe2025.com`) dan **Password** pilihan Anda
-4. Gunakan kredensial ini untuk login di `/admin/login`
+3. Masukkan **Email** dan **Password** pilihan Anda
+4. Gunakan kredensial tersebut untuk login di `/admin/login`
+
+> **⭐ JALAN PINTAS (BYPASS) ADMIN:** 
+> Jika Anda mengalami kendala saat membuat akun admin di Supabase karena sistem wajib konfirmasi email, Anda bisa langsung masuk menggunakan akun admin *bypass* bawaan:
+> - **Email**: `admin@example.com`
+> - **Password**: `admin123`
 
 ---
 
@@ -219,9 +224,9 @@ VALUES
 ### 2️⃣ Login
 
 1. Buka `/login`
-2. Masukkan:
-   - **Nomor Peserta / No Passport** — Gunakan salah satu untuk masuk
-   - **Kata Sandi** — `123456` *(berlaku sama untuk semua peserta)*
+2. Masukkan kredensial berikut:
+   - **Nomor Peserta** (atau No Passport) — Contoh: `IPE-2025-0001`
+   - **Kata Sandi** — `123456` *(kata sandi universal untuk semua peserta)*
 3. Klik **"Masuk Ujian"**
 
 ---
