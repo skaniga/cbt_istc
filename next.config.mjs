@@ -10,6 +10,14 @@ const nextConfig = {
   images: {
     formats: ['image/avif', 'image/webp'],
     minimumCacheTTL: 60 * 60 * 24 * 7, // cache 7 hari
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'cbzjanjnysigrtilzmze.supabase.co',
+        port: '',
+        pathname: '/storage/v1/object/public/**',
+      },
+    ],
   },
   // Kompres semua response dengan gzip/brotli
   compress: true,

@@ -8,11 +8,13 @@ import { useLanguage } from '@/lib/i18n/LanguageContext'
 export default function PesertaClient({
   participant,
   examSession,
-  isAksesTerbuka
+  isAksesTerbuka,
+  batasSoal
 }: {
   participant: Participant
   examSession: ExamSession | null
   isAksesTerbuka: boolean
+  batasSoal: string
 }) {
   const { t } = useLanguage()
 
@@ -38,7 +40,7 @@ export default function PesertaClient({
                 <>
                   <h2 style={{ fontSize: '1.75rem', marginBottom: '1rem' }}>{t('dashboard_not_started')}</h2>
                   <p style={{ color: 'var(--muted-fg)', marginBottom: '1.5rem', lineHeight: 1.6 }}>
-                    {t('dashboard_exam_desc')}
+                    {t('dashboard_exam_desc').replace('50', batasSoal)}
                   </p>
                   {isAksesTerbuka ? (
                     <StartExamForm buttonLabel={t('dashboard_exam_start')} />

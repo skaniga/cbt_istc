@@ -38,11 +38,20 @@ export default async function PesertaDashboard() {
     
   const isAksesTerbuka = configAccess?.nilai === 'true'
 
+  // 4. Ambil batas soal
+  const { data: configBatas } = await supabase
+    .from('system_config')
+    .select('nilai')
+    .eq('kunci', 'batas_soal')
+    .maybeSingle()
+  const batasSoal = configBatas?.nilai || '50'
+
   return (
     <PesertaClient 
       participant={participant} 
       examSession={examSession} 
       isAksesTerbuka={isAksesTerbuka} 
+      batasSoal={batasSoal}
     />
   )
 }

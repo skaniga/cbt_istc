@@ -24,6 +24,13 @@ export default function LandingContent({
 
   const namaLomba  = config['nama_lomba']  ?? 'International Photography Exhibition'
   const tahunAktif = config['tahun_aktif'] ?? '2025'
+  const heroImage  = config['hero_image_url'] ?? '/hero.webp'
+  const aboutImage = config['about_image_url'] ?? '/hero.webp'
+  const heroTitle  = config['hero_title']
+  const heroSubtitle = config['hero_subtitle']
+  const aboutTitle = config['about_title']
+  const aboutDesc  = config['about_desc']
+  const batasSoal  = config['batas_soal'] ?? '50'
 
   const timelineSteps = [
     {
@@ -39,7 +46,7 @@ export default function LandingContent({
     {
       roman: 'III',
       title: t('step3_title'),
-      desc: t('step3_desc'),
+      desc: t('step3_desc').replace('50', batasSoal),
     },
     {
       roman: 'IV',
@@ -56,7 +63,7 @@ export default function LandingContent({
         <section className="hero" aria-label="Hero section" id="hero">
           <div className="hero__bg" aria-hidden="true">
             <Image
-              src="/hero.webp"
+              src={heroImage}
               alt="International Photography Exhibition hall"
               fill
               priority
@@ -75,12 +82,18 @@ export default function LandingContent({
                 {t('hero_badge')} — {namaLomba}
               </p>
               <h1 className="hero__title">
-                {t('hero_title_line1')}<br />
-                <em>{t('hero_title_line2')}</em><br />
-                {t('hero_title_line3')}
+                {heroTitle ? (
+                  <span style={{ whiteSpace: 'pre-wrap' }}>{heroTitle}</span>
+                ) : (
+                  <>
+                    {t('hero_title_line1')}<br />
+                    <em>{t('hero_title_line2')}</em><br />
+                    {t('hero_title_line3')}
+                  </>
+                )}
               </h1>
               <p className="hero__subtitle">
-                {t('hero_subtitle')}
+                {heroSubtitle || t('hero_subtitle')}
               </p>
               <div className="hero__actions">
                 <Link href="/daftar" className="btn btn--primary" id="hero-daftar-btn">
@@ -98,7 +111,7 @@ export default function LandingContent({
           <div className="container">
             <div className="stats-bar" style={{ border: 'none', borderRadius: 0 }}>
               <div className="stat-item">
-                <p className="stat-item__num">50</p>
+                <p className="stat-item__num">{batasSoal}</p>
                 <p className="stat-item__label">Soal Pilihan Ganda</p>
               </div>
               <div className="stat-item">
@@ -123,7 +136,7 @@ export default function LandingContent({
               <div className="about__image-wrap">
                 <div className="arch-top ornate-frame" style={{ aspectRatio: '3/4', background: 'var(--muted)', overflow: 'hidden' }}>
                   <Image
-                    src="/hero.webp"
+                    src={aboutImage}
                     alt="Ruang pameran International Photography Exhibition"
                     width={600}
                     height={800}
@@ -136,11 +149,11 @@ export default function LandingContent({
                 <p className="label" style={{ marginBottom: '1rem' }}>{t('about_label')}</p>
                 <div className="ornate-divider" aria-hidden="true" style={{ marginTop: 0, width: '8rem', background: 'linear-gradient(90deg, var(--brass), transparent)' }} />
                 <h2 id="tentang-heading" style={{ marginTop: '1.5rem', marginBottom: '1.5rem' }}>
-                  {t('about_title')}
+                  {aboutTitle || t('about_title')}
                 </h2>
                 <div style={{ color: 'var(--muted-fg)', display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
-                  <p className="drop-cap">
-                    {t('about_desc')}
+                  <p className="drop-cap" style={{ whiteSpace: 'pre-wrap' }}>
+                    {aboutDesc || t('about_desc')}
                   </p>
                 </div>
               </div>
