@@ -6,9 +6,18 @@ VALUES
 ON CONFLICT (kunci) DO NOTHING;
 
 -- 2. Pastikan ada bucket bernama "public" di Supabase Storage
-INSERT INTO storage.buckets (id, name, public)
-VALUES ('public', 'public', true)
-ON CONFLICT (id) DO UPDATE SET public = true;
+INSERT INTO storage.buckets (id, name, public, allowed_mime_types, file_size_limit)
+VALUES (
+  'public', 
+  'public', 
+  true, 
+  ARRAY['image/jpeg', 'image/png', 'image/webp']::text[],
+  2097152 -- 2MB
+)
+ON CONFLICT (id) DO UPDATE SET 
+  public = true,
+  allowed_mime_types = ARRAY['image/jpeg', 'image/png', 'image/webp']::text[],
+  file_size_limit = 2097152;
 
 -- 3. Kebijakan (Policy) agar publik dapat MELIHAT (Download) gambar
 DROP POLICY IF EXISTS "Public Access" ON storage.objects;

@@ -1,6 +1,7 @@
 'use client'
 
-import { createContext, useContext, useState, useEffect, ReactNode } from 'react'
+import { createContext, useContext, ReactNode } from 'react'
+import { useParams, useRouter, usePathname } from 'next/navigation'
 import { translations, Locale, TranslationKey } from './translations'
 
 interface LanguageContextType {
@@ -16,22 +17,35 @@ const LanguageContext = createContext<LanguageContextType>({
 })
 
 export function LanguageProvider({ children }: { children: ReactNode }) {
-  const [locale, setLocaleState] = useState<Locale>('en')
-
-  useEffect(() => {
-    const saved = localStorage.getItem('ipe_locale') as Locale | null
-    if (saved && ['en', 'id', 'ms'].includes(saved)) {
-      setLocaleState(saved)
-    }
-  }, [])
+  const params = useParams()
+  const router = useRouter()
+  const pathname = usePathname()
+  
+  // Extract locale from params, fallback to 'id' if not found or invalid
+  const paramLang = typeof params?.lang === 'string' ? params.lang : 'id'
+  const locale: Locale = ['en', 'id', 'ms'].includes(paramLang) ? (paramLang as Locale) : 'id'
 
   const setLocale = (newLocale: Locale) => {
-    setLocaleState(newLocale)
-    localStorage.setItem('ipe_locale', newLocale)
+    if (newLocale === locale) return
+    
+    // Replace the current locale in the URL path with the new one
+    // Example: /id/peserta -> /en/peserta
+    const currentPath = pathname || `/${locale}`
+    
+    // We assume the first segment is always the locale since we're in [lang]
+    let newPath = currentPath
+    
+    if (currentPath.startsWith(`/${locale}`)) {
+      newPath = currentPath.replace(`/${locale}`, `/${newLocale}`)
+    } else {
+      newPath = `/${newLocale}${currentPath}`
+    }
+    
+    router.push(newPath)
   }
 
   const t = (key: TranslationKey): string => {
-    return translations[locale][key] ?? translations['en'][key] ?? key
+    return translations[locale]?.[key] ?? translations['en'][key] ?? key
   }
 
   return (

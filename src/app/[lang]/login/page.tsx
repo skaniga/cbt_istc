@@ -9,7 +9,7 @@ import { useLanguage } from '@/lib/i18n/LanguageContext'
 export default function LoginPage() {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
-  const { t } = useLanguage()
+  const { t, locale } = useLanguage()
 
   async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
@@ -17,6 +17,7 @@ export default function LoginPage() {
     setError(null)
 
     const formData = new FormData(e.currentTarget)
+    formData.append('locale', locale)
     
     try {
       const result = await loginParticipant(formData)
@@ -71,7 +72,7 @@ export default function LoginPage() {
               </button>
 
               <div style={{ textAlign: 'center', marginTop: '1.5rem', fontSize: '0.9rem', color: 'var(--muted-fg)' }}>
-                {t('login_no_account')} <Link href="/daftar" style={{ color: 'var(--brass)', textDecoration: 'underline' }}>{t('login_register_here')}</Link>
+                {t('login_no_account')} <Link href={`/${locale}/daftar`} style={{ color: 'var(--brass)', textDecoration: 'underline' }}>{t('login_register_here')}</Link>
               </div>
               <div style={{ textAlign: 'center', marginTop: '0.5rem', fontSize: '0.9rem', color: 'var(--muted-fg)' }}>
                 Atau login sebagai <Link href="/admin/login" style={{ textDecoration: 'underline' }}>Admin</Link>

@@ -6,16 +6,14 @@ import { revalidatePath } from 'next/cache'
 export async function updateBerandaSettings(formData: FormData) {
   const supabase = await createClient()
 
-  // Get current user to ensure auth
+  // Validate that the requester is a real authenticated admin
   const { data: { user } } = await supabase.auth.getUser()
-  const { cookies } = await import('next/headers')
-  const hasBypassCookie = cookies().get('ipe_admin_session')?.value === 'true'
-
-  if (!user && !hasBypassCookie) {
+  if (!user) {
     return { error: 'Unauthorized' }
   }
 
-  // Use service role to bypass RLS since admin might be using bypass cookie
+  // Use service role ONLY for the actual DB write (to bypass RLS on system_config)
+  // The auth check above ensures only real admins can reach this point
   const { createClient: createSupabaseClient } = await import('@supabase/supabase-js')
   const adminSupabase = createSupabaseClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,

@@ -20,7 +20,7 @@ export default function LandingContent({
   config: Record<string, string>
   events: AnnualEvent[]
 }) {
-  const { t } = useLanguage()
+  const { t, locale } = useLanguage()
 
   const namaLomba  = config['nama_lomba']  ?? 'International Photography Exhibition'
   const tahunAktif = config['tahun_aktif'] ?? '2025'
@@ -96,10 +96,10 @@ export default function LandingContent({
                 {heroSubtitle || t('hero_subtitle')}
               </p>
               <div className="hero__actions">
-                <Link href="/daftar" className="btn btn--primary" id="hero-daftar-btn">
+                <Link href={`/${locale}/daftar`} className="btn btn--primary" id="hero-daftar-btn">
                   {t('hero_cta_register')}
                 </Link>
-                <Link href="/login" className="btn btn--secondary" id="hero-login-btn">
+                <Link href={`/${locale}/login`} className="btn btn--secondary" id="hero-login-btn">
                   {t('nav_login')}
                 </Link>
               </div>
@@ -219,9 +219,6 @@ export default function LandingContent({
                   <p className="label" style={{ marginBottom: '0.75rem' }}>{t('archive_label')}</p>
                   <h2 id="arsip-heading">{t('archive_title')}</h2>
                 </div>
-                <Link href="/arsip" className="btn btn--ghost" id="lihat-semua-arsip-btn">
-                  {t('archive_view_all')} →
-                </Link>
               </div>
 
               <div className="archive-grid">
@@ -272,6 +269,12 @@ export default function LandingContent({
                   </article>
                 ))}
               </div>
+
+              <div style={{ marginTop: '2.5rem', textAlign: 'center' }}>
+                <Link href={`/${locale}/arsip`} className="btn btn--ghost" id="lihat-semua-arsip-btn">
+                  {t('archive_view_all')} →
+                </Link>
+              </div>
             </div>
           </section>
         )}
@@ -295,17 +298,17 @@ export default function LandingContent({
             </div>
             <div>
               <p className="footer__col-title">{t('footer_quick_links')}</p>
-              <ul className="footer__links" role="list">
-                <li><Link href="/#tentang" className="footer__link">{t('nav_about')}</Link></li>
-                <li><Link href="/#alur" className="footer__link">{t('nav_flow')}</Link></li>
-                <li><Link href="/#arsip" className="footer__link">{t('nav_archive')}</Link></li>
+              <ul className="footer__list" role="list">
+                <li><Link href={`/${locale}#tentang`} className="footer__link">{t('nav_about')}</Link></li>
+                <li><Link href={`/${locale}#alur`} className="footer__link">{t('nav_flow')}</Link></li>
+                <li><Link href={`/${locale}#arsip`} className="footer__link">{t('nav_archive')}</Link></li>
               </ul>
             </div>
             <div>
               <p className="footer__col-title">{t('footer_participant')}</p>
-              <ul className="footer__links" role="list">
-                <li><Link href="/daftar" className="footer__link">{t('nav_register')}</Link></li>
-                <li><Link href="/login" className="footer__link">{t('nav_login')}</Link></li>
+              <ul className="footer__list" role="list">
+                <li><Link href={`/${locale}/daftar`} className="footer__link">{t('nav_register')}</Link></li>
+                <li><Link href={`/${locale}/login`} className="footer__link">{t('nav_login')}</Link></li>
                 <li><Link href="/admin/login" className="footer__link">Admin</Link></li>
               </ul>
             </div>

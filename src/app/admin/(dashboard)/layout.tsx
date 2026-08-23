@@ -7,13 +7,10 @@ export default async function AdminLayout({
 }: {
   children: React.ReactNode
 }) {
-  const { cookies } = await import('next/headers')
-  const hasBypassCookie = cookies().get('ipe_admin_session')?.value === 'true'
-
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
 
-  if (!user && !hasBypassCookie) {
+  if (!user) {
     redirect('/admin/login')
   }
 

@@ -26,6 +26,13 @@ export default function BerandaForm({
       // Handle Hero Image Upload
       const heroFile = formData.get('hero_file') as File
       if (heroFile && heroFile.size > 0) {
+        if (heroFile.size > 2 * 1024 * 1024) {
+          throw new Error('Ukuran foto Hero maksimal 2MB')
+        }
+        if (!['image/jpeg', 'image/png', 'image/webp'].includes(heroFile.type)) {
+          throw new Error('Format foto Hero harus JPG, PNG, atau WEBP')
+        }
+
         const fileExt = heroFile.name.split('.').pop()
         const fileName = `hero_${Math.random()}.${fileExt}`
         const { error: uploadError, data } = await supabase.storage
@@ -44,6 +51,13 @@ export default function BerandaForm({
       // Handle About Image Upload
       const aboutFile = formData.get('about_file') as File
       if (aboutFile && aboutFile.size > 0) {
+        if (aboutFile.size > 2 * 1024 * 1024) {
+          throw new Error('Ukuran foto Galeri/Tentang maksimal 2MB')
+        }
+        if (!['image/jpeg', 'image/png', 'image/webp'].includes(aboutFile.type)) {
+          throw new Error('Format foto Galeri/Tentang harus JPG, PNG, atau WEBP')
+        }
+
         const fileExt = aboutFile.name.split('.').pop()
         const fileName = `about_${Math.random()}.${fileExt}`
         const { error: uploadError, data } = await supabase.storage

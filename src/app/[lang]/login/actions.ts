@@ -42,5 +42,6 @@ export async function loginParticipant(formData: FormData) {
   }
 
   // Redirect setelah session tersimpan
-  redirect('/peserta')
+  const locale = formData.get('locale') as string || 'id'
+  redirect(`/${locale}/peserta`)
 }

@@ -10,7 +10,7 @@ export default function DaftarPage() {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [successData, setSuccessData] = useState<{ nomor_peserta: string, nama: string } | null>(null)
-  const { t } = useLanguage()
+  const { t, locale } = useLanguage()
 
   async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
@@ -68,7 +68,7 @@ export default function DaftarPage() {
                 <p style={{ color: 'var(--muted-fg)', fontSize: '0.9rem', marginBottom: '2rem' }}>
                   {t('reg_success_note')}
                 </p>
-                <Link href="/login" className="btn btn--primary" style={{ width: '100%', justifyContent: 'center' }}>
+                <Link href={`/${locale}/login`} className="btn btn--primary" style={{ width: '100%', justifyContent: 'center' }}>
                   {t('reg_success_login')}
                 </Link>
               </div>
@@ -105,7 +105,7 @@ export default function DaftarPage() {
                   </button>
 
                   <p style={{ textAlign: 'center', marginTop: '1rem', fontSize: '0.9rem', color: 'var(--muted-fg)' }}>
-                    {t('reg_already')} <Link href="/login" style={{ color: 'var(--brass)', textDecoration: 'underline' }}>{t('reg_login_here')}</Link>
+                    {t('reg_already')} <Link href={`/${locale}/login`} style={{ color: 'var(--brass)', textDecoration: 'underline' }}>{t('reg_login_here')}</Link>
                   </p>
                 </form>
               </>

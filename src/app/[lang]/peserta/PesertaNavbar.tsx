@@ -11,7 +11,7 @@ export default function PesertaNavbar() {
     <header className="navbar navbar--scrolled" role="banner">
       <div className="container">
         <nav className="navbar__inner" aria-label="Participant Navigation">
-          <Link href="/peserta" className="navbar__logo">
+          <Link href={`/${locale}/peserta`} className="navbar__logo">
             IPE
             <span>Participant Dashboard</span>
           </Link>

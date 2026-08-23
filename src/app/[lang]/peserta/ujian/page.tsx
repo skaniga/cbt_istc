@@ -113,6 +113,8 @@ export default async function UjianPage() {
     })
   }
 
+  const serverTimeStr = new Date().toISOString()
+
   return (
     <div style={{ background: 'var(--bg)', minHeight: 'calc(100vh - 5rem)' }}>
       <CbtClient
@@ -120,6 +122,7 @@ export default async function UjianPage() {
         questions={questions}
         initialAnswers={initialAnswers}
         endTimeStr={endTime.toISOString()}
+        serverTimeStr={serverTimeStr}
       />
     </div>
   )

@@ -16,7 +16,7 @@ export default function PesertaClient({
   isAksesTerbuka: boolean
   batasSoal: string
 }) {
-  const { t } = useLanguage()
+  const { t, locale } = useLanguage()
 
   return (
     <div className="section" style={{ paddingTop: '3rem' }}>
@@ -96,7 +96,7 @@ export default function PesertaClient({
                   </div>
                   
                   <div style={{ marginTop: '2.5rem' }}>
-                    <Link href="/peserta/sertifikat" className="btn btn--primary" style={{ minWidth: '12rem', justifyContent: 'center' }}>
+                    <Link href={`/${locale}/peserta/sertifikat`} className="btn btn--primary" style={{ minWidth: '12rem', justifyContent: 'center' }}>
                       {t('dashboard_certificate')}
                     </Link>
                   </div>

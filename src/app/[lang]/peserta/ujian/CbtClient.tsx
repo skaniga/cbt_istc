@@ -35,6 +35,7 @@ export default function CbtClient({
   questions: Question[]
   initialAnswers: AnswerMap
   endTimeStr: string // ISO string of when the exam ends
+  serverTimeStr: string // ISO string of server time on load
 }) {
   const [answers, setAnswers] = useState<AnswerMap>(initialAnswers)
   const [currentIndex, setCurrentIndex] = useState(0)
@@ -46,10 +47,14 @@ export default function CbtClient({
   // Timer logic
   useEffect(() => {
     const endTime = new Date(endTimeStr).getTime()
+    const serverTimeOnLoad = new Date(serverTimeStr).getTime()
+    const localTimeOnLoad = new Date().getTime()
+    const timeDelta = serverTimeOnLoad - localTimeOnLoad
     
     const interval = setInterval(() => {
-      const now = new Date().getTime()
-      const diff = endTime - now
+      const nowLocal = new Date().getTime()
+      const nowServer = nowLocal + timeDelta
+      const diff = endTime - nowServer
       
       if (diff <= 0) {
         clearInterval(interval)
@@ -61,7 +66,7 @@ export default function CbtClient({
     }, 1000)
 
     return () => clearInterval(interval)
-  }, [endTimeStr])
+  }, [endTimeStr, serverTimeStr])
 
   const formatTime = (seconds: number | null) => {
     if (seconds === null) return '--:--:--'

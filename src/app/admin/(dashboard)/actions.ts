@@ -7,10 +7,6 @@ import { revalidatePath } from 'next/cache'
 export async function logoutAdmin() {
   const supabase = await createClient()
   await supabase.auth.signOut()
-
-  const { cookies } = await import('next/headers')
-  cookies().delete('ipe_admin_session')
-
   redirect('/admin/login')
 }
 
@@ -18,10 +14,7 @@ export async function toggleAksesUjian(currentStatus: string) {
   const supabase = await createClient()
   
   const { data: { user } } = await supabase.auth.getUser()
-  const { cookies } = await import('next/headers')
-  const hasBypass = cookies().get('ipe_admin_session')?.value === 'true'
-  
-  if (!user && !hasBypass) return { error: 'Unauthorized' }
+  if (!user) return { error: 'Unauthorized' }
 
   const newStatus = currentStatus === 'true' ? 'false' : 'true'
 
@@ -43,17 +36,11 @@ export async function manualKeepAlive() {
   const supabase = await createClient()
 
   const { data: { user } } = await supabase.auth.getUser()
-  const { cookies } = await import('next/headers')
-  const hasBypass = cookies().get('ipe_admin_session')?.value === 'true'
+  if (!user) return { error: 'Unauthorized' }
 
-  if (!user && !hasBypass) return { error: 'Unauthorized' }
-
-  // Record keep alive
   const { error } = await supabase
     .from('keep_alives')
-    .insert({
-      method: 'manual'
-    })
+    .insert({ method: 'manual' })
 
   if (error) {
     return { error: 'Gagal mencatat Keep Alive.' }
