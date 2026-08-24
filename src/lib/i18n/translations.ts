@@ -11,17 +11,17 @@ export const translations = {
 
     // Landing Hero
     hero_badge: 'International Competition',
-    hero_title_line1: 'International',
-    hero_title_line2: 'Photography',
-    hero_title_line3: 'Exhibition',
-    hero_subtitle: 'An international-standard photographic art competition. Discover, compete, and be recognized on the world stage.',
+    hero_title_line1: 'International Science',
+    hero_title_line2: '& Technology',
+    hero_title_line3: 'Competitions',
+    hero_subtitle: 'An international-standard science and technology competition. Discover, compete, and be recognized on the world stage.',
     hero_cta_register: 'Register Now',
     hero_cta_learn: 'Learn More',
 
     // Landing Sections
     about_label: 'About the Competition',
-    about_title: 'A Global Photography Stage',
-    about_desc: 'International Photography Exhibition is a prestigious annual photography competition that brings together photographers from various countries, competing in photographic theory and technique through a Computer-Based Testing (CBT) examination system.',
+    about_title: 'A Global Science & Technology Stage',
+    about_desc: 'International Science and Technology Competitions is a prestigious annual competition that brings together students from various countries, competing in science and technology through a Computer-Based Testing (CBT) examination system.',
     about_stat1: 'Countries',
     about_stat2: 'Participants',
     about_stat3: 'Editions',
@@ -33,7 +33,7 @@ export const translations = {
     step2_title: 'Verification',
     step2_desc: 'Committee verifies data. Participant status updated within 1×24 hours.',
     step3_title: 'CBT Exam',
-    step3_desc: '50 multiple-choice questions on photography. Completed online.',
+    step3_desc: '50 multiple-choice questions on science and technology. Completed online.',
     step4_title: 'Certificate',
     step4_desc: 'Download your official digital certificate immediately after completing the exam.',
 
@@ -42,7 +42,7 @@ export const translations = {
     archive_view_all: 'View All Archive',
     archive_participants: 'Participants',
 
-    footer_tagline: 'International Photography Exhibition — Celebrating photographic excellence across borders.',
+    footer_tagline: 'International Science and Technology Competitions — Celebrating scientific excellence across borders.',
     footer_quick_links: 'Quick Links',
     footer_participant: 'Participant',
     footer_admin: 'Admin',
@@ -67,7 +67,7 @@ export const translations = {
     login_title: 'Participant Login',
     login_subtitle: 'Enter your participant number and universal password.',
     login_number: 'Participant Number',
-    login_number_placeholder: 'e.g. IPE-2025-0001',
+    login_number_placeholder: 'e.g. ISTC-2025-0001',
     login_password: 'Password',
     login_password_placeholder: 'Universal password',
     login_submit: 'Login',
@@ -126,7 +126,7 @@ export const translations = {
 
     // Arsip Page
     archive_page_title: 'Hall of Fame',
-    archive_page_subtitle: 'Tracing the history of photographic excellence through editions of the International Photography Exhibition.',
+    archive_page_subtitle: 'Tracing the history of scientific excellence through editions of the International Science and Technology Competitions.',
 
     // General
     loading: 'Loading...',
@@ -145,17 +145,17 @@ export const translations = {
 
     // Landing Hero
     hero_badge: 'Kompetisi Internasional',
-    hero_title_line1: 'International',
-    hero_title_line2: 'Photography',
-    hero_title_line3: 'Exhibition',
-    hero_subtitle: 'Kompetisi seni fotografi berstandar internasional. Temukan, bersaing, dan diakui di panggung dunia.',
+    hero_title_line1: 'International Science',
+    hero_title_line2: '& Technology',
+    hero_title_line3: 'Competitions',
+    hero_subtitle: 'Kompetisi sains dan teknologi berstandar internasional. Temukan, bersaing, dan diakui di panggung dunia.',
     hero_cta_register: 'Daftar Sekarang',
     hero_cta_learn: 'Pelajari Lebih Lanjut',
 
     // Landing Sections
     about_label: 'Tentang Kompetisi',
-    about_title: 'Panggung Fotografi Global',
-    about_desc: 'International Photography Exhibition adalah kompetisi fotografi tahunan bergengsi yang mempertemukan para fotografer dari berbagai negara, bersaing dalam teori dan teknik fotografi melalui sistem ujian Computer-Based Testing (CBT).',
+    about_title: 'Panggung Sains & Teknologi Global',
+    about_desc: 'International Science and Technology Competitions adalah kompetisi sains dan teknologi tahunan bergengsi yang mempertemukan para pelajar dari berbagai negara, bersaing dalam ilmu pengetahuan dan teknologi melalui sistem ujian Computer-Based Testing (CBT).',
     about_stat1: 'Negara',
     about_stat2: 'Peserta',
     about_stat3: 'Edisi',
@@ -167,7 +167,7 @@ export const translations = {
     step2_title: 'Verifikasi',
     step2_desc: 'Panitia memverifikasi data. Status peserta diperbarui dalam 1×24 jam.',
     step3_title: 'Ujian CBT',
-    step3_desc: '50 soal pilihan ganda seputar fotografi. Dikerjakan secara daring.',
+    step3_desc: '50 soal pilihan ganda seputar sains dan teknologi. Dikerjakan secara daring.',
     step4_title: 'Sertifikat',
     step4_desc: 'Unduh sertifikat digital resmi segera setelah ujian diselesaikan.',
 
@@ -176,7 +176,7 @@ export const translations = {
     archive_view_all: 'Lihat Seluruh Arsip',
     archive_participants: 'Peserta',
 
-    footer_tagline: 'International Photography Exhibition — Merayakan keunggulan fotografi lintas batas.',
+    footer_tagline: 'International Science and Technology Competitions — Merayakan keunggulan sains dan teknologi lintas batas.',
     footer_quick_links: 'Tautan Cepat',
     footer_participant: 'Peserta',
     footer_admin: 'Admin',
@@ -201,7 +201,7 @@ export const translations = {
     login_title: 'Login Peserta',
     login_subtitle: 'Masukkan nomor peserta dan kata sandi universal Anda.',
     login_number: 'Nomor Peserta',
-    login_number_placeholder: 'contoh: IPE-2025-0001',
+    login_number_placeholder: 'contoh: ISTC-2025-0001',
     login_password: 'Kata Sandi',
     login_password_placeholder: 'Kata sandi universal',
     login_submit: 'Masuk',
@@ -260,7 +260,7 @@ export const translations = {
 
     // Arsip Page
     archive_page_title: 'Hall of Fame',
-    archive_page_subtitle: 'Menelusuri sejarah keunggulan fotografi melalui edisi-edisi International Photography Exhibition.',
+    archive_page_subtitle: 'Menelusuri sejarah keunggulan sains dan teknologi melalui edisi-edisi International Science and Technology Competitions.',
 
     // General
     loading: 'Memuat...',
@@ -279,17 +279,17 @@ export const translations = {
 
     // Landing Hero
     hero_badge: 'Pertandingan Antarabangsa',
-    hero_title_line1: 'International',
-    hero_title_line2: 'Photography',
-    hero_title_line3: 'Exhibition',
-    hero_subtitle: 'Pertandingan seni fotografi bertaraf antarabangsa. Temui, bersaing, dan diiktiraf di pentas dunia.',
+    hero_title_line1: 'International Science',
+    hero_title_line2: '& Technology',
+    hero_title_line3: 'Competitions',
+    hero_subtitle: 'Pertandingan sains dan teknologi bertaraf antarabangsa. Temui, bersaing, dan diiktiraf di pentas dunia.',
     hero_cta_register: 'Daftar Sekarang',
     hero_cta_learn: 'Ketahui Lebih Lanjut',
 
     // Landing Sections
     about_label: 'Tentang Pertandingan',
-    about_title: 'Pentas Fotografi Global',
-    about_desc: 'International Photography Exhibition ialah pertandingan fotografi tahunan berprestij yang mempertemukan para fotografer dari pelbagai negara, bersaing dalam teori dan teknik fotografi melalui sistem peperiksaan Computer-Based Testing (CBT).',
+    about_title: 'Pentas Sains & Teknologi Global',
+    about_desc: 'International Science and Technology Competitions ialah pertandingan sains dan teknologi tahunan berprestij yang mempertemukan para pelajar dari pelbagai negara, bersaing dalam ilmu pengetahuan dan teknologi melalui sistem peperiksaan Computer-Based Testing (CBT).',
     about_stat1: 'Negara',
     about_stat2: 'Peserta',
     about_stat3: 'Edisi',
@@ -301,7 +301,7 @@ export const translations = {
     step2_title: 'Pengesahan',
     step2_desc: 'Jawatankuasa mengesahkan data. Status peserta dikemas kini dalam masa 1×24 jam.',
     step3_title: 'Peperiksaan CBT',
-    step3_desc: '50 soalan aneka pilihan tentang fotografi. Dilaksanakan secara dalam talian.',
+    step3_desc: '50 soalan aneka pilihan tentang sains dan teknologi. Dilaksanakan secara dalam talian.',
     step4_title: 'Sijil',
     step4_desc: 'Muat turun sijil digital rasmi selepas peperiksaan selesai.',
 
@@ -310,7 +310,7 @@ export const translations = {
     archive_view_all: 'Lihat Semua Arkib',
     archive_participants: 'Peserta',
 
-    footer_tagline: 'International Photography Exhibition — Meraikan kecemerlangan fotografi merentasi sempadan.',
+    footer_tagline: 'International Science and Technology Competitions — Meraikan kecemerlangan sains dan teknologi merentasi sempadan.',,
     footer_quick_links: 'Pautan Pantas',
     footer_participant: 'Peserta',
     footer_admin: 'Pentadbir',
@@ -335,7 +335,7 @@ export const translations = {
     login_title: 'Log Masuk Peserta',
     login_subtitle: 'Masukkan nombor peserta dan kata laluan universal anda.',
     login_number: 'Nombor Peserta',
-    login_number_placeholder: 'cth: IPE-2025-0001',
+    login_number_placeholder: 'cth: ISTC-2025-0001',
     login_password: 'Kata Laluan',
     login_password_placeholder: 'Kata laluan universal',
     login_submit: 'Log Masuk',
@@ -394,7 +394,7 @@ export const translations = {
 
     // Arsip Page
     archive_page_title: 'Hall of Fame',
-    archive_page_subtitle: 'Menelusuri sejarah kecemerlangan fotografi melalui edisi International Photography Exhibition.',
+    archive_page_subtitle: 'Menelusuri sejarah kecemerlangan sains dan teknologi melalui edisi International Science and Technology Competitions.',
 
     // General
     loading: 'Memuatkan...',

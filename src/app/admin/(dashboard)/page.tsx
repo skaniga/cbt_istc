@@ -32,7 +32,7 @@ export default async function AdminDashboardPage() {
     <div>
       <div style={{ marginBottom: '2.5rem' }}>
         <h1 style={{ fontSize: '2.5rem', marginBottom: '0.5rem' }}>Dashboard Overview</h1>
-        <p style={{ color: 'var(--muted-fg)' }}>Welcome to the main control panel of IPE.</p>
+        <p style={{ color: 'var(--muted-fg)' }}>Welcome to the main control panel of ISTC.</p>
       </div>
 
       <div className="admin-overview-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '2rem' }}>

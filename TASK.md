@@ -1,4 +1,4 @@
-# TASK.md — International Photography Exhibition CBT Platform
+# TASK.md — International Science and Technology Competitions CBT Platform
 
 ## STATUS SAAT INI
 **Sesi**: 1 (Setup & Foundation)

@@ -12,7 +12,7 @@ export default function PesertaNavbar() {
       <div className="container">
         <nav className="navbar__inner" aria-label="Participant Navigation">
           <Link href={`/${locale}/peserta`} className="navbar__logo">
-            IPE
+            ISTC
             <span>Participant Dashboard</span>
           </Link>
 

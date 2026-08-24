@@ -60,8 +60,10 @@ export default async function SertifikatPage() {
         <SertifikatClient 
           participant={participant} 
           winnerData={winnerData}
-          namaLomba={config['nama_lomba'] || 'International Photography Exhibition'}
+          namaLomba={config['nama_lomba'] || 'International Science and Technology Competitions'}
           tahun={config['tahun_aktif'] || '2025'}
+          namaKetua={config['nama_ketua']}
+          jabatanKetua={config['jabatan_ketua']}
         />
 
       </div>

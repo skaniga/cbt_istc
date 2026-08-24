@@ -22,11 +22,11 @@ export default function Navbar() {
         <nav className="navbar__inner" aria-label="Navigasi utama">
 
           {/* Logo */}
-          <Link href={`/${locale}`} className="navbar__logo" aria-label="International Photography Exhibition – Beranda" style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-            <img src="/logo.webp" alt="IPE Logo" style={{ width: '40px', height: '40px', borderRadius: '50%', objectFit: 'cover' }} />
+          <Link href={`/${locale}`} className="navbar__logo" aria-label="International Science and Technology Competitions – Beranda" style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+            <img src="/logo.png" alt="ISTC Logo" style={{ width: '44px', height: '44px', borderRadius: '8px', objectFit: 'contain', background: '#0a0e1a' }} />
             <div style={{ display: 'flex', flexDirection: 'column' }}>
-              <span style={{ fontWeight: 700, fontSize: '1.25rem', lineHeight: 1 }}>IPE</span>
-              <span style={{ fontSize: '0.65rem', textTransform: 'uppercase', letterSpacing: '0.05em', color: 'var(--muted-fg)' }}>International Photography Exhibition</span>
+              <span style={{ fontWeight: 700, fontSize: '1.25rem', lineHeight: 1 }}>ISTC</span>
+              <span style={{ fontSize: '0.65rem', textTransform: 'uppercase', letterSpacing: '0.05em', color: 'var(--muted-fg)' }}>International Science and Technology Competitions</span>
             </div>
           </Link>
 

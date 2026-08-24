@@ -105,7 +105,7 @@ export default function BerandaForm({
         <input 
           type="text" 
           name="nama_lomba" 
-          defaultValue={initialConfig['nama_lomba'] || 'International Photography Exhibition'}
+          defaultValue={initialConfig['nama_lomba'] || 'International Science and Technology Competitions'}
           style={{ width: '100%', padding: '0.75rem', borderRadius: '4px', border: '1px solid var(--border)' }}
         />
       </div>
@@ -192,6 +192,33 @@ export default function BerandaForm({
           accept="image/*"
         />
         <p style={{ fontSize: '0.8rem', color: 'var(--muted-fg)', marginTop: '0.5rem' }}>Kosongkan jika tidak ingin mengubah foto saat ini.</p>
+      </div>
+
+      <div style={{ padding: '1.5rem', border: '1px solid var(--border)', borderRadius: '4px', background: 'var(--bg-alt)' }}>
+        <h3 style={{ marginBottom: '1rem', fontSize: '1.1rem' }}>Sertifikat — Tanda Tangan</h3>
+
+        <div style={{ marginBottom: '1rem' }}>
+          <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 600 }}>Nama Ketua / Penandatangan</label>
+          <input
+            type="text"
+            name="nama_ketua"
+            defaultValue={initialConfig['nama_ketua'] || 'Committee'}
+            placeholder="Contoh: Dr. Ahmad Fauzi"
+            style={{ width: '100%', padding: '0.75rem', borderRadius: '4px', border: '1px solid var(--border)' }}
+          />
+        </div>
+
+        <div>
+          <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 600 }}>Jabatan Penandatangan</label>
+          <input
+            type="text"
+            name="jabatan_ketua"
+            defaultValue={initialConfig['jabatan_ketua'] || 'KETUA PENYELENGGARA'}
+            placeholder="Contoh: KETUA PENYELENGGARA"
+            style={{ width: '100%', padding: '0.75rem', borderRadius: '4px', border: '1px solid var(--border)' }}
+          />
+          <p style={{ fontSize: '0.8rem', color: 'var(--muted-fg)', marginTop: '0.5rem' }}>Teks ini muncul di bawah tanda tangan pada sertifikat peserta.</p>
+        </div>
       </div>
 
       <button 

@@ -1,6 +1,6 @@
-# 🏛️ International Photography Exhibition — CBT Platform
+# 🏛️ International Science and Technology Competitions — CBT Platform
 
-> **Platform Manajemen Ujian Berbasis Web** untuk International Photography Exhibition (IPE) 2025.
+> **Platform Manajemen Ujian Berbasis Web** untuk International Science and Technology Competitions (ISTC) 2025.
 > Dibangun dengan Next.js 14, Supabase, dan desain *Academia / Classical* yang premium.
 
 ![Next.js](https://img.shields.io/badge/Next.js-14.x-black?style=flat-square&logo=next.js)
@@ -30,7 +30,7 @@
 
 ## 🎯 Tentang Platform
 
-Platform IPE CBT dirancang khusus untuk mendukung proses seleksi peserta **International Photography Exhibition** secara digital dan efisien. Sistem ini menggantikan ujian konvensional berbasis kertas dengan pengalaman berbasis web yang elegan, aman, dan mudah diakses dari perangkat manapun.
+Platform ISTC CBT dirancang khusus untuk mendukung proses seleksi peserta **International Science and Technology Competitions** secara digital dan efisien. Sistem ini menggantikan ujian konvensional berbasis kertas dengan pengalaman berbasis web yang elegan, aman, dan mudah diakses dari perangkat manapun.
 
 **Desain filosofi**: *Academia / Classical* — menghadirkan nuansa keagungan galeri seni dengan palet warna putih gading, hitam elegan, dan aksen kuningan (*brass*), terinspirasi dari estetika pameran fotografi internasional bertaraf dunia.
 
@@ -70,7 +70,7 @@ Mendaftar di /daftar              Login di /admin/login
     │                                    │
     ▼                                    ▼
 Dapat Nomor Peserta          Dashboard Admin terbuka
-(contoh: IPE-2025-0001)      ─ Buka/Tutup Akses Ujian
+(contoh: ISTC-2025-0001)      ─ Buka/Tutup Akses Ujian
     │                        ─ Lihat Daftar Peserta
     ▼                        ─ Kelola Soal
 Login di /login
@@ -212,7 +212,7 @@ VALUES
    - **Nama Lengkap** — Sesuai identitas resmi (paspor/KTP)
    - **Nomor Passport / ID** — Nomor identitas unik Anda
 3. Klik **"Daftar Sekarang"**
-4. Sistem akan menampilkan **Nomor Peserta** Anda (format: `IPE-2025-XXXX`)
+4. Sistem akan menampilkan **Nomor Peserta** Anda (format: `ISTC-2025-XXXX`)
 
 > 🔑 **Simpan Nomor Peserta ini!** Anda akan membutuhkannya untuk login.
 
@@ -222,7 +222,7 @@ VALUES
 
 1. Buka `/login`
 2. Masukkan kredensial berikut:
-   - **Nomor Peserta** (atau No Passport) — Contoh: `IPE-2025-0001`
+   - **Nomor Peserta** (atau No Passport) — Contoh: `ISTC-2025-0001`
    - **Kata Sandi** — `123456` *(kata sandi universal untuk semua peserta)*
 3. Klik **"Masuk Ujian"**
 
@@ -308,7 +308,7 @@ Buka `/admin/login` dan masukkan **Email + Password** akun admin yang dibuat di 
 ### Manajemen Peserta (`/admin/peserta`)
 
 Menampilkan tabel lengkap seluruh peserta dengan kolom:
-- **No. Peserta** — Kode unik peserta (format: `IPE-2025-XXXX`)
+- **No. Peserta** — Kode unik peserta (format: `ISTC-2025-XXXX`)
 - **Nama Lengkap** — Nama sesuai identitas
 - **No Passport / ID** — Nomor identitas yang digunakan saat daftar
 - **Tgl Daftar** — Tanggal pendaftaran
@@ -397,7 +397,7 @@ computer-service-shop/
 
 | URL | Akses | Deskripsi |
 |-----|-------|-----------|
-| `/` | Publik | Landing Page (tentang IPE, alur, CTA) |
+| `/` | Publik | Landing Page (tentang ISTC, alur, CTA) |
 | `/daftar` | Publik | Form pendaftaran peserta baru |
 | `/login` | Publik | Login peserta dengan nomor + sandi |
 | `/peserta` | 🔐 Peserta | Dashboard peserta (status ujian) |
@@ -496,4 +496,4 @@ Untuk pertanyaan teknis terkait platform ini, hubungi tim pengembang.
 
 ---
 
-*International Photography Exhibition CBT Platform — Dibuat dengan ❤️ untuk mendukung seleksi peserta yang adil, efisien, dan berkesan.*
+*International Science and Technology Competitions CBT Platform — Dibuat dengan ❤️ untuk mendukung seleksi peserta yang adil, efisien, dan berkesan.*

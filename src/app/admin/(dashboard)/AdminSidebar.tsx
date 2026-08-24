@@ -23,7 +23,7 @@ export default function AdminSidebar() {
     }}>
       <div style={{ marginBottom: '3rem' }}>
         <p style={{ fontFamily: 'var(--font-display)', fontSize: '0.8rem', letterSpacing: '0.2em', color: 'var(--brass)' }}>
-          IPE ADMIN
+          ISTC ADMIN
         </p>
       </div>
 

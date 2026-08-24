@@ -27,6 +27,8 @@ export async function updateBerandaSettings(formData: FormData) {
     { kunci: 'hero_subtitle', nilai: formData.get('hero_subtitle') as string },
     { kunci: 'about_title', nilai: formData.get('about_title') as string },
     { kunci: 'about_desc', nilai: formData.get('about_desc') as string },
+    { kunci: 'nama_ketua', nilai: formData.get('nama_ketua') as string },
+    { kunci: 'jabatan_ketua', nilai: formData.get('jabatan_ketua') as string },
   ]
 
   // Optional image URLs

@@ -9,12 +9,16 @@ export default function SertifikatClient({
   participant,
   namaLomba,
   tahun,
-  winnerData
+  winnerData,
+  namaKetua,
+  jabatanKetua
 }: {
   participant: Participant
   namaLomba: string
   tahun: string
   winnerData?: { peringkat: number, apresiasi: string } | null
+  namaKetua?: string
+  jabatanKetua?: string
 }) {
   const certRef = useRef<HTMLDivElement>(null)
   const containerRef = useRef<HTMLDivElement>(null)
@@ -216,17 +220,17 @@ export default function SertifikatClient({
               {t('cert_issued')}: {today}
             </p>
 
-            {/* Logo IPE */}
+            {/* Logo ISTC */}
             <div style={{
-              position: 'absolute', bottom: '4rem', right: '6rem',
-              width: '110px', height: '110px', borderRadius: '50%',
+              position: 'absolute', bottom: '3.5rem', right: '5rem',
+              width: '120px', height: '120px',
               display: 'flex', alignItems: 'center', justifyContent: 'center',
-              boxShadow: '0 4px 10px rgba(0,0,0,0.2)',
+              background: '#0a0e1a',
+              borderRadius: '12px',
+              boxShadow: '0 4px 16px rgba(0,0,0,0.3)',
               border: `2px solid ${primaryColor}`,
-              overflow: 'hidden',
-              background: 'var(--bg)'
             }}>
-              <img src="/logo.webp" alt="IPE Logo" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+              <img src="/logo.png" alt="ISTC Logo" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
             </div>
 
             {/* Tanda Tangan */}
@@ -235,11 +239,11 @@ export default function SertifikatClient({
                 fontFamily: 'cursive', fontSize: '2.5rem', color: 'var(--fg)', 
                 opacity: 0.8, marginBottom: '0.5rem', transform: 'rotate(-5deg)'
               }}>
-                Committee
+                {namaKetua || 'Committee'}
               </div>
               <div style={{ width: '150px', height: '1px', background: 'var(--fg)', margin: '0 auto 0.5rem' }} />
               <p style={{ fontFamily: 'var(--font-display)', fontSize: '0.65rem', letterSpacing: '0.1em', color: 'var(--muted-fg)' }}>
-                {t('cert_chairman')}
+                {jabatanKetua || t('cert_chairman')}
               </p>
             </div>
 

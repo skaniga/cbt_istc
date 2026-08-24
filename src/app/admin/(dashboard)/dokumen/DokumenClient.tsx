@@ -88,7 +88,7 @@ export default function DokumenClient({ initialDocuments }: { initialDocuments: 
       <div style={{ marginBottom: '2.5rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <div>
           <h1 style={{ fontSize: '2.5rem', marginBottom: '0.5rem' }}>Dokumen & Berkas</h1>
-          <p style={{ color: 'var(--muted-fg)' }}>Manajemen berkas administrasi dan penyelenggaraan IPE.</p>
+          <p style={{ color: 'var(--muted-fg)' }}>Manajemen berkas administrasi dan penyelenggaraan ISTC.</p>
         </div>
         <button onClick={openCreate} className="btn btn--primary">
           + Tambah Dokumen

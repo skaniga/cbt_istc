@@ -100,7 +100,7 @@ export default function ArsipClient({ initialEvents }: { initialEvents: any[] })
       <div style={{ marginBottom: '2.5rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <div>
           <h1 style={{ fontSize: '2.5rem', marginBottom: '0.5rem' }}>Arsip Penyelenggaraan</h1>
-          <p style={{ color: 'var(--muted-fg)' }}>Rekapitulasi data IPE dari tahun ke tahun.</p>
+          <p style={{ color: 'var(--muted-fg)' }}>Rekapitulasi data ISTC dari tahun ke tahun.</p>
         </div>
         <button onClick={openCreate} className="btn btn--primary">
           + Tambah Arsip

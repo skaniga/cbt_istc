@@ -22,7 +22,7 @@ export default function LandingContent({
 }) {
   const { t, locale } = useLanguage()
 
-  const namaLomba  = config['nama_lomba']  ?? 'International Photography Exhibition'
+  const namaLomba  = config['nama_lomba']  ?? 'International Science and Technology Competitions'
   const tahunAktif = config['tahun_aktif'] ?? '2025'
   const heroImage  = config['hero_image_url'] ?? '/hero.webp'
   const aboutImage = config['about_image_url'] ?? '/hero.webp'
@@ -64,7 +64,7 @@ export default function LandingContent({
           <div className="hero__bg" aria-hidden="true">
             <Image
               src={heroImage}
-              alt="International Photography Exhibition hall"
+              alt="International Science and Technology Competitions hall"
               fill
               priority
               sizes="100vw"
@@ -137,7 +137,7 @@ export default function LandingContent({
                 <div className="arch-top ornate-frame" style={{ aspectRatio: '3/4', background: 'var(--muted)', overflow: 'hidden' }}>
                   <Image
                     src={aboutImage}
-                    alt="Ruang pameran International Photography Exhibition"
+                    alt="Ruang pameran International Science and Technology Competitions"
                     width={600}
                     height={800}
                     style={{ width: '100%', height: '100%', objectFit: 'cover' }}
@@ -228,10 +228,10 @@ export default function LandingContent({
                       {ev.flyer_url ? (
                         <Image
                           src={ev.flyer_url}
-                          alt={`Flyer IPE ${ev.tahun}`}
+                          alt={`Flyer ISTC ${ev.tahun}`}
                           width={400}
                           height={300}
-                          style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                          style={{ width: '100%', height: '100%', objectFit: 'contain' }}
                           className="img-sepia"
                         />
                       ) : (
@@ -251,9 +251,9 @@ export default function LandingContent({
                       )}
                     </div>
                     <div className="archive-card__body">
-                      <p className="label" style={{ marginBottom: '0.5rem' }}>IPE {ev.tahun}</p>
+                      <p className="label" style={{ marginBottom: '0.5rem' }}>ISTC {ev.tahun}</p>
                       <h3 style={{ fontSize: '1.25rem', marginBottom: '0.5rem' }}>
-                        {ev.tema ?? `International Photography Exhibition ${ev.tahun}`}
+                        {ev.tema ?? `International Science and Technology Competitions ${ev.tahun}`}
                       </h3>
                       {ev.deskripsi && (
                         <p style={{ color: 'var(--muted-fg)', fontSize: '0.95rem', lineHeight: 1.6 }}>
@@ -286,10 +286,10 @@ export default function LandingContent({
           <div className="footer__grid">
             <div>
               <div className="footer__brand" style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '1rem' }}>
-                <img src="/logo.webp" alt="IPE Logo" style={{ width: '40px', height: '40px', borderRadius: '50%', objectFit: 'cover' }} />
+                <img src="/logo.png" alt="ISTC Logo" style={{ width: '44px', height: '44px', borderRadius: '8px', objectFit: 'contain', background: '#0a0e1a' }} />
                 <div style={{ display: 'flex', flexDirection: 'column' }}>
-                  <span style={{ fontWeight: 700, fontSize: '1.25rem', lineHeight: 1 }}>IPE</span>
-                  <span style={{ fontSize: '0.65rem', textTransform: 'uppercase', letterSpacing: '0.05em', color: 'var(--muted-fg)' }}>International Photography Exhibition</span>
+                  <span style={{ fontWeight: 700, fontSize: '1.25rem', lineHeight: 1 }}>ISTC</span>
+                  <span style={{ fontSize: '0.65rem', textTransform: 'uppercase', letterSpacing: '0.05em', color: 'var(--muted-fg)' }}>International Science and Technology Competitions</span>
                 </div>
               </div>
               <p className="footer__desc">
@@ -315,7 +315,7 @@ export default function LandingContent({
           </div>
           <div className="footer__bottom">
             <p className="footer__copy">
-              © {tahunAktif} International Photography Exhibition. All rights reserved.
+              © {tahunAktif} International Science and Technology Competitions. All rights reserved.
             </p>
             <div className="ornate-divider" aria-hidden="true" style={{ width: '8rem', margin: 0 }} />
           </div>

@@ -1,5 +1,5 @@
 // ============================================================
-// Database Types — International Photography Exhibition 2025
+// Database Types — International Science and Technology Competitions 2025
 // ============================================================
 
 export type KategoriPeserta = 'umum' | 'pelajar' | 'profesional'

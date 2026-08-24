@@ -29,7 +29,8 @@ export default function CbtClient({
   examSessionId,
   questions,
   initialAnswers,
-  endTimeStr
+  endTimeStr,
+  serverTimeStr
 }: {
   examSessionId: string
   questions: Question[]
