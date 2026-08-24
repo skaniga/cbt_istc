@@ -7,10 +7,10 @@ import { useLanguage } from '@/lib/i18n/LanguageContext'
 import { AnnualEvent, SystemConfig } from '@/lib/types'
 
 const categories = [
-  { label: 'Teknik Fotografi', icon: '◎', desc: 'Eksposur, komposisi, pencahayaan, dan optik kamera.' },
-  { label: 'Estetika Visual', icon: '◈', desc: 'Prinsip desain, warna, perspektif, dan storytelling.' },
-  { label: 'Sejarah Fotografi', icon: '◉', desc: 'Pelopor fotografi, gerakan seni, dan ikonografi.' },
-  { label: 'Pengetahuan Umum', icon: '◆', desc: 'Regulasi, standar industri, dan perkembangan terkini.' },
+  { label: 'Matematika', icon: '➗', desc: 'Aljabar, geometri, kalkulus, dan logika matematika.' },
+  { label: 'Ilmu Pengetahuan Alam', icon: '🧬', desc: 'Fisika, kimia, biologi, dan ilmu bumi.' },
+  { label: 'Robotic', icon: '⚙️', desc: 'Pemrograman, mekanika, elektronika, dan kecerdasan buatan.' },
+  { label: 'Technology', icon: '💻', desc: 'Komputasi, jaringan, keamanan siber, dan rekayasa perangkat lunak.' },
 ]
 
 export default function LandingContent({
