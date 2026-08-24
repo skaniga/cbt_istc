@@ -80,8 +80,36 @@ export default function SertifikatClient({
       const pdfHeight = pdf.internal.pageSize.getHeight()
 
       pdf.addImage(imgData, 'JPEG', 0, 0, pdfWidth, pdfHeight)
-      pdf.save(`Sertifikat_${participant.nomor_peserta}.pdf`)
+      const fileName = `Sertifikat_${participant.nomor_peserta}.pdf`
+      const pdfBlob = pdf.output('blob')
 
+      // 1. Try native mobile share (fixes iOS/Android PWA blob download issues)
+      if (navigator.share && navigator.canShare) {
+        const file = new File([pdfBlob], fileName, { type: 'application/pdf' })
+        if (navigator.canShare({ files: [file] })) {
+          try {
+            await navigator.share({
+              files: [file],
+              title: fileName,
+            })
+            return // Successfully shared/saved via OS
+          } catch (err) {
+            console.log('Share canceled or failed, falling back to download:', err)
+          }
+        }
+      }
+
+      // 2. Standard browser download fallback
+      const blobUrl = URL.createObjectURL(pdfBlob)
+      const link = document.createElement('a')
+      link.href = blobUrl
+      link.download = fileName
+      document.body.appendChild(link)
+      link.click()
+      document.body.removeChild(link)
+      
+      // Revoke slightly later to ensure download starts on slow devices
+      setTimeout(() => URL.revokeObjectURL(blobUrl), 2000)
     } catch (error) {
       console.error('Error generating PDF:', error)
       alert('An error occurred while generating the PDF. Please try again.')
