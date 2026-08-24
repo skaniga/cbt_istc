@@ -310,7 +310,7 @@ export const translations = {
     archive_view_all: 'Lihat Semua Arkib',
     archive_participants: 'Peserta',
 
-    footer_tagline: 'International Science and Technology Competitions — Meraikan kecemerlangan sains dan teknologi merentasi sempadan.',,
+    footer_tagline: 'International Science and Technology Competitions — Meraikan kecemerlangan sains dan teknologi merentasi sempadan.',
     footer_quick_links: 'Pautan Pantas',
     footer_participant: 'Peserta',
     footer_admin: 'Pentadbir',
