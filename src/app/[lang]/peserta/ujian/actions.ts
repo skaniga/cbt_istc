@@ -1,6 +1,6 @@
 'use server'
 
-import { createClient } from '@/lib/supabase/server'
+import { createAdminClient } from '@/lib/supabase/server'
 import { getSession } from '@/lib/session'
 import { redirect } from 'next/navigation'
 
@@ -8,7 +8,7 @@ export async function saveAnswer(examSessionId: string, questionId: string, answ
   const session = await getSession()
   if (!session) return { error: 'Unauthorized' }
 
-  const supabase = await createClient()
+  const supabase = createAdminClient()
 
   // Upsert jawaban
   const { error } = await supabase
@@ -34,7 +34,7 @@ export async function finishExam(examSessionId: string) {
   const session = await getSession()
   if (!session) redirect('/login')
 
-  const supabase = await createClient()
+  const supabase = createAdminClient()
 
   // Ambil semua jawaban peserta dan cocokkan dengan tabel questions
   const { data: answers } = await supabase

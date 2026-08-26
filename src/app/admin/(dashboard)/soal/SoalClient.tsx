@@ -209,41 +209,56 @@ export default function SoalClient({
               </tr>
             </thead>
             <tbody>
-              {questions && questions.length > 0 ? (
-                questions.map((q) => (
-                  <tr key={q.id} style={{ borderBottom: '1px solid var(--border)', background: 'var(--bg)' }}>
-                    <td style={{ padding: '1rem', fontWeight: 600 }}>{q.nomor_soal}</td>
-                    <td style={{ padding: '1rem', lineHeight: 1.5 }}>
-                      {q.pertanyaan.length > 80 ? q.pertanyaan.substring(0, 80) + '...' : q.pertanyaan}
-                    </td>
-                    <td style={{ padding: '1rem', fontFamily: 'var(--font-display)', color: 'var(--brass)', fontWeight: 600 }}>
-                      {q.kunci_jawaban}
-                    </td>
-                    <td style={{ padding: '1rem', textTransform: 'capitalize' }}>{q.kategori}</td>
-                    <td style={{ padding: '1rem' }}>
-                      <span style={{ 
-                        padding: '0.2rem 0.5rem', borderRadius: '4px', fontSize: '0.75rem', fontWeight: 600,
-                        background: q.aktif ? '#E8F5E9' : '#F5F5F5',
-                        color: q.aktif ? '#2E7D32' : 'var(--muted-fg)'
-                      }}>
-                        {q.aktif ? 'AKTIF' : 'NON-AKTIF'}
-                      </span>
-                    </td>
-                    <td style={{ padding: '1rem' }}>
-                      <div style={{ display: 'flex', gap: '0.5rem' }}>
-                        <button onClick={() => openEdit(q)} className="btn" style={{ padding: '0.25rem 0.75rem', fontSize: '0.8rem', background: '#F5F5F5', color: '#333' }}>Edit</button>
-                        <button onClick={() => handleDelete(q.id)} className="btn" style={{ padding: '0.25rem 0.75rem', fontSize: '0.8rem', background: '#FFEBEE', color: '#C62828' }} disabled={loading}>Hapus</button>
-                      </div>
-                    </td>
-                  </tr>
-                ))
-              ) : (
-                <tr>
-                  <td colSpan={6} style={{ padding: '3rem 1rem', textAlign: 'center', color: 'var(--muted-fg)' }}>
-                    Belum ada soal di database.
-                  </td>
-                </tr>
-              )}
+              {(() => {
+                if (!questions || questions.length === 0) {
+                  return (
+                    <tr>
+                      <td colSpan={6} style={{ padding: '3rem 1rem', textAlign: 'center', color: 'var(--muted-fg)' }}>
+                        Belum ada soal di database.
+                      </td>
+                    </tr>
+                  );
+                }
+
+                let activeCount = 0;
+                return questions.map((q) => {
+                  let isSelected = false;
+                  if (q.aktif && acakSoal === 'false' && activeCount < parseInt(batasSoal, 10)) {
+                    isSelected = true;
+                    activeCount++;
+                  }
+                  return (
+                    <tr key={q.id} style={{ borderBottom: '1px solid var(--border)', background: isSelected ? 'rgba(232, 245, 233, 0.4)' : 'var(--bg)' }}>
+                      <td style={{ padding: '1rem', fontWeight: 600 }}>
+                        {q.nomor_soal}
+                        {isSelected && <span style={{ display: 'block', fontSize: '0.65rem', color: '#2E7D32', marginTop: '0.2rem', fontWeight: 700 }}>TERPILIH</span>}
+                      </td>
+                      <td style={{ padding: '1rem', lineHeight: 1.5 }}>
+                        {q.pertanyaan.length > 80 ? q.pertanyaan.substring(0, 80) + '...' : q.pertanyaan}
+                      </td>
+                      <td style={{ padding: '1rem', fontFamily: 'var(--font-display)', color: 'var(--brass)', fontWeight: 600 }}>
+                        {q.kunci_jawaban}
+                      </td>
+                      <td style={{ padding: '1rem', textTransform: 'capitalize' }}>{q.kategori}</td>
+                      <td style={{ padding: '1rem' }}>
+                        <span style={{ 
+                          padding: '0.2rem 0.5rem', borderRadius: '4px', fontSize: '0.75rem', fontWeight: 600,
+                          background: q.aktif ? '#E8F5E9' : '#F5F5F5',
+                          color: q.aktif ? '#2E7D32' : 'var(--muted-fg)'
+                        }}>
+                          {q.aktif ? 'AKTIF' : 'NON-AKTIF'}
+                        </span>
+                      </td>
+                      <td style={{ padding: '1rem' }}>
+                        <div style={{ display: 'flex', gap: '0.5rem' }}>
+                          <button onClick={() => openEdit(q)} className="btn" style={{ padding: '0.25rem 0.75rem', fontSize: '0.8rem', background: '#F5F5F5', color: '#333' }}>Edit</button>
+                          <button onClick={() => handleDelete(q.id)} className="btn" style={{ padding: '0.25rem 0.75rem', fontSize: '0.8rem', background: '#FFEBEE', color: '#C62828' }} disabled={loading}>Hapus</button>
+                        </div>
+                      </td>
+                    </tr>
+                  );
+                });
+              })()}
             </tbody>
           </table>
         </div>
