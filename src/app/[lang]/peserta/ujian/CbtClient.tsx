@@ -4,6 +4,7 @@ import { useState, useEffect, useRef, useCallback } from 'react'
 import { saveAnswer, finishExam } from './actions'
 import { useLanguage } from '@/lib/i18n/LanguageContext'
 import type { TranslationKey } from '@/lib/i18n/translations'
+import { useExamGuard } from './useExamGuard'
 
 type Question = {
   id: string
@@ -27,7 +28,7 @@ type Question = {
 type AnswerMap = Record<string, string>
 type SaveStatus = 'idle' | 'saving' | 'saved' | 'error'
 
-// #5 — Modal konfirmasi submit dengan daftar soal belum dijawab
+// Modal konfirmasi submit (#5)
 function SubmitConfirmModal({
   unansweredCount,
   totalCount,
@@ -41,7 +42,7 @@ function SubmitConfirmModal({
   onConfirm: () => void
   onCancel: () => void
   isFinishing: boolean
-  t: (key: TranslationKey) => string  // eslint-disable-line @typescript-eslint/no-explicit-any
+  t: (key: TranslationKey) => string
 }) {
   return (
     <div style={{
@@ -120,37 +121,55 @@ export default function CbtClient({
   const [answers, setAnswers] = useState<AnswerMap>(initialAnswers)
   const [currentIndex, setCurrentIndex] = useState(0)
   const [timeLeft, setTimeLeft] = useState<number | null>(null)
-  const [isFinishing, setIsFinishing] = useState(false)
   const [navOpen, setNavOpen] = useState(false)
   const [saveStatus, setSaveStatus] = useState<SaveStatus>('idle')
-  const [showSubmitModal, setShowSubmitModal] = useState(false) // #5
+  const [showSubmitModal, setShowSubmitModal] = useState(false)
+  const [isOnline, setIsOnline] = useState(true)
+
+  // ── Guard Refs ──────────────────────────────────────────────────
+  // useRef (bukan useState) agar cegah double-submit bahkan sebelum re-render
+  const isFinishingRef = useRef(false)
+  const [isFinishingDisplay, setIsFinishingDisplay] = useState(false)
 
   const pendingSaves = useRef<Map<string, ReturnType<typeof setTimeout>>>(new Map())
   const { t, locale } = useLanguage()
 
-  // #4 — Progress stats
+  // Integrasikan guard: beforeunload + multi-tab + offline queue
+  const { addToQueue, removeFromQueue, flushQueue } = useExamGuard(examSessionId, true)
+
+  // Progress
   const answeredCount = Object.keys(answers).length
   const progressPct = questions.length > 0 ? (answeredCount / questions.length) * 100 : 0
 
-  // #7 — Timer: kritis jika < 5 menit
+  // Timer states
   const isCritical = timeLeft !== null && timeLeft < 300
   const isUrgent = timeLeft !== null && timeLeft < 60
 
+  // ── Online/offline indicator ──────────────────────────────────
+  useEffect(() => {
+    const setOnline = () => setIsOnline(true)
+    const setOffline = () => setIsOnline(false)
+    window.addEventListener('online', setOnline)
+    window.addEventListener('offline', setOffline)
+    setIsOnline(navigator.onLine)
+    return () => {
+      window.removeEventListener('online', setOnline)
+      window.removeEventListener('offline', setOffline)
+    }
+  }, [])
+
+  // ── Timer ──────────────────────────────────────────────────────
   useEffect(() => {
     const endTime = new Date(endTimeStr).getTime()
     const serverTimeOnLoad = new Date(serverTimeStr).getTime()
-    const localTimeOnLoad = new Date().getTime()
-    const timeDelta = serverTimeOnLoad - localTimeOnLoad
+    const timeDelta = serverTimeOnLoad - Date.now()
 
     const interval = setInterval(() => {
-      const nowLocal = new Date().getTime()
-      const nowServer = nowLocal + timeDelta
-      const diff = endTime - nowServer
-
+      const diff = endTime - (Date.now() + timeDelta)
       if (diff <= 0) {
         clearInterval(interval)
         setTimeLeft(0)
-        handleFinish()
+        void handleFinish()
       } else {
         setTimeLeft(Math.floor(diff / 1000))
       }
@@ -162,7 +181,7 @@ export default function CbtClient({
 
   useEffect(() => {
     const map = pendingSaves.current
-    return () => { map.forEach(t => clearTimeout(t)) }
+    return () => { map.forEach(timeout => clearTimeout(timeout)) }
   }, [])
 
   const formatTime = (seconds: number | null) => {
@@ -173,6 +192,7 @@ export default function CbtClient({
     return `${h.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`
   }
 
+  // ── Debounced save + offline queue ────────────────────────────
   const debouncedSave = useCallback((questionId: string, option: string) => {
     const existing = pendingSaves.current.get(questionId)
     if (existing) clearTimeout(existing)
@@ -180,31 +200,52 @@ export default function CbtClient({
 
     const timeout = setTimeout(async () => {
       pendingSaves.current.delete(questionId)
+
+      if (!navigator.onLine) {
+        // Offline — simpan di antrian lokal, akan di-retry saat online
+        addToQueue(questionId, option)
+        setSaveStatus('error')
+        setTimeout(() => setSaveStatus('idle'), 3000)
+        return
+      }
+
       const result = await saveAnswer(examSessionId, questionId, option)
       if (result?.error) {
+        // Gagal — masukkan ke offline queue untuk retry
+        addToQueue(questionId, option)
         setSaveStatus('error')
         setTimeout(() => setSaveStatus('idle'), 3000)
       } else {
+        removeFromQueue(questionId)
         setSaveStatus('saved')
         setTimeout(() => setSaveStatus('idle'), 1500)
       }
     }, 400)
 
     pendingSaves.current.set(questionId, timeout)
-  }, [examSessionId])
+  }, [examSessionId, addToQueue, removeFromQueue])
 
   const handleOptionClick = (questionId: string, option: string) => {
     setAnswers(prev => ({ ...prev, [questionId]: option }))
     debouncedSave(questionId, option)
   }
 
-  const handleFinish = async () => {
-    if (isFinishing) return
-    setIsFinishing(true)
-    pendingSaves.current.forEach(t => clearTimeout(t))
+  // ── Finish exam — useRef guard mencegah double-submit ─────────
+  const handleFinish = useCallback(async () => {
+    // Guard dengan useRef — aman dari race condition sebelum re-render
+    if (isFinishingRef.current) return
+    isFinishingRef.current = true
+    setIsFinishingDisplay(true)
+
+    // Flush pending debounce
+    pendingSaves.current.forEach(timeout => clearTimeout(timeout))
     pendingSaves.current.clear()
+
+    // Flush offline queue sebelum submit
+    if (navigator.onLine) await flushQueue()
+
     await finishExam(examSessionId)
-  }
+  }, [examSessionId, flushQueue])
 
   const currentQ = questions[currentIndex]
   if (!currentQ) return <div>{t('exam_data_unavailable')}</div>
@@ -223,23 +264,33 @@ export default function CbtClient({
     idle:   { text: '',               color: 'transparent' },
     saving: { text: '↑ Menyimpan...', color: 'var(--muted-fg)' },
     saved:  { text: '✓ Tersimpan',    color: '#27AE60' },
-    error:  { text: '✗ Gagal simpan', color: 'var(--crimson)' },
+    error:  { text: isOnline ? '✗ Gagal simpan' : '⚡ Mode Offline', color: 'var(--crimson)' },
   }[saveStatus]
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', minHeight: 'calc(100vh - 5rem)' }}>
 
-      {/* #4 — Progress bar tipis di paling atas */}
+      {/* Progress bar tipis (#4) */}
       <div style={{ height: '3px', background: 'var(--border)', position: 'sticky', top: '5rem', zIndex: 41 }}>
         <div style={{
           height: '100%',
           width: `${progressPct}%`,
-          background: progressPct === 100
-            ? '#27AE60'
-            : 'var(--brass-gradient)',
+          background: progressPct === 100 ? '#27AE60' : 'linear-gradient(90deg, var(--brass-light), var(--brass))',
           transition: 'width 0.4s ease',
         }} />
       </div>
+
+      {/* Offline Banner */}
+      {!isOnline && (
+        <div style={{
+          background: 'var(--crimson)', color: '#fff',
+          textAlign: 'center', padding: '0.6rem',
+          fontFamily: 'var(--font-display)', fontSize: '0.6rem',
+          letterSpacing: '0.15em', textTransform: 'uppercase',
+        }}>
+          ⚡ Anda Sedang Offline — Jawaban disimpan sementara dan akan dikirim saat koneksi pulih
+        </div>
+      )}
 
       {/* Header CBT */}
       <div style={{
@@ -254,7 +305,6 @@ export default function CbtClient({
           <span className="label" style={{ margin: 0 }}>
             {t('exam_question')} {currentIndex + 1} / {questions.length}
           </span>
-          {/* #4 — Progress count */}
           <span style={{
             fontFamily: 'var(--font-display)', fontSize: '0.55rem',
             letterSpacing: '0.12em', textTransform: 'uppercase',
@@ -269,12 +319,12 @@ export default function CbtClient({
           <span style={{
             fontFamily: 'var(--font-display)', fontSize: '0.6rem',
             letterSpacing: '0.1em', color: saveIndicator.color,
-            transition: 'color 0.3s ease', minWidth: '8rem', textAlign: 'right',
+            transition: 'color 0.3s ease', minWidth: '9rem', textAlign: 'right',
           }}>
             {saveIndicator.text}
           </span>
 
-          {/* #7 — Timer dengan animasi pulse saat kritis */}
+          {/* Timer (#7) */}
           <div
             className={isCritical ? (isUrgent ? 'timer-urgent' : 'timer-critical') : ''}
             style={{
@@ -286,7 +336,7 @@ export default function CbtClient({
             ⏱ {formatTime(timeLeft)}
           </div>
 
-          {/* #5 — Tombol selesaikan ujian selalu tersedia */}
+          {/* Tombol selesaikan — selalu ada (#5) */}
           <button
             className="btn btn--primary"
             style={{
@@ -294,21 +344,21 @@ export default function CbtClient({
               textShadow: 'none', fontSize: '0.55rem', padding: '0.6rem 1rem',
             }}
             onClick={() => setShowSubmitModal(true)}
-            disabled={isFinishing}
+            disabled={isFinishingDisplay}
           >
-            {isFinishing ? t('exam_saving') : '⏹ Selesaikan'}
+            {isFinishingDisplay ? t('exam_saving') : '⏹ Selesaikan'}
           </button>
         </div>
       </div>
 
-      {/* #5 — Modal konfirmasi submit */}
+      {/* Modal konfirmasi (#5) */}
       {showSubmitModal && (
         <SubmitConfirmModal
           unansweredCount={unansweredCount}
           totalCount={questions.length}
-          onConfirm={() => { setShowSubmitModal(false); handleFinish() }}
+          onConfirm={() => { setShowSubmitModal(false); void handleFinish() }}
           onCancel={() => setShowSubmitModal(false)}
-          isFinishing={isFinishing}
+          isFinishing={isFinishingDisplay}
           t={t}
         />
       )}
@@ -318,13 +368,19 @@ export default function CbtClient({
         {/* Main Content */}
         <div className="cbt-main-content" style={{ flex: 1, padding: '2rem', maxWidth: '48rem', margin: '0 auto' }}>
 
-          <div className="card ornate-frame" style={{ marginBottom: '2rem', minHeight: '300px' }}>
-            <h2 style={{ fontSize: '1.5rem', lineHeight: 1.6, marginBottom: '2.5rem' }}>
-              {getTranslated(currentQ, 'pertanyaan')}
-            </h2>
+          <div className="card ornate-frame" style={{ marginBottom: '2rem' }}>
+            {/* Soal — maxHeight + scroll untuk teks sangat panjang (#9) */}
+            <div style={{
+              maxHeight: '40vh', overflowY: 'auto',
+              marginBottom: '2rem', paddingRight: '0.5rem',
+            }}>
+              <h2 style={{ fontSize: '1.4rem', lineHeight: 1.7, wordBreak: 'break-word' }}>
+                {getTranslated(currentQ, 'pertanyaan')}
+              </h2>
+            </div>
 
-            {/* #11 — Pilihan jawaban dengan aria-pressed */}
-            <div role="group" aria-label="Pilihan jawaban" style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+            {/* Pilihan jawaban (#11 aria) */}
+            <div role="radiogroup" aria-label="Pilihan jawaban" style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
               {(['A', 'B', 'C', 'D'] as const).map(opt => {
                 const fieldName = `pilihan_${opt.toLowerCase()}` as 'pilihan_a' | 'pilihan_b' | 'pilihan_c' | 'pilihan_d'
                 const text = getTranslated(currentQ, fieldName)
@@ -334,7 +390,7 @@ export default function CbtClient({
                   <button
                     key={opt}
                     role="radio"
-                    aria-checked={isSelected}  // #11 — screen reader dapat tahu pilihan aktif
+                    aria-checked={isSelected}
                     aria-label={`Pilihan ${opt}: ${text}`}
                     onClick={() => handleOptionClick(currentQ.id, opt)}
                     style={{
@@ -345,6 +401,7 @@ export default function CbtClient({
                       background: isSelected ? 'rgba(201,169,98,0.08)' : 'var(--bg)',
                       transition: 'all 0.2s ease',
                       cursor: 'pointer',
+                      wordBreak: 'break-word', // handle teks panjang pada pilihan (#9)
                     }}
                   >
                     <span style={{
@@ -356,7 +413,7 @@ export default function CbtClient({
                     }}>
                       {opt}
                     </span>
-                    <span style={{ fontSize: '1.1rem', marginTop: '0.1rem', color: isSelected ? 'var(--fg)' : 'var(--muted-fg)' }}>
+                    <span style={{ fontSize: '1.05rem', marginTop: '0.15rem', color: isSelected ? 'var(--fg)' : 'var(--muted-fg)', lineHeight: 1.6 }}>
                       {text}
                     </span>
                   </button>
@@ -365,7 +422,7 @@ export default function CbtClient({
             </div>
           </div>
 
-          {/* Navigasi Soal */}
+          {/* Navigasi soal */}
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '2rem' }}>
             <button
               className="btn btn--secondary"
@@ -384,9 +441,9 @@ export default function CbtClient({
                 className="btn btn--primary"
                 style={{ background: 'var(--crimson)', color: '#fff', textShadow: 'none' }}
                 onClick={() => setShowSubmitModal(true)}
-                disabled={isFinishing}
+                disabled={isFinishingDisplay}
               >
-                {isFinishing ? t('exam_saving') : t('exam_submit')}
+                {isFinishingDisplay ? t('exam_saving') : t('exam_submit')}
               </button>
             ) : (
               <button
@@ -399,11 +456,10 @@ export default function CbtClient({
           </div>
         </div>
 
-        {/* Sidebar (Grid Soal) */}
+        {/* Sidebar */}
         <aside className={`cbt-sidebar ${navOpen ? 'cbt-sidebar--open' : ''}`}>
           <div style={{ padding: '1.5rem', borderBottom: '1px solid var(--border)' }}>
-            <p className="label" style={{ marginBottom: '0.5rem' }}>{t('exam_nav')}</p>
-            {/* #4 — Progress info di sidebar */}
+            <p className="label" style={{ marginBottom: '0.25rem' }}>{t('exam_nav')}</p>
             <p style={{ fontSize: '0.8rem', color: 'var(--muted-fg)' }}>
               {answeredCount} / {questions.length} dijawab
             </p>
@@ -443,7 +499,7 @@ export default function CbtClient({
             })}
           </div>
 
-          {/* #5 — Submit dari sidebar */}
+          {/* Submit dari sidebar (#5) */}
           <div style={{ padding: '1rem 1.5rem', borderTop: '1px solid var(--border)' }}>
             <button
               className="btn btn--primary"
@@ -452,9 +508,9 @@ export default function CbtClient({
                 background: 'var(--crimson)', color: '#fff', textShadow: 'none',
               }}
               onClick={() => { setNavOpen(false); setShowSubmitModal(true) }}
-              disabled={isFinishing}
+              disabled={isFinishingDisplay}
             >
-              {isFinishing ? t('exam_saving') : '⏹ Selesaikan Ujian'}
+              {isFinishingDisplay ? t('exam_saving') : '⏹ Selesaikan Ujian'}
             </button>
           </div>
         </aside>
@@ -462,7 +518,6 @@ export default function CbtClient({
         {/* Mobile Overlay */}
         {navOpen && (
           <div
-            className="mobile-overlay"
             onClick={() => setNavOpen(false)}
             style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.5)', zIndex: 45 }}
           />

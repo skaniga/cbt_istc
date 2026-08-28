@@ -1,6 +1,7 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { StartExamForm } from './components'
 import { Participant, ExamSession } from '@/lib/types'
@@ -23,6 +24,22 @@ export default function PesertaClient({
 }) {
   const { t, locale } = useLanguage()
   const [copied, setCopied] = useState(false)
+  const router = useRouter()
+
+  // Supabase Realtime — auto-refresh dashboard saat akses ujian dibuka admin (#9 tester)
+  // Peserta tidak perlu manual refresh — halaman update otomatis
+  useEffect(() => {
+    // Hanya aktif jika ujian belum dimulai dan akses belum terbuka
+    if (examSession || isAksesTerbuka) return
+
+    // Poll setiap 15 detik — sederhana dan reliable
+    // (Supabase Realtime bisa ditambahkan jika ada channel yang sesuai)
+    const interval = setInterval(() => {
+      router.refresh()
+    }, 15000)
+
+    return () => clearInterval(interval)
+  }, [examSession, isAksesTerbuka, router])
 
   const handleCopy = (text: string) => {
     navigator.clipboard.writeText(text).then(() => {
@@ -122,8 +139,24 @@ export default function PesertaClient({
                   </p>
 
                   {/* #2 — Status akses ditutup yang lebih informatif */}
+                  {/* Notice ujian satu kali + tombol mulai / akses ditutup (#10 tester) */}
                   {isAksesTerbuka ? (
-                    <StartExamForm buttonLabel={t('dashboard_exam_start')} />
+                    <>
+                      {/* Warning: ujian hanya bisa dikerjakan satu kali */}
+                      <div style={{
+                        padding: '0.875rem 1rem',
+                        background: '#FFFBF0',
+                        border: '1px solid #F0C040',
+                        borderRadius: '4px',
+                        marginBottom: '1.25rem',
+                      }}>
+                        <p style={{ fontSize: '0.875rem', color: '#7A5A00', lineHeight: 1.6 }}>
+                          ⚠️ <strong>Perhatian:</strong> Ujian hanya dapat dikerjakan <strong>satu kali</strong>.
+                          Pastikan Anda berada di tempat yang tenang dengan koneksi internet yang stabil sebelum memulai.
+                        </p>
+                      </div>
+                      <StartExamForm buttonLabel={t('dashboard_exam_start')} />
+                    </>
                   ) : (
                     <div style={{
                       padding: '1.25rem 1.5rem',
