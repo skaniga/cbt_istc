@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef, useCallback } from 'react'
 import { saveAnswer, finishExam } from './actions'
 import { useLanguage } from '@/lib/i18n/LanguageContext'
+import type { TranslationKey } from '@/lib/i18n/translations'
 
 type Question = {
   id: string
@@ -24,9 +25,84 @@ type Question = {
 }
 
 type AnswerMap = Record<string, string>
-
-// Status indikator untuk auto-save feedback (#8)
 type SaveStatus = 'idle' | 'saving' | 'saved' | 'error'
+
+// #5 — Modal konfirmasi submit dengan daftar soal belum dijawab
+function SubmitConfirmModal({
+  unansweredCount,
+  totalCount,
+  onConfirm,
+  onCancel,
+  isFinishing,
+  t,
+}: {
+  unansweredCount: number
+  totalCount: number
+  onConfirm: () => void
+  onCancel: () => void
+  isFinishing: boolean
+  t: (key: TranslationKey) => string  // eslint-disable-line @typescript-eslint/no-explicit-any
+}) {
+  return (
+    <div style={{
+      position: 'fixed', inset: 0, zIndex: 100,
+      background: 'rgba(28,23,20,0.6)', backdropFilter: 'blur(4px)',
+      display: 'flex', alignItems: 'center', justifyContent: 'center',
+      padding: '1.5rem',
+    }}>
+      <div className="card ornate-frame" style={{ maxWidth: '26rem', width: '100%' }}>
+        <p className="label" style={{ marginBottom: '0.75rem', color: unansweredCount > 0 ? 'var(--crimson)' : 'var(--brass)' }}>
+          {unansweredCount > 0 ? '⚠ Perhatian' : '✓ Siap Submit'}
+        </p>
+        <h3 style={{ fontSize: '1.5rem', marginBottom: '1rem' }}>
+          {t('exam_confirm_submit')}
+        </h3>
+
+        <div style={{
+          display: 'grid', gridTemplateColumns: '1fr 1fr',
+          gap: '0.75rem', marginBottom: '1.5rem',
+        }}>
+          <div style={{ background: 'var(--bg-alt)', padding: '0.875rem', borderRadius: '4px', textAlign: 'center' }}>
+            <p style={{ fontFamily: 'var(--font-heading)', fontSize: '2rem', lineHeight: 1, color: 'var(--brass)' }}>
+              {totalCount - unansweredCount}
+            </p>
+            <p style={{ fontFamily: 'var(--font-display)', fontSize: '0.55rem', letterSpacing: '0.15em', textTransform: 'uppercase', color: 'var(--muted-fg)', marginTop: '0.25rem' }}>
+              Terjawab
+            </p>
+          </div>
+          <div style={{ background: 'var(--bg-alt)', padding: '0.875rem', borderRadius: '4px', textAlign: 'center' }}>
+            <p style={{ fontFamily: 'var(--font-heading)', fontSize: '2rem', lineHeight: 1, color: unansweredCount > 0 ? 'var(--crimson)' : 'var(--muted-fg)' }}>
+              {unansweredCount}
+            </p>
+            <p style={{ fontFamily: 'var(--font-display)', fontSize: '0.55rem', letterSpacing: '0.15em', textTransform: 'uppercase', color: 'var(--muted-fg)', marginTop: '0.25rem' }}>
+              Belum Dijawab
+            </p>
+          </div>
+        </div>
+
+        {unansweredCount > 0 && (
+          <p style={{ fontSize: '0.9rem', color: 'var(--muted-fg)', marginBottom: '1.5rem', lineHeight: 1.6 }}>
+            Masih ada <strong>{unansweredCount} soal</strong> yang belum dijawab. Apakah Anda yakin ingin mengakhiri ujian?
+          </p>
+        )}
+
+        <div style={{ display: 'flex', gap: '0.75rem' }}>
+          <button className="btn btn--secondary" onClick={onCancel} style={{ flex: 1, justifyContent: 'center' }} disabled={isFinishing}>
+            Kembali
+          </button>
+          <button
+            className="btn btn--primary"
+            onClick={onConfirm}
+            style={{ flex: 1, justifyContent: 'center', background: 'var(--crimson)', color: '#fff', textShadow: 'none' }}
+            disabled={isFinishing}
+          >
+            {isFinishing ? t('exam_saving') : t('exam_submit')}
+          </button>
+        </div>
+      </div>
+    </div>
+  )
+}
 
 export default function CbtClient({
   examSessionId,
@@ -46,29 +122,35 @@ export default function CbtClient({
   const [timeLeft, setTimeLeft] = useState<number | null>(null)
   const [isFinishing, setIsFinishing] = useState(false)
   const [navOpen, setNavOpen] = useState(false)
-  const [saveStatus, setSaveStatus] = useState<SaveStatus>('idle') // #8 save indicator
+  const [saveStatus, setSaveStatus] = useState<SaveStatus>('idle')
+  const [showSubmitModal, setShowSubmitModal] = useState(false) // #5
 
-  // #1 Race condition fix: debounce per-question menggunakan ref Map
-  // Menyimpan pending timeout ID untuk setiap question ID
   const pendingSaves = useRef<Map<string, ReturnType<typeof setTimeout>>>(new Map())
   const { t, locale } = useLanguage()
 
-  // Timer logic
+  // #4 — Progress stats
+  const answeredCount = Object.keys(answers).length
+  const progressPct = questions.length > 0 ? (answeredCount / questions.length) * 100 : 0
+
+  // #7 — Timer: kritis jika < 5 menit
+  const isCritical = timeLeft !== null && timeLeft < 300
+  const isUrgent = timeLeft !== null && timeLeft < 60
+
   useEffect(() => {
     const endTime = new Date(endTimeStr).getTime()
     const serverTimeOnLoad = new Date(serverTimeStr).getTime()
     const localTimeOnLoad = new Date().getTime()
     const timeDelta = serverTimeOnLoad - localTimeOnLoad
-    
+
     const interval = setInterval(() => {
       const nowLocal = new Date().getTime()
       const nowServer = nowLocal + timeDelta
       const diff = endTime - nowServer
-      
+
       if (diff <= 0) {
         clearInterval(interval)
         setTimeLeft(0)
-        handleFinish() // Auto finish saat waktu habis
+        handleFinish()
       } else {
         setTimeLeft(Math.floor(diff / 1000))
       }
@@ -78,12 +160,9 @@ export default function CbtClient({
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [endTimeStr, serverTimeStr])
 
-  // Cleanup semua pending debounce saat component unmount
   useEffect(() => {
     const map = pendingSaves.current
-    return () => {
-      map.forEach(timeout => clearTimeout(timeout))
-    }
+    return () => { map.forEach(t => clearTimeout(t)) }
   }, [])
 
   const formatTime = (seconds: number | null) => {
@@ -94,22 +173,14 @@ export default function CbtClient({
     return `${h.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`
   }
 
-  // #1 Debounced save — mencegah race condition jika peserta klik cepat-cepat
-  // Hanya request TERAKHIR yang dikirim ke server setelah 400ms tidak ada klik lagi
   const debouncedSave = useCallback((questionId: string, option: string) => {
-    // Cancel pending save untuk soal yang sama jika ada
     const existing = pendingSaves.current.get(questionId)
     if (existing) clearTimeout(existing)
-
-    // Set save status ke 'saving' segera
     setSaveStatus('saving')
 
-    // Jadwalkan save baru
     const timeout = setTimeout(async () => {
       pendingSaves.current.delete(questionId)
       const result = await saveAnswer(examSessionId, questionId, option)
-      
-      // #8 Update save indicator berdasarkan hasil
       if (result?.error) {
         setSaveStatus('error')
         setTimeout(() => setSaveStatus('idle'), 3000)
@@ -117,33 +188,27 @@ export default function CbtClient({
         setSaveStatus('saved')
         setTimeout(() => setSaveStatus('idle'), 1500)
       }
-    }, 400) // 400ms debounce
+    }, 400)
 
     pendingSaves.current.set(questionId, timeout)
   }, [examSessionId])
 
   const handleOptionClick = (questionId: string, option: string) => {
-    // Update UI segera (Optimistic)
     setAnswers(prev => ({ ...prev, [questionId]: option }))
-    // Kirim ke server dengan debounce — mencegah race condition
     debouncedSave(questionId, option)
   }
 
   const handleFinish = async () => {
     if (isFinishing) return
     setIsFinishing(true)
-
-    // Flush semua pending debounce sebelum finish
-    pendingSaves.current.forEach(timeout => clearTimeout(timeout))
+    pendingSaves.current.forEach(t => clearTimeout(t))
     pendingSaves.current.clear()
-
     await finishExam(examSessionId)
   }
 
   const currentQ = questions[currentIndex]
   if (!currentQ) return <div>{t('exam_data_unavailable')}</div>
 
-  // Helper untuk mendapat teks soal berdasarkan bahasa aktif
   const getTranslated = (q: Question, field: 'pertanyaan' | 'pilihan_a' | 'pilihan_b' | 'pilihan_c' | 'pilihan_d') => {
     if (locale === 'en' && q[`${field}_en`]) return q[`${field}_en`]
     if (locale === 'ms' && q[`${field}_ms`]) return q[`${field}_ms`]
@@ -152,10 +217,10 @@ export default function CbtClient({
 
   const isLastQuestion = currentIndex === questions.length - 1
   const isFirstQuestion = currentIndex === 0
+  const unansweredCount = questions.length - answeredCount
 
-  // #8 Save indicator label & color
   const saveIndicator = {
-    idle:   { text: '',           color: 'transparent' },
+    idle:   { text: '',               color: 'transparent' },
     saving: { text: '↑ Menyimpan...', color: 'var(--muted-fg)' },
     saved:  { text: '✓ Tersimpan',    color: '#27AE60' },
     error:  { text: '✗ Gagal simpan', color: 'var(--crimson)' },
@@ -163,68 +228,114 @@ export default function CbtClient({
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', minHeight: 'calc(100vh - 5rem)' }}>
-      
+
+      {/* #4 — Progress bar tipis di paling atas */}
+      <div style={{ height: '3px', background: 'var(--border)', position: 'sticky', top: '5rem', zIndex: 41 }}>
+        <div style={{
+          height: '100%',
+          width: `${progressPct}%`,
+          background: progressPct === 100
+            ? '#27AE60'
+            : 'var(--brass-gradient)',
+          transition: 'width 0.4s ease',
+        }} />
+      </div>
+
       {/* Header CBT */}
-      <div style={{ 
-        display: 'flex', justifyContent: 'space-between', alignItems: 'center', 
-        padding: '1rem 1.5rem', background: 'var(--bg-alt)', borderBottom: '1px solid var(--border)',
-        position: 'sticky', top: '5rem', zIndex: 40
+      <div style={{
+        display: 'flex', justifyContent: 'space-between', alignItems: 'center',
+        padding: '0.875rem 1.5rem', background: 'var(--bg-alt)', borderBottom: '1px solid var(--border)',
+        position: 'sticky', top: 'calc(5rem + 3px)', zIndex: 40, gap: '1rem', flexWrap: 'wrap',
       }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-          {/* Mobile Nav Toggle */}
-          <button 
-            className="mobile-nav-toggle"
-            onClick={() => setNavOpen(!navOpen)}
-          >
+          <button className="mobile-nav-toggle" onClick={() => setNavOpen(!navOpen)}>
             ☰ {t('exam_question')}
           </button>
-          <span className="label" style={{ margin: 0 }}>{t('exam_question')} {currentIndex + 1} {t('exam_of')} {questions.length}</span>
+          <span className="label" style={{ margin: 0 }}>
+            {t('exam_question')} {currentIndex + 1} / {questions.length}
+          </span>
+          {/* #4 — Progress count */}
+          <span style={{
+            fontFamily: 'var(--font-display)', fontSize: '0.55rem',
+            letterSpacing: '0.12em', textTransform: 'uppercase',
+            color: progressPct === 100 ? '#27AE60' : 'var(--muted-fg)',
+          }}>
+            {answeredCount}/{questions.length} dijawab
+          </span>
         </div>
 
-        <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem' }}>
-          {/* #8 Auto-save indicator */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', flexWrap: 'wrap' }}>
+          {/* Save indicator */}
           <span style={{
-            fontFamily: 'var(--font-display)',
-            fontSize: '0.6rem',
-            letterSpacing: '0.1em',
-            color: saveIndicator.color,
-            transition: 'color 0.3s ease',
-            minWidth: '8rem',
-            textAlign: 'right'
+            fontFamily: 'var(--font-display)', fontSize: '0.6rem',
+            letterSpacing: '0.1em', color: saveIndicator.color,
+            transition: 'color 0.3s ease', minWidth: '8rem', textAlign: 'right',
           }}>
             {saveIndicator.text}
           </span>
 
-          {/* Timer */}
-          <div style={{ 
-            fontFamily: 'var(--font-display)', fontSize: '1.25rem', fontWeight: 600,
-            color: (timeLeft && timeLeft < 300) ? 'var(--crimson)' : 'var(--fg)',
-            display: 'flex', alignItems: 'center', gap: '0.5rem'
-          }}>
+          {/* #7 — Timer dengan animasi pulse saat kritis */}
+          <div
+            className={isCritical ? (isUrgent ? 'timer-urgent' : 'timer-critical') : ''}
+            style={{
+              fontFamily: 'var(--font-display)', fontSize: '1.2rem', fontWeight: 600,
+              color: isCritical ? 'var(--crimson)' : 'var(--fg)',
+              display: 'flex', alignItems: 'center', gap: '0.4rem',
+            }}
+          >
             ⏱ {formatTime(timeLeft)}
           </div>
+
+          {/* #5 — Tombol selesaikan ujian selalu tersedia */}
+          <button
+            className="btn btn--primary"
+            style={{
+              background: 'var(--crimson)', color: '#fff',
+              textShadow: 'none', fontSize: '0.55rem', padding: '0.6rem 1rem',
+            }}
+            onClick={() => setShowSubmitModal(true)}
+            disabled={isFinishing}
+          >
+            {isFinishing ? t('exam_saving') : '⏹ Selesaikan'}
+          </button>
         </div>
       </div>
 
+      {/* #5 — Modal konfirmasi submit */}
+      {showSubmitModal && (
+        <SubmitConfirmModal
+          unansweredCount={unansweredCount}
+          totalCount={questions.length}
+          onConfirm={() => { setShowSubmitModal(false); handleFinish() }}
+          onCancel={() => setShowSubmitModal(false)}
+          isFinishing={isFinishing}
+          t={t}
+        />
+      )}
+
       <div style={{ display: 'flex', flex: 1, position: 'relative' }}>
-        
-        {/* Main Content (Question & Options) */}
+
+        {/* Main Content */}
         <div className="cbt-main-content" style={{ flex: 1, padding: '2rem', maxWidth: '48rem', margin: '0 auto' }}>
-          
+
           <div className="card ornate-frame" style={{ marginBottom: '2rem', minHeight: '300px' }}>
             <h2 style={{ fontSize: '1.5rem', lineHeight: 1.6, marginBottom: '2.5rem' }}>
               {getTranslated(currentQ, 'pertanyaan')}
             </h2>
 
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+            {/* #11 — Pilihan jawaban dengan aria-pressed */}
+            <div role="group" aria-label="Pilihan jawaban" style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
               {(['A', 'B', 'C', 'D'] as const).map(opt => {
                 const fieldName = `pilihan_${opt.toLowerCase()}` as 'pilihan_a' | 'pilihan_b' | 'pilihan_c' | 'pilihan_d'
                 const text = getTranslated(currentQ, fieldName)
                 const isSelected = answers[currentQ.id] === opt
-                
+
                 return (
                   <button
                     key={opt}
+                    role="radio"
+                    aria-checked={isSelected}  // #11 — screen reader dapat tahu pilihan aktif
+                    aria-label={`Pilihan ${opt}: ${text}`}
                     onClick={() => handleOptionClick(currentQ.id, opt)}
                     style={{
                       display: 'flex', alignItems: 'flex-start', gap: '1rem',
@@ -233,15 +344,15 @@ export default function CbtClient({
                       borderRadius: '4px',
                       background: isSelected ? 'rgba(201,169,98,0.08)' : 'var(--bg)',
                       transition: 'all 0.2s ease',
-                      cursor: 'pointer'
+                      cursor: 'pointer',
                     }}
                   >
-                    <span style={{ 
+                    <span style={{
                       width: '2rem', height: '2rem', flexShrink: 0,
                       display: 'flex', alignItems: 'center', justifyContent: 'center',
                       borderRadius: '50%', background: isSelected ? 'var(--brass)' : 'var(--bg-alt)',
                       color: isSelected ? 'var(--on-brass)' : 'var(--muted-fg)',
-                      fontFamily: 'var(--font-display)', fontSize: '0.8rem', fontWeight: 600
+                      fontFamily: 'var(--font-display)', fontSize: '0.8rem', fontWeight: 600,
                     }}>
                       {opt}
                     </span>
@@ -254,32 +365,32 @@ export default function CbtClient({
             </div>
           </div>
 
-          {/* Navigation Buttons */}
+          {/* Navigasi Soal */}
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '2rem' }}>
-            <button 
-              className="btn btn--secondary" 
+            <button
+              className="btn btn--secondary"
               disabled={isFirstQuestion}
               onClick={() => setCurrentIndex(prev => prev - 1)}
             >
               ← {t('exam_prev')}
             </button>
-            
+
+            <span style={{ fontFamily: 'var(--font-display)', fontSize: '0.6rem', color: 'var(--muted-fg)', letterSpacing: '0.1em' }}>
+              {currentIndex + 1} / {questions.length}
+            </span>
+
             {isLastQuestion ? (
-              <button 
-                className="btn btn--primary" 
+              <button
+                className="btn btn--primary"
                 style={{ background: 'var(--crimson)', color: '#fff', textShadow: 'none' }}
-                onClick={() => {
-                  if (confirm(t('exam_confirm_submit'))) {
-                    handleFinish()
-                  }
-                }}
+                onClick={() => setShowSubmitModal(true)}
                 disabled={isFinishing}
               >
                 {isFinishing ? t('exam_saving') : t('exam_submit')}
               </button>
             ) : (
-              <button 
-                className="btn btn--primary" 
+              <button
+                className="btn btn--primary"
                 onClick={() => setCurrentIndex(prev => prev + 1)}
               >
                 {t('exam_next')} →
@@ -288,14 +399,19 @@ export default function CbtClient({
           </div>
         </div>
 
-        {/* Sidebar (Grid Soal) — #9 CSS class pakai globals.css */}
+        {/* Sidebar (Grid Soal) */}
         <aside className={`cbt-sidebar ${navOpen ? 'cbt-sidebar--open' : ''}`}>
           <div style={{ padding: '1.5rem', borderBottom: '1px solid var(--border)' }}>
-            <p className="label">{t('exam_nav')}</p>
+            <p className="label" style={{ marginBottom: '0.5rem' }}>{t('exam_nav')}</p>
+            {/* #4 — Progress info di sidebar */}
+            <p style={{ fontSize: '0.8rem', color: 'var(--muted-fg)' }}>
+              {answeredCount} / {questions.length} dijawab
+            </p>
           </div>
-          <div style={{ 
+
+          <div style={{
             padding: '1.5rem', display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: '0.5rem',
-            overflowY: 'auto', maxHeight: 'calc(100vh - 12rem)'
+            overflowY: 'auto', maxHeight: 'calc(100vh - 16rem)',
           }}>
             {questions.map((q, i) => {
               const isAnswered = !!answers[q.id]
@@ -305,25 +421,20 @@ export default function CbtClient({
               let border = 'var(--border)'
               let color = 'var(--muted-fg)'
 
-              if (isActive) {
-                bg = 'var(--brass)'
-                border = 'var(--brass)'
-                color = 'var(--on-brass)'
-              } else if (isAnswered) {
-                bg = 'var(--bg-deep)'
-                border = 'var(--brass-light)'
-                color = 'var(--fg)'
-              }
+              if (isActive) { bg = 'var(--brass)'; border = 'var(--brass)'; color = 'var(--on-brass)' }
+              else if (isAnswered) { bg = 'var(--bg-deep)'; border = 'var(--brass-light)'; color = 'var(--fg)' }
 
               return (
                 <button
                   key={q.id}
                   onClick={() => { setCurrentIndex(i); setNavOpen(false) }}
+                  aria-label={`Soal ${i + 1}${isAnswered ? ' (sudah dijawab)' : ''}`}
+                  aria-current={isActive ? 'true' : undefined}
                   style={{
                     aspectRatio: '1', display: 'flex', alignItems: 'center', justifyContent: 'center',
                     background: bg, border: `1px solid ${border}`, borderRadius: '4px',
                     fontFamily: 'var(--font-display)', fontSize: '0.9rem', color: color,
-                    cursor: 'pointer', transition: 'all 0.2s'
+                    cursor: 'pointer', transition: 'all 0.2s',
                   }}
                 >
                   {i + 1}
@@ -331,17 +442,31 @@ export default function CbtClient({
               )
             })}
           </div>
+
+          {/* #5 — Submit dari sidebar */}
+          <div style={{ padding: '1rem 1.5rem', borderTop: '1px solid var(--border)' }}>
+            <button
+              className="btn btn--primary"
+              style={{
+                width: '100%', justifyContent: 'center',
+                background: 'var(--crimson)', color: '#fff', textShadow: 'none',
+              }}
+              onClick={() => { setNavOpen(false); setShowSubmitModal(true) }}
+              disabled={isFinishing}
+            >
+              {isFinishing ? t('exam_saving') : '⏹ Selesaikan Ujian'}
+            </button>
+          </div>
         </aside>
 
         {/* Mobile Overlay */}
         {navOpen && (
-          <div 
+          <div
             className="mobile-overlay"
             onClick={() => setNavOpen(false)}
             style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.5)', zIndex: 45 }}
           />
         )}
-
       </div>
     </div>
   )

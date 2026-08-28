@@ -1044,3 +1044,63 @@ p { font-family: var(--font-body); line-height: 1.75; }
     transform: translateX(0);
   }
 }
+
+/* ============================================================
+   CBT TIMER — Animasi pulse saat waktu kritis (#7)
+   ============================================================ */
+@keyframes timerPulse {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.55; }
+}
+
+@keyframes timerUrgent {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50%       { opacity: 0.7; transform: scale(1.04); }
+}
+
+/* < 5 menit: pulse lambat */
+.timer-critical {
+  animation: timerPulse 1.8s ease-in-out infinite;
+}
+
+/* < 1 menit: pulse cepat + scale */
+.timer-urgent {
+  animation: timerUrgent 0.7s ease-in-out infinite;
+}
+
+/* ============================================================
+   LOADING SKELETON — Shimmer animation (#10)
+   ============================================================ */
+@keyframes shimmer {
+  0%   { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+.skeleton {
+  background: linear-gradient(
+    90deg,
+    var(--muted) 25%,
+    var(--bg-deep) 50%,
+    var(--muted) 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.6s ease-in-out infinite;
+  border-radius: 4px;
+}
+
+/* ============================================================
+   PESERTA DASHBOARD — Info grid (#1)
+   ============================================================ */
+.peserta-info-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+@media (max-width: 768px) {
+  .peserta-info-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
