@@ -2,6 +2,7 @@ import { createClient } from '@/lib/supabase/server'
 import { getSession } from '@/lib/session'
 import { redirect } from 'next/navigation'
 import CbtClient from './CbtClient'
+import ExamErrorBoundary from './ExamErrorBoundary'
 
 export const revalidate = 0
 
@@ -117,13 +118,15 @@ export default async function UjianPage() {
 
   return (
     <div style={{ background: 'var(--bg)', minHeight: 'calc(100vh - 5rem)' }}>
-      <CbtClient
-        examSessionId={examSession.id}
-        questions={questions}
-        initialAnswers={initialAnswers}
-        endTimeStr={endTime.toISOString()}
-        serverTimeStr={serverTimeStr}
-      />
+      <ExamErrorBoundary>
+        <CbtClient
+          examSessionId={examSession.id}
+          questions={questions}
+          initialAnswers={initialAnswers}
+          endTimeStr={endTime.toISOString()}
+          serverTimeStr={serverTimeStr}
+        />
+      </ExamErrorBoundary>
     </div>
   )
 }
