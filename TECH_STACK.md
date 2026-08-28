@@ -166,6 +166,7 @@ RETURNS jsonb LANGUAGE plpgsql ...
 - Shimmer animation CSS (`.skeleton` class)
 - Placeholder mengikuti layout asli halaman
 
+
 #### #11 · Accessibility (Aria) — [`CbtClient.tsx`](src/app/%5Blang%5D/peserta/ujian/CbtClient.tsx)
 ```tsx
 <button role="radio" aria-checked={isSelected} aria-label={`Pilihan ${opt}: ${text}`}>
@@ -184,6 +185,9 @@ RETURNS jsonb LANGUAGE plpgsql ...
 | [`src/app/not-found.tsx`](src/app/not-found.tsx) | Halaman 404 custom |
 | [`src/app/[lang]/peserta/loading.tsx`](src/app/%5Blang%5D/peserta/loading.tsx) | Loading skeleton dashboard |
 | [`src/app/[lang]/peserta/ujian/loading.tsx`](src/app/%5Blang%5D/peserta/ujian/loading.tsx) | Loading skeleton ujian CBT |
+| [`src/app/[lang]/peserta/ujian/useExamGuard.ts`](src/app/%5Blang%5D/peserta/ujian/useExamGuard.ts) | Hook: beforeunload + multi-tab + offline queue |
+| [`supabase/qa_fixes.sql`](supabase/qa_fixes.sql) | UNIQUE constraint + index tambahan |
+
 
 ### File Dimodifikasi
 | File | Perubahan |
@@ -195,30 +199,147 @@ RETURNS jsonb LANGUAGE plpgsql ...
 | [`src/app/[lang]/peserta/components.tsx`](src/app/%5Blang%5D/peserta/components.tsx) | Fix TS void |
 | [`src/app/admin/(dashboard)/components.tsx`](src/app/admin/%28dashboard%29/components.tsx) | Fix TS void |
 | [`src/app/[lang]/peserta/ujian/actions.ts`](src/app/%5Blang%5D/peserta/ujian/actions.ts) | Validasi waktu + RPC atomic |
-| [`src/app/[lang]/peserta/ujian/CbtClient.tsx`](src/app/%5Blang%5D/peserta/ujian/CbtClient.tsx) | Debounce, progress bar, submit modal, timer, aria |
+| [`src/app/[lang]/peserta/ujian/CbtClient.tsx`](src/app/%5Blang%5D/peserta/ujian/CbtClient.tsx) | Debounce, progress bar, submit modal, timer, aria, offline queue, useRef guard |
 | [`src/app/[lang]/peserta/ujian/page.tsx`](src/app/%5Blang%5D/peserta/ujian/page.tsx) | Wrap ExamErrorBoundary |
 | [`src/app/[lang]/peserta/page.tsx`](src/app/%5Blang%5D/peserta/page.tsx) | Fetch config tambahan |
-| [`src/app/[lang]/peserta/PesertaClient.tsx`](src/app/%5Blang%5D/peserta/PesertaClient.tsx) | Info panel, status closed, copy button |
+| [`src/app/[lang]/peserta/PesertaClient.tsx`](src/app/%5Blang%5D/peserta/PesertaClient.tsx) | Info panel, status closed, copy button, auto-refresh, one-time notice |
+| [`src/app/[lang]/peserta/PesertaNavbar.tsx`](src/app/%5Blang%5D/peserta/PesertaNavbar.tsx) | Disable language switcher saat ujian, konfirmasi logout |
 | [`src/app/[lang]/daftar/page.tsx`](src/app/%5Blang%5D/daftar/page.tsx) | useTransition, validasi passport, copy |
 | [`src/app/globals.css`](src/app/globals.css) | CBT CSS, timer animations, skeleton |
 
 ---
 
+### 🧪 Sesi 5 — QA User Tester Fixes
+
+Berdasarkan review sebagai **Senior User Tester**, ditemukan dan diperbaiki 10 skenario edge-case kritis:
+
+#### 🔴 #1 · Language Lock Saat Ujian — [`PesertaNavbar.tsx`](src/app/%5Blang%5D/peserta/PesertaNavbar.tsx)
+**Problem:** Ganti bahasa di tengah ujian bisa menyebabkan reset state & soal berubah tampilan.
+```tsx
+const isExamPage = pathname?.includes('/ujian')
+<select disabled={isExamPage} style={{ cursor: isExamPage ? 'not-allowed' : 'pointer' }} />
+```
+- Tooltip muncul: *"🔒 Terkunci selama ujian"*
+- Tombol Logout di halaman ujian meminta konfirmasi
+
+---
+
+#### 🔴 #2 · Multi-Tab Detection — [`useExamGuard.ts`](src/app/%5Blang%5D/peserta/ujian/useExamGuard.ts)
+**Problem:** Peserta buka ujian di 2 tab → jawaban konflik.
+```ts
+const channel = new BroadcastChannel('istc_exam_active_tab')
+// Tab baru mendapat alert jika tab ujian sudah ada
+channel.onmessage = (e) => {
+  if (e.data.type === 'TAB_OPEN' && sessionId === examSessionId) {
+    alert('⚠️ Ujian sedang dibuka di tab lain!')
+  }
+}
+```
+
+---
+
+#### 🔴 #3 · Offline Queue + Retry — [`useExamGuard.ts`](src/app/%5Blang%5D/peserta/ujian/useExamGuard.ts)
+**Problem:** Internet putus → jawaban gagal tersimpan tanpa retry → jawaban hilang.
+```ts
+// Jawaban gagal → simpan di localStorage
+addToQueue(questionId, option)
+// Koneksi pulih → retry otomatis
+window.addEventListener('online', () => flushQueue())
+```
+- Banner merah muncul di header saat offline
+- Auto-retry saat online kembali
+- Flush queue sebelum `finishExam`
+
+---
+
+#### 🔴 #4 · `useRef` Guard Double-Submit — [`CbtClient.tsx`](src/app/%5Blang%5D/peserta/ujian/CbtClient.tsx)
+**Problem:** Timer habis + peserta klik submit bersamaan → 2 request `finishExam`.  
+`useState` tidak cukup karena re-render belum terjadi saat guard dicek.
+```ts
+// Sebelum: if (isFinishing) return  ← tidak aman
+// Sesudah: useRef ← atomic, tidak tergantung render cycle
+const isFinishingRef = useRef(false)
+if (isFinishingRef.current) return
+isFinishingRef.current = true
+```
+
+---
+
+#### 🔴 #5 · beforeunload Warning — [`useExamGuard.ts`](src/app/%5Blang%5D/peserta/ujian/useExamGuard.ts)
+**Problem:** Peserta tidak sengaja refresh/tutup tab → kehilangan konteks ujian.
+```ts
+window.addEventListener('beforeunload', (e) => {
+  e.preventDefault()
+  e.returnValue = 'Ujian sedang berlangsung...'
+})
+```
+
+---
+
+#### 🟡 #6 · UNIQUE Constraint exam_sessions — [`supabase/qa_fixes.sql`](supabase/qa_fixes.sql)
+**Problem:** Tidak ada `UNIQUE(peserta_id)` → race condition saat banyak peserta klik Mulai bersamaan bisa insert duplikat.
+```sql
+ALTER TABLE public.exam_sessions
+  ADD CONSTRAINT exam_sessions_peserta_id_unique UNIQUE (peserta_id);
+```
+
+---
+
+#### 🟡 #7 · Auto-Refresh Dashboard — [`PesertaClient.tsx`](src/app/%5Blang%5D/peserta/PesertaClient.tsx)
+**Problem:** Peserta harus manual refresh untuk tahu kapan akses dibuka admin.
+```ts
+// Poll 15 detik — hanya aktif jika akses belum terbuka
+const interval = setInterval(() => router.refresh(), 15000)
+```
+
+---
+
+#### 🟡 #8 · Notice Ujian Satu Kali — [`PesertaClient.tsx`](src/app/%5Blang%5D/peserta/PesertaClient.tsx)
+**Problem:** Tidak ada peringatan eksplisit bahwa ujian hanya bisa dikerjakan sekali saat akses terbuka (hanya ada di banner akses ditutup).
+- Banner kuning ⚠️ muncul di atas tombol Mulai Ujian
+
+---
+
+#### 🟡 #9 · Long Text Overflow — [`CbtClient.tsx`](src/app/%5Blang%5D/peserta/ujian/CbtClient.tsx)
+**Problem:** Soal dengan teks 500+ kata bisa overflow dan merusak layout.
+```tsx
+<div style={{ maxHeight: '40vh', overflowY: 'auto' }}>
+  <h2 style={{ wordBreak: 'break-word' }}>{soal}</h2>
+</div>
+```
+
+---
+
+#### 🟡 #10 · Konfirmasi Logout Saat Ujian — [`PesertaNavbar.tsx`](src/app/%5Blang%5D/peserta/PesertaNavbar.tsx)
+**Problem:** Klik Logout saat ujian langsung keluar tanpa konfirmasi.
+```tsx
+onClick={isExamPage ? (e) => {
+  if (!confirm('Ujian sedang berlangsung. Yakin ingin logout?')) e.preventDefault()
+} : undefined}
+```
+
+---
+
 ## ⚠️ Tindak Lanjut yang Wajib Dilakukan
 
-> Dua file SQL **harus dijalankan manual** di Supabase Dashboard → SQL Editor:
+> File SQL berikut **harus dijalankan manual** di Supabase Dashboard → SQL Editor:
 
-1. **[`supabase/optimize_login.sql`](supabase/optimize_login.sql)** — Index + optimasi RPC login
-2. **[`supabase/finish_exam_atomic.sql`](supabase/finish_exam_atomic.sql)** — Stored procedure atomic finish exam
+| # | File | Tujuan |
+|---|---|---|
+| 1 | [`supabase/optimize_login.sql`](supabase/optimize_login.sql) | Index B-Tree + optimasi RPC login |
+| 2 | [`supabase/finish_exam_atomic.sql`](supabase/finish_exam_atomic.sql) | Stored procedure atomic finish exam |
+| 3 | [`supabase/qa_fixes.sql`](supabase/qa_fixes.sql) | UNIQUE constraint + index answers/exam_sessions |
 
 > Di **Vercel Dashboard** → Settings → Environment Variables:
-- Pastikan `SESSION_SECRET` sudah terdaftar (sudah ada ✅)
+- `SESSION_SECRET` — sudah terdaftar ✅
 
 ---
 
 ## 📊 Git Commits Sore Ini
 
 ```
+79f4b13  QA fixes: beforeunload, multi-tab, offline queue, useRef guard, language lock...
+2dc7bd8  docs: add TECH_STACK.md
 87107cf  UX overhaul: info panel, status closed, form validation, progress bar...
 a4f3e43  Fix race condition, atomic finish exam, error boundary, save indicator...
 bedafde  Optimize login performance, security, and fix TS errors
@@ -228,3 +349,4 @@ bedafde  Optimize login performance, security, and fix TS errors
 ---
 
 *Dibuat: 28 Agustus 2026 — ISTC CBT Platform Development Session*
+*Update: QA Testing session ditambahkan pukul 17:35 WIB*
