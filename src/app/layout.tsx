@@ -88,10 +88,10 @@ export const metadata: Metadata = {
     apple: '/apple-touch-icon.png',
   },
 
-  // ─── Verification (isi setelah dapat kode dari GSC) ────────────
-  // verification: {
-  //   google: 'KODE_GSC_ANDA_DI_SINI',
-  // },
+  // ─── Verification ─────────────────────────────────────────────
+  verification: {
+    google: 'Z6FF5mD6FyW8ekXHznDpzgilP_5SH4gI21Nfo2LV6II',
+  },
 }
 
 // ─── JSON-LD Structured Data ────────────────────────────────────
