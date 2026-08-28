@@ -15,7 +15,7 @@ function SubmitButton({ label }: { label: string }) {
 
 export function StartExamForm({ buttonLabel = "Mulai Ujian" }: { buttonLabel?: string }) {
   return (
-    <form action={startExam}>
+    <form action={() => { void startExam() }}>
       <SubmitButton label={buttonLabel} />
     </form>
   )
