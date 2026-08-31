@@ -25,9 +25,21 @@ export default function PesertaClient({
         <div style={{ marginBottom: '3rem' }}>
           <p className="label" style={{ marginBottom: '0.5rem' }}>{t('dashboard_welcome')},</p>
           <h1 style={{ fontSize: '2.5rem', marginBottom: '0.5rem' }}>{participant.nama_lengkap}</h1>
-          <p style={{ color: 'var(--muted-fg)', fontFamily: 'var(--font-display)', letterSpacing: '0.1em' }}>
+          <p style={{ color: 'var(--muted-fg)', fontFamily: 'var(--font-display)', letterSpacing: '0.1em', marginBottom: '0.5rem' }}>
             {participant.nomor_peserta} • No Passport: {participant.no_passport}
           </p>
+          {participant.kategori && (
+            <span style={{
+              display: 'inline-flex', alignItems: 'center', gap: '0.35rem',
+              fontSize: '0.78rem', fontFamily: 'var(--font-display)', letterSpacing: '0.08em',
+              textTransform: 'uppercase', color: 'var(--brass)',
+              background: 'rgba(180,130,60,0.1)', border: '1px solid var(--brass)',
+              padding: '0.25rem 0.75rem', borderRadius: '999px'
+            }}>
+              {participant.kategori === 'Environmental Technology' ? '🌱' : participant.kategori === 'Smart Robotics' ? '🤖' : participant.kategori === 'Science In Action' ? '🔬' : '📐'}
+              {participant.kategori}
+            </span>
+          )}
         </div>
 
         <div className="card ornate-frame">

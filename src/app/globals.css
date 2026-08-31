@@ -28,7 +28,7 @@
 
   /* Gradients */
   --brass-gradient: linear-gradient(180deg, #D4B872 0%, #C9A962 50%, #B8953F 100%);
-  --hero-overlay:   linear-gradient(to right, rgba(250,250,248,0.97) 0%, rgba(250,250,248,0.85) 45%, rgba(250,250,248,0.2) 100%);
+  --hero-overlay:   linear-gradient(to bottom, rgba(5,8,20,0.75) 0%, rgba(5,8,20,0.85) 50%, rgba(5,8,20,0.95) 100%);
 
   /* Typography — font vars injected by next/font on <html> element */
   --font-heading: 'Cormorant Garamond', Georgia, serif;
@@ -500,7 +500,7 @@ p { font-family: var(--font-body); line-height: 1.75; }
   min-height: 100vh;
   position: relative;
   display: flex;
-  align-items: center;
+  align-items: flex-end;
   overflow: hidden;
 }
 
@@ -514,7 +514,9 @@ p { font-family: var(--font-body); line-height: 1.75; }
   width: 100%;
   height: 100%;
   object-fit: cover;
-  object-position: center;
+  object-position: center 85%;
+  /* No sepia on hero — show full vivid color */
+  filter: none !important;
 }
 
 .hero__bg::after {
@@ -525,10 +527,17 @@ p { font-family: var(--font-body); line-height: 1.75; }
 }
 
 .hero__content {
-  position: relative;
+  position: absolute;
+  bottom: 4rem;
+  left: 3rem;
   z-index: 1;
-  max-width: 42rem;
-  padding-block: 8rem 4rem;
+  max-width: 40rem;
+}
+
+/* Dark hero — override text to light */
+.hero .label {
+  color: var(--brass-light);
+  text-shadow: 0 1px 4px rgba(0,0,0,0.6);
 }
 
 .hero__year-badge {
@@ -554,20 +563,23 @@ p { font-family: var(--font-body); line-height: 1.75; }
   line-height: 1.05;
   letter-spacing: -0.02em;
   margin-bottom: 0.5rem;
+  color: #FAFAF8;
+  text-shadow: 0 2px 16px rgba(0,0,0,0.5);
 }
 
 .hero__title em {
   font-style: italic;
-  color: var(--muted-fg);
+  color: var(--brass-light);
 }
 
 .hero__subtitle {
   font-family: var(--font-body);
   font-size: 1.25rem;
-  color: var(--muted-fg);
+  color: rgba(250, 250, 248, 0.75);
   margin-bottom: 2.5rem;
   line-height: 1.6;
   max-width: 34rem;
+  text-shadow: 0 1px 8px rgba(0,0,0,0.5);
 }
 
 .hero__actions {
@@ -605,6 +617,67 @@ p { font-family: var(--font-body); line-height: 1.75; }
 @keyframes scrollBounce {
   0%, 100% { opacity: 0.5; transform: translateX(-50%) translateY(0); }
   50% { opacity: 1; transform: translateX(-50%) translateY(6px); }
+}
+
+/* ============================================================
+   HERO — MOBILE RESPONSIVE (Opsi B: Overlay Gelap Solid)
+   ============================================================ */
+@media (max-width: 768px) {
+  /* Overlay hampir hitam agar gambar latar tidak bersaing dengan teks */
+  :root {
+    --hero-overlay: linear-gradient(to bottom, rgba(5,8,20,0.88) 0%, rgba(5,8,20,0.93) 60%, rgba(5,8,20,0.98) 100%);
+  }
+
+  .hero {
+    align-items: flex-end;
+    min-height: 100svh; /* safe viewport height on mobile */
+  }
+
+  /* Reset absolute positioning — kembali ke flow normal */
+  .hero__content {
+    position: relative !important;
+    left: auto !important;
+    bottom: auto !important;
+    width: 100%;
+    max-width: 100%;
+    text-align: center;
+    padding: 2rem 1.25rem 3rem;
+    background: rgba(5,8,20,0.60) !important;
+    backdrop-filter: blur(4px) !important;
+    -webkit-backdrop-filter: blur(4px) !important;
+    border-radius: 0 !important;
+    border-top: 1px solid rgba(201,169,98,0.25);
+  }
+
+  /* Hero teks diperbesar sedikit & di-center */
+  .hero__title {
+    font-size: clamp(2rem, 8vw, 3rem);
+    text-align: center;
+  }
+
+  .hero__subtitle {
+    max-width: 100%;
+    text-align: center;
+  }
+
+  .hero__year-badge {
+    justify-content: center;
+  }
+
+  .hero__actions {
+    justify-content: center;
+    flex-direction: column;
+  }
+
+  .hero__actions .btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  /* Sembunyikan scroll hint di mobile */
+  .hero__scroll-hint {
+    display: none;
+  }
 }
 
 /* ============================================================

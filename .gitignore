@@ -34,3 +34,10 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# ── Scripts & temp files (tidak perlu di repo) ──
+*.py
+*.docx
+*.jpeg
+*.jpg
+supabase/translation_cache.json

@@ -44,6 +44,17 @@ export async function startExam() {
     redirect('/peserta/ujian')
   }
 
+  // Validasi peserta punya kategori
+  const { data: peserta } = await supabase
+    .from('participants')
+    .select('kategori')
+    .eq('id', session.pesertaId)
+    .single()
+
+  if (!peserta?.kategori) {
+    return { error: 'Data bidang kompetisi tidak ditemukan. Silakan hubungi panitia.' }
+  }
+
   // Ambil jumlah soal dari config atau default 50
   const { data: configSoal } = await supabase
     .from('system_config')

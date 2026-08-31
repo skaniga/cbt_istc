@@ -6,15 +6,17 @@ import { revalidatePath } from 'next/cache';
 export async function updateParticipant(id: string, formData: FormData) {
   const supabase = createAdminClient();
   const nama_lengkap = formData.get('nama_lengkap') as string;
-  const no_passport = formData.get('no_passport') as string;
+  const no_passport  = formData.get('no_passport')  as string;
+  const kategori     = formData.get('kategori')     as string | null;
   
   if (!nama_lengkap || !no_passport) {
     return { error: 'Nama Lengkap dan No Passport wajib diisi.' };
   }
 
-  const { error } = await supabase.from('participants').update({
-    nama_lengkap, no_passport
-  }).eq('id', id);
+  const updateData: Record<string, any> = { nama_lengkap, no_passport };
+  if (kategori) updateData.kategori = kategori;
+
+  const { error } = await supabase.from('participants').update(updateData).eq('id', id);
 
   if (error) {
     console.error('Error updating participant:', error);

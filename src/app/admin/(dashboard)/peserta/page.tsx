@@ -9,7 +9,7 @@ export default async function AdminPesertaPage() {
   // Ambil semua peserta diurutkan berdasarkan pendaftaran terbaru
   const { data: participants, error } = await supabase
     .from('participants')
-    .select('id, nomor_peserta, nama_lengkap, no_passport, skor, lulus, created_at')
+    .select('id, nomor_peserta, nama_lengkap, no_passport, kategori, skor, lulus, created_at')
     .order('created_at', { ascending: false })
 
   if (error) {

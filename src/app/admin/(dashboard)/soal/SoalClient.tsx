@@ -39,7 +39,7 @@ export default function SoalClient({
     pilihan_c_ms: '',
     pilihan_d_ms: '',
     kunci_jawaban: 'A',
-    kategori: 'umum',
+    kategori: 'Environmental Technology',
     bobot: '2',
     aktif: true
   });
@@ -67,7 +67,7 @@ export default function SoalClient({
       pilihan_c_ms: '',
       pilihan_d_ms: '',
       kunci_jawaban: 'A',
-      kategori: 'umum',
+      kategori: 'Environmental Technology',
       bobot: '2',
       aktif: true
     });
@@ -286,12 +286,12 @@ export default function SoalClient({
                   <input type="number" className="input" value={formData.nomor_soal} onChange={e => setFormData({...formData, nomor_soal: e.target.value})} required />
                 </div>
                 <div>
-                  <label className="label-text">Kategori</label>
+                  <label className="label-text">Bidang / Kategori</label>
                   <select className="input" value={formData.kategori} onChange={e => setFormData({...formData, kategori: e.target.value})}>
-                    <option value="umum">Umum</option>
-                    <option value="teknik">Teknik</option>
-                    <option value="estetika">Estetika</option>
-                    <option value="sejarah">Sejarah</option>
+                    <option value="Environmental Technology">🌱 Environmental Technology</option>
+                    <option value="Smart Robotics">🤖 Smart Robotics</option>
+                    <option value="Science In Action">🔬 Science In Action</option>
+                    <option value="Mathematic">📐 Mathematic</option>
                   </select>
                 </div>
                 <div>

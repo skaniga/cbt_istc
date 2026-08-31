@@ -9,7 +9,8 @@ export default function PesertaClient({ initialParticipants }: { initialParticip
   const [editingId, setEditingId] = useState<string | null>(null);
   const [formData, setFormData] = useState({
     nama_lengkap: '',
-    no_passport: ''
+    no_passport: '',
+    kategori: ''
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -18,7 +19,8 @@ export default function PesertaClient({ initialParticipants }: { initialParticip
     setEditingId(p.id);
     setFormData({
       nama_lengkap: p.nama_lengkap,
-      no_passport: p.no_passport
+      no_passport: p.no_passport,
+      kategori: p.kategori || ''
     });
     setError(null);
     setIsModalOpen(true);
@@ -46,6 +48,7 @@ export default function PesertaClient({ initialParticipants }: { initialParticip
     const fd = new FormData();
     fd.append('nama_lengkap', formData.nama_lengkap);
     fd.append('no_passport', formData.no_passport);
+    fd.append('kategori', formData.kategori);
 
     const res = await updateParticipant(editingId, fd);
 
@@ -74,6 +77,7 @@ export default function PesertaClient({ initialParticipants }: { initialParticip
                 <th style={{ padding: '1rem', fontWeight: 600 }}>No. Peserta</th>
                 <th style={{ padding: '1rem', fontWeight: 600 }}>Nama Lengkap</th>
                 <th style={{ padding: '1rem', fontWeight: 600 }}>No Passport / ID</th>
+                <th style={{ padding: '1rem', fontWeight: 600 }}>Bidang</th>
                 <th style={{ padding: '1rem', fontWeight: 600 }}>Tgl Daftar</th>
                 <th style={{ padding: '1rem', fontWeight: 600 }}>Skor</th>
                 <th style={{ padding: '1rem', fontWeight: 600 }}>Status</th>
@@ -89,6 +93,20 @@ export default function PesertaClient({ initialParticipants }: { initialParticip
                     </td>
                     <td style={{ padding: '1rem' }}>{p.nama_lengkap}</td>
                     <td style={{ padding: '1rem', color: 'var(--muted-fg)' }}>{p.no_passport}</td>
+                    <td style={{ padding: '0.75rem 1rem' }}>
+                      {p.kategori ? (
+                        <span style={{
+                          fontSize: '0.72rem', padding: '0.2rem 0.5rem', borderRadius: '999px',
+                          background: 'rgba(180,130,60,0.1)', color: 'var(--brass)',
+                          border: '1px solid var(--brass)', fontWeight: 600, whiteSpace: 'nowrap'
+                        }}>
+                          {p.kategori === 'Environmental Technology' ? '🌱' : p.kategori === 'Smart Robotics' ? '🤖' : p.kategori === 'Science In Action' ? '🔬' : '📐'}
+                          {' '}{p.kategori}
+                        </span>
+                      ) : (
+                        <span style={{ color: 'var(--muted-fg)', fontSize: '0.8rem' }}>—</span>
+                      )}
+                    </td>
                     <td style={{ padding: '1rem', color: 'var(--muted-fg)' }}>
                       {new Date(p.created_at).toLocaleDateString('id-ID')}
                     </td>
@@ -127,7 +145,7 @@ export default function PesertaClient({ initialParticipants }: { initialParticip
                 ))
               ) : (
                 <tr>
-                  <td colSpan={7} style={{ padding: '3rem 1rem', textAlign: 'center', color: 'var(--muted-fg)' }}>
+                  <td colSpan={8} style={{ padding: '3rem 1rem', textAlign: 'center', color: 'var(--muted-fg)' }}>
                     Belum ada peserta yang terdaftar.
                   </td>
                 </tr>
@@ -160,6 +178,16 @@ export default function PesertaClient({ initialParticipants }: { initialParticip
               <div>
                 <label className="label-text">No Passport / ID</label>
                 <input type="text" className="input" value={formData.no_passport} onChange={e => setFormData({...formData, no_passport: e.target.value})} required />
+              </div>
+              <div>
+                <label className="label-text">Bidang Kompetisi</label>
+                <select className="input" value={formData.kategori} onChange={e => setFormData({...formData, kategori: e.target.value})}>
+                  <option value="">— Pilih Bidang —</option>
+                  <option value="Environmental Technology">🌱 Environmental Technology</option>
+                  <option value="Smart Robotics">🤖 Smart Robotics</option>
+                  <option value="Science In Action">🔬 Science In Action</option>
+                  <option value="Mathematic">📐 Mathematic</option>
+                </select>
               </div>
               <div style={{ display: 'flex', gap: '1rem', justifyContent: 'flex-end', marginTop: '1rem' }}>
                 <button type="button" onClick={() => setIsModalOpen(false)} className="btn" style={{ background: '#eee', color: '#333' }}>Batal</button>

@@ -75,7 +75,7 @@ export default function LoginPage() {
                 {t('login_no_account')} <Link href={`/${locale}/daftar`} style={{ color: 'var(--brass)', textDecoration: 'underline' }}>{t('login_register_here')}</Link>
               </div>
               <div style={{ textAlign: 'center', marginTop: '0.5rem', fontSize: '0.9rem', color: 'var(--muted-fg)' }}>
-                Atau login sebagai <Link href="/admin/login" style={{ textDecoration: 'underline' }}>Admin</Link>
+                {locale === 'en' ? 'Or login as' : locale === 'ms' ? 'Atau log masuk sebagai' : 'Atau login sebagai'} <a href="/admin/login" style={{ textDecoration: 'underline', color: 'var(--muted-fg)' }}>Admin</a>
               </div>
 
             </form>

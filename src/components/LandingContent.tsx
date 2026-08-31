@@ -1,17 +1,62 @@
 'use client'
 
+import { useState } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import Navbar from '@/components/Navbar'
 import { useLanguage } from '@/lib/i18n/LanguageContext'
-import { AnnualEvent, SystemConfig } from '@/lib/types'
+import { AnnualEvent } from '@/lib/types'
 
-const categories = [
-  { label: 'Matematika', icon: '➗', desc: 'Aljabar, geometri, kalkulus, dan logika matematika.' },
-  { label: 'Ilmu Pengetahuan Alam', icon: '🧬', desc: 'Fisika, kimia, biologi, dan ilmu bumi.' },
-  { label: 'Robotic', icon: '⚙️', desc: 'Pemrograman, mekanika, elektronika, dan kecerdasan buatan.' },
-  { label: 'Technology', icon: '💻', desc: 'Komputasi, jaringan, keamanan siber, dan rekayasa perangkat lunak.' },
-]
+const categoriesData = {
+  en: [
+    { label: 'Environmental Technology', icon: '🌱', desc: '3R/5R Principles, Waste Management & Composting, Renewable Energy (Solar, Wind, Water, Biogas), Water Treatment & Desalination, Global Warming Impact & Environmental Solutions.' },
+    { label: 'Smart Robotics', icon: '🤖', desc: 'Basic Robot Components, Sensor Functions (Ultrasonic, IR, LDR, PIR, Temperature), Motors/Actuators, Basic Microcontroller (Arduino), Robot Programming Logic.' },
+    { label: 'Science In Action', icon: '🔬', desc: 'Scientific Method & Experimental Variables, Measuring Instruments & Lab Safety, Applied Junior High Physics (Force, Energy, Light, Sound), Simple Chemistry, Applied Biology.' },
+    { label: 'Mathematic', icon: '📐', desc: 'Number Operations & Social Arithmetic, Algebra & Linear Equations, Plane & Solid Geometry, Pythagorean Theorem, Basic Statistics & Probability.' },
+  ],
+  id: [
+    { label: 'Environmental Technology', icon: '🌱', desc: 'Prinsip 3R/5R, Pengelolaan Sampah & Komposting, Energi Terbarukan, Pengolahan Air & Desalinasi, Dampak Pemanasan Global & Solusi Lingkungan.' },
+    { label: 'Smart Robotics', icon: '🤖', desc: 'Komponen Dasar Robot, Fungsi Sensor (Ultrasonik, IR, LDR, PIR, Suhu), Motor/Penggerak, Dasar Mikrokontroler, Logika Pemrograman Robot.' },
+    { label: 'Science In Action', icon: '🔬', desc: 'Metode Ilmiah & Variabel Percobaan, Alat Ukur & Keselamatan Lab, Penerapan Fisika SMP, Kimia Sederhana, Biologi Terapan.' },
+    { label: 'Mathematic', icon: '📐', desc: 'Operasi Bilangan & Aritmatika Sosial, Aljabar & Persamaan Linear, Geometri Datar & Ruang, Teorema Pythagoras, Statistika Sederhana & Peluang.' },
+  ],
+  ms: [
+    { label: 'Environmental Technology', icon: '🌱', desc: 'Prinsip 3R/5R, Pengurusan Sisa & Pengkomposan, Tenaga Boleh Diperbaharui (Suria, Angin, Air, Biogas), Rawatan Air & Penyahgaraman, Kesan Pemanasan Global & Penyelesaian Alam Sekitar.' },
+    { label: 'Smart Robotics', icon: '🤖', desc: 'Komponen Asas Robot, Fungsi Sensor (Ultrasonik, IR, LDR, PIR, Suhu), Motor/Penggerak, Asas Mikropengawal (Arduino), Logik Pengaturcaraan Robot.' },
+    { label: 'Science In Action', icon: '🔬', desc: 'Kaedah Saintifik & Pemboleh Ubah Eksperimen, Alat Ukur & Keselamatan Makmal, Fizik Sekolah Menengah Rendah Gunaan, Kimia Mudah, Biologi Gunaan.' },
+    { label: 'Mathematic', icon: '📐', desc: 'Operasi Nombor & Aritmetik Sosial, Algebra & Persamaan Linear, Geometri Satah & Ruang, Teorem Pythagoras, Statistik Asas & Kebarangkalian.' },
+  ],
+}
+
+const juknisDataAll = {
+  en: [
+    { title: "I. Introduction", content: "The development of science and technology in the era of globalization demands young generations to have high competitiveness, critical thinking, and innovation. The International Science and Technology Competition (ISTC) 2026 serves as a platform for Junior High School students to channel their creative ideas, science projects, and technological innovations on the international stage." },
+    { title: "II. Competition Theme", content: '"Innovating for a Sustainable Future through Science and Technology"' },
+    { title: "III. Participant Requirements", content: "• Active Junior High School student or equivalent.\n• Physically and Mentally Healthy\n• Not Color Blind\n• Aged 12 to 15 years as of September 10, 2026." },
+    { title: "IV. Timeline / Schedule", content: "• Registration & Proposal Submission: June 1 – September 5, 2026\n• Announcement of Initial Selection: September 7, 2026\n• Technical Meeting (Online): September 8, 2026\n• Final Round & Exhibition (Offline in Kuala Lumpur): September 10, 2026" },
+    { title: "V. Final Round Provisions", content: "Participants who pass the initial selection are required to attend in person at the event venue in Kuala Lumpur, Malaysia on September 10, 2026." },
+    { title: "VI. Assessment System", content: "• Creativity & Innovation (30%)\n• Scientific & Technical Value (30%)\n• Benefits & Implementation (20%)\n• Presentation (20%)" },
+    { title: "VII. Awards & Prizes", content: "• Grand Champion International Certificate\n• Award to Champion 1, 2 and 3\n• All attending participants will receive an International Participation Certificate." },
+  ],
+  id: [
+    { title: "I. Pendahuluan", content: "Perkembangan ilmu pengetahuan dan teknologi (IPTEK) di era globalisasi menuntut generasi muda untuk memiliki daya saing tinggi, berpikir kritis, serta inovatif. International Science and Technology Competition (ISTC) 2026 hadir sebagai wadah bagi pelajar tingkat Sekolah Menengah Pertama (SMP) untuk menyalurkan ide kreatif, proyek sains, dan inovasi teknologi di kancah internasional." },
+    { title: "II. Tema Kegiatan", content: '"Innovating for a Sustainable Future through Science and Technology"' },
+    { title: "III. Persyaratan Peserta", content: "• Pelajar aktif tingkat Sekolah Menengah Pertama (SMP) atau sederajat.\n• Sehat Jasmani dan Rohani\n• Tidak Buta Warna\n• Berusia 12 hingga 15 tahun terhitung pada tanggal 10 September 2026." },
+    { title: "IV. Timeline / Jadwal Kegiatan", content: "• Pendaftaran & Pengiriman Proposal: 1 Juni – 5 September 2026\n• Pengumuman Seleksi Tahap Awal: 7 September 2026\n• Technical Meeting (Online): 8 September 2026\n• Babak Final & Pameran (Offline di Kuala Lumpur): 10 September 2026" },
+    { title: "V. Ketentuan Babak Final", content: "Peserta yang lolos seleksi tahap awal diwajibkan hadir secara langsung di lokasi acara di Kuala Lumpur, Malaysia pada tanggal 10 September 2026." },
+    { title: "VI. Sistem Penilaian", content: "• Kreativitas & Inovasi (30%)\n• Nilai Ilmiah & Teknis (30%)\n• Manfaat & Implementasi (20%)\n• Presentasi (20%)" },
+    { title: "VII. Penghargaan & Hadiah", content: "• Grand Champion Sertifikat Internasional\n• Award to Champion 1, 2 and 3\n• Seluruh peserta yang hadir akan mendapatkan Sertifikat Partisipasi Internasional." },
+  ],
+  ms: [
+    { title: "I. Pendahuluan", content: "Perkembangan sains dan teknologi di era globalisasi menuntut generasi muda mempunyai daya saing tinggi, pemikiran kritis, dan inovatif. Pertandingan Sains dan Teknologi Antarabangsa (ISTC) 2026 hadir sebagai platform bagi pelajar Sekolah Menengah Rendah untuk menyalurkan idea kreatif, projek sains, dan inovasi teknologi di peringkat antarabangsa." },
+    { title: "II. Tema Pertandingan", content: '"Innovating for a Sustainable Future through Science and Technology"' },
+    { title: "III. Syarat Peserta", content: "• Pelajar aktif Sekolah Menengah Rendah atau setara.\n• Sihat Jasmani dan Rohani\n• Tidak Buta Warna\n• Berusia 12 hingga 15 tahun pada tarikh 10 September 2026." },
+    { title: "IV. Jadual Aktiviti", content: "• Pendaftaran & Penyerahan Cadangan: 1 Jun – 5 September 2026\n• Pengumuman Pemilihan Awal: 7 September 2026\n• Mesyuarat Teknikal (Dalam Talian): 8 September 2026\n• Pusingan Akhir & Pameran (Luar Talian di Kuala Lumpur): 10 September 2026" },
+    { title: "V. Peraturan Pusingan Akhir", content: "Peserta yang lulus pemilihan awal diwajibkan hadir secara langsung di lokasi acara di Kuala Lumpur, Malaysia pada 10 September 2026." },
+    { title: "VI. Sistem Penilaian", content: "• Kreativiti & Inovasi (30%)\n• Nilai Saintifik & Teknikal (30%)\n• Manfaat & Pelaksanaan (20%)\n• Pembentangan (20%)" },
+    { title: "VII. Anugerah & Hadiah", content: "• Grand Champion Sijil Antarabangsa\n• Anugerah kepada Juara 1, 2 dan 3\n• Semua peserta yang hadir akan menerima Sijil Penyertaan Antarabangsa." },
+  ],
+}
 
 export default function LandingContent({
   config,
@@ -21,6 +66,19 @@ export default function LandingContent({
   events: AnnualEvent[]
 }) {
   const { t, locale } = useLanguage()
+  const [openJuknis, setOpenJuknis] = useState<number | null>(0)
+
+  const categories = categoriesData[locale as keyof typeof categoriesData] ?? categoriesData.en
+  const juknisData = juknisDataAll[locale as keyof typeof juknisDataAll] ?? juknisDataAll.en
+
+  // PDF file names per locale
+  const kisiPdf   = locale === 'en' ? '/Syllabi_ISTC_2026_EN.pdf'  : locale === 'ms' ? '/Silibus_ISTC_2026_MS.pdf'   : '/Kisi_Kisi_ISTC_2026.pdf'
+  const juknisPdf = locale === 'en' ? '/Guidelines_ISTC_2026_EN.pdf' : locale === 'ms' ? '/Panduan_ISTC_2026_MS.pdf' : '/Juknis_ISTC_2026.pdf'
+
+  const kisiLabel   = locale === 'en' ? 'Download Syllabus PDF'   : locale === 'ms' ? 'Muat Turun PDF Silibus'     : 'Download PDF Kisi-kisi'
+  const juknisLabel = locale === 'en' ? 'Download Guidelines PDF' : locale === 'ms' ? 'Muat Turun PDF Panduan'     : 'Download PDF Juknis'
+  const kisiTitle   = locale === 'en' ? 'Examination Syllabus'    : locale === 'ms' ? 'Silibus Peperiksaan'        : 'Kisi-kisi Soal'
+  const juknisTitle = locale === 'en' ? 'Technical Guidelines'    : locale === 'ms' ? 'Panduan Teknikal Pertandingan' : 'Petunjuk Teknis Kompetisi'
 
   const namaLomba  = config['nama_lomba']  ?? 'International Science and Technology Competitions'
   const tahunAktif = config['tahun_aktif'] ?? '2025'
@@ -69,12 +127,17 @@ export default function LandingContent({
               priority
               sizes="100vw"
               style={{ objectFit: 'cover', objectPosition: 'center' }}
-              className="img-sepia"
             />
           </div>
 
           <div className="container">
-            <div className="hero__content ornate-frame ornate-frame--lg">
+            <div className="hero__content ornate-frame ornate-frame--lg" style={{
+              background: 'rgba(5,8,20,0.55)',
+              backdropFilter: 'blur(2px)',
+              WebkitBackdropFilter: 'blur(2px)',
+              borderRadius: '8px',
+              padding: '2.5rem 2rem',
+            }}>
               <div className="hero__year-badge" aria-hidden="true">
                 <span className="label">{tahunAktif}</span>
               </div>
@@ -161,10 +224,13 @@ export default function LandingContent({
           </div>
         </section>
 
-        <section className="section section--alt" aria-labelledby="kategori-heading">
+        <section className="section section--alt" id="kisi-kisi" aria-labelledby="kategori-heading">
           <div className="container">
             <div style={{ textAlign: 'center', marginBottom: '3.5rem' }}>
-              <h2 id="kategori-heading">Kategori Ujian</h2>
+              <h2 id="kategori-heading">{kisiTitle}</h2>
+              <p style={{ color: 'var(--muted-fg)', marginTop: '0.5rem' }}>
+                {locale === 'en' ? 'Subjects and topics covered in the competition exam' : locale === 'ms' ? 'Mata pelajaran dan topik yang diuji dalam peperiksaan' : 'Silabus materi yang akan diujikan pada kompetisi'}
+              </p>
             </div>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '1.5rem' }}>
               {categories.map((cat, i) => (
@@ -188,6 +254,17 @@ export default function LandingContent({
                 </article>
               ))}
             </div>
+            
+            <div style={{ textAlign: 'center', marginTop: '3rem' }}>
+              <a href={kisiPdf} download className="btn btn--outline" style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem' }}>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                  <polyline points="7 10 12 15 17 10"></polyline>
+                  <line x1="12" y1="15" x2="12" y2="3"></line>
+                </svg>
+                {kisiLabel}
+              </a>
+            </div>
           </div>
         </section>
 
@@ -207,6 +284,65 @@ export default function LandingContent({
                   <p className="timeline-step__desc">{step.desc}</p>
                 </div>
               ))}
+            </div>
+          </div>
+        </section>
+
+        <section className="section" id="juknis" aria-labelledby="juknis-heading" style={{ paddingTop: 0 }}>
+          <div className="container">
+            <div className="ornate-frame" style={{ padding: '3rem', background: 'var(--bg-alt)' }}>
+              <div style={{ textAlign: 'center', marginBottom: '2.5rem' }}>
+                <h2 id="juknis-heading" style={{ fontSize: '1.75rem' }}>{juknisTitle}</h2>
+              </div>
+              
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                {juknisData.map((item, idx) => (
+                  <div key={idx} style={{ border: '1px solid var(--border)', borderRadius: '8px', overflow: 'hidden' }}>
+                    <button
+                      onClick={() => setOpenJuknis(openJuknis === idx ? null : idx)}
+                      style={{
+                        width: '100%',
+                        padding: '1.25rem',
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        alignItems: 'center',
+                        background: openJuknis === idx ? 'rgba(255,255,255,0.02)' : 'transparent',
+                        border: 'none',
+                        color: 'var(--fg)',
+                        cursor: 'pointer',
+                        textAlign: 'left',
+                        fontFamily: 'var(--font-heading)',
+                        fontSize: '1.1rem',
+                        transition: 'background 0.2s ease'
+                      }}
+                    >
+                      {item.title}
+                      <span style={{ 
+                        transform: openJuknis === idx ? 'rotate(180deg)' : 'rotate(0deg)',
+                        transition: 'transform 0.3s ease'
+                      }}>
+                        ▼
+                      </span>
+                    </button>
+                    {openJuknis === idx && (
+                      <div style={{ padding: '0 1.25rem 1.25rem', color: 'var(--muted-fg)', whiteSpace: 'pre-wrap', lineHeight: 1.6 }}>
+                        {item.content}
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </div>
+
+              <div style={{ textAlign: 'center', marginTop: '3rem' }}>
+                <a href={juknisPdf} download className="btn btn--primary" style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem' }}>
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                    <polyline points="7 10 12 15 17 10"></polyline>
+                    <line x1="12" y1="15" x2="12" y2="3"></line>
+                  </svg>
+                  {juknisLabel}
+                </a>
+              </div>
             </div>
           </div>
         </section>

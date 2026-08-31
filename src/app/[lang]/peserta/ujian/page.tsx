@@ -11,7 +11,20 @@ export default async function UjianPage() {
 
   const supabase = await createClient()
 
-  // 1. Cek sesi ujian aktif
+  // 1. Ambil data peserta (termasuk kategori)
+  const { data: participant } = await supabase
+    .from('participants')
+    .select('id, kategori')
+    .eq('id', session.pesertaId)
+    .single()
+
+  if (!participant?.kategori) {
+    redirect('/peserta') // Peserta belum punya kategori
+  }
+
+  const kategoriPeserta = participant.kategori
+
+  // 2. Cek sesi ujian aktif
   const { data: examSession } = await supabase
     .from('exam_sessions')
     .select('id, status, mulai_at, total_soal')
@@ -42,11 +55,12 @@ export default async function UjianPage() {
     // Sementara kita pass endTime yang sudah lewat ke CbtClient agar CbtClient langsung submit saat mount.
   }
 
-  // 3. Ambil data soal
+  // 3. Ambil soal sesuai kategori peserta
   const { data: allQuestions } = await supabase
     .from('questions')
     .select('id, pertanyaan, pilihan_a, pilihan_b, pilihan_c, pilihan_d, pertanyaan_en, pilihan_a_en, pilihan_b_en, pilihan_c_en, pilihan_d_en, pertanyaan_ms, pilihan_a_ms, pilihan_b_ms, pilihan_c_ms, pilihan_d_ms')
     .eq('aktif', true)
+    .eq('kategori', kategoriPeserta)  // ← Filter by participant's category
     
   let questions = allQuestions || []
 
@@ -93,7 +107,7 @@ export default async function UjianPage() {
     return (
       <div className="section" style={{ textAlign: 'center', paddingTop: '8rem' }}>
         <h2>Questions Unavailable</h2>
-        <p style={{ color: 'var(--muted-fg)' }}>Admin has not entered questions into the system.</p>
+        <p style={{ color: 'var(--muted-fg)' }}>No questions found for category: <strong>{kategoriPeserta}</strong>.</p>
       </div>
     )
   }
@@ -123,6 +137,7 @@ export default async function UjianPage() {
         initialAnswers={initialAnswers}
         endTimeStr={endTime.toISOString()}
         serverTimeStr={serverTimeStr}
+        kategori={kategoriPeserta}
       />
     </div>
   )

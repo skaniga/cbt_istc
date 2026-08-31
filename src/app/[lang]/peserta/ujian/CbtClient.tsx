@@ -30,13 +30,15 @@ export default function CbtClient({
   questions,
   initialAnswers,
   endTimeStr,
-  serverTimeStr
+  serverTimeStr,
+  kategori
 }: {
   examSessionId: string
   questions: Question[]
   initialAnswers: AnswerMap
-  endTimeStr: string // ISO string of when the exam ends
-  serverTimeStr: string // ISO string of server time on load
+  endTimeStr: string
+  serverTimeStr: string
+  kategori?: string
 }) {
   const [answers, setAnswers] = useState<AnswerMap>(initialAnswers)
   const [currentIndex, setCurrentIndex] = useState(0)
@@ -113,7 +115,7 @@ export default function CbtClient({
         padding: '1rem 1.5rem', background: 'var(--bg-alt)', borderBottom: '1px solid var(--border)',
         position: 'sticky', top: '5rem', zIndex: 40
       }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', flexWrap: 'wrap' }}>
           {/* Mobile Nav Toggle */}
           <button 
             className="mobile-nav-toggle"
@@ -123,6 +125,18 @@ export default function CbtClient({
             ☰ {t('exam_question')}
           </button>
           <span className="label" style={{ margin: 0 }}>{t('exam_question')} {currentIndex + 1} {t('exam_of')} {questions.length}</span>
+          {kategori && (
+            <span style={{
+              fontSize: '0.72rem', fontFamily: 'var(--font-display)', letterSpacing: '0.08em',
+              textTransform: 'uppercase', color: 'var(--brass)',
+              background: 'rgba(180,130,60,0.1)', border: '1px solid var(--brass)',
+              padding: '0.2rem 0.6rem', borderRadius: '999px',
+              display: 'inline-flex', alignItems: 'center', gap: '0.3rem'
+            }}>
+              {kategori === 'Environmental Technology' ? '🌱' : kategori === 'Smart Robotics' ? '🤖' : kategori === 'Science In Action' ? '🔬' : '📐'}
+              {' '}{kategori}
+            </span>
+          )}
         </div>
         
         <div style={{ 

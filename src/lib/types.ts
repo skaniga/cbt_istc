@@ -18,6 +18,7 @@ export interface Participant {
   foto_url: string | null
   skor: number | null
   lulus: boolean
+  kategori: string | null  // Bidang kompetisi yang dipilih saat mendaftar
   created_at: string
 }
 

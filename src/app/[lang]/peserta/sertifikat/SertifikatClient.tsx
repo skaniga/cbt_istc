@@ -81,35 +81,10 @@ export default function SertifikatClient({
 
       pdf.addImage(imgData, 'JPEG', 0, 0, pdfWidth, pdfHeight)
       const fileName = `Sertifikat_${participant.nomor_peserta}.pdf`
-      const pdfBlob = pdf.output('blob')
 
-      // 1. Try native mobile share (fixes iOS/Android PWA blob download issues)
-      if (navigator.share && navigator.canShare) {
-        const file = new File([pdfBlob], fileName, { type: 'application/pdf' })
-        if (navigator.canShare({ files: [file] })) {
-          try {
-            await navigator.share({
-              files: [file],
-              title: fileName,
-            })
-            return // Successfully shared/saved via OS
-          } catch (err) {
-            console.log('Share canceled or failed, falling back to download:', err)
-          }
-        }
-      }
+      // Direct download — konsisten di semua platform (desktop & mobile)
+      pdf.save(fileName)
 
-      // 2. Standard browser download fallback
-      const blobUrl = URL.createObjectURL(pdfBlob)
-      const link = document.createElement('a')
-      link.href = blobUrl
-      link.download = fileName
-      document.body.appendChild(link)
-      link.click()
-      document.body.removeChild(link)
-      
-      // Revoke slightly later to ensure download starts on slow devices
-      setTimeout(() => URL.revokeObjectURL(blobUrl), 2000)
     } catch (error) {
       console.error('Error generating PDF:', error)
       alert('An error occurred while generating the PDF. Please try again.')
@@ -217,9 +192,19 @@ export default function SertifikatClient({
               {certTitle}
             </p>
 
-            <h1 style={{ fontFamily: 'var(--font-heading)', fontSize: '4.5rem', fontWeight: 400, color: 'var(--fg)', marginBottom: '1.5rem', fontStyle: 'italic' }}>
+            <h1 style={{ fontFamily: 'var(--font-heading)', fontSize: '4.5rem', fontWeight: 400, color: 'var(--fg)', marginBottom: '0.5rem', fontStyle: 'italic' }}>
               {participant.nama_lengkap}
             </h1>
+
+            {/* Bidang Kompetisi */}
+            {participant.kategori && (
+              <p style={{
+                fontFamily: 'var(--font-display)', fontSize: '0.9rem', letterSpacing: '0.25em',
+                color: primaryColor, textTransform: 'uppercase', marginBottom: '1.5rem'
+              }}>
+                ― {participant.kategori} ―
+              </p>
+            )}
 
             <div style={{ display: 'flex', alignItems: 'center', gap: '2rem', marginBottom: '3rem' }}>
               <span style={{ height: '1px', width: '100px', background: primaryColor }} />
