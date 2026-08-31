@@ -8,7 +8,7 @@ export function ToggleAksesForm({ currentStatus }: { currentStatus: string }) {
   const isAksesTerbuka = currentStatus === 'true'
 
   return (
-    <form action={() => toggleAksesUjian(currentStatus)}>
+    <form action={() => { void toggleAksesUjian(currentStatus) }}>
       <button 
         type="submit" 
         className="btn" 
@@ -34,7 +34,7 @@ export function KeepAliveForm() {
   const { pending } = useFormStatus()
 
   return (
-    <form action={manualKeepAlive}>
+    <form action={() => { void manualKeepAlive() }}>
       <button 
         type="submit" 
         className="btn btn--secondary" 

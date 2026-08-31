@@ -1,35 +1,43 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useTransition, useEffect } from 'react'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 import Navbar from '@/components/Navbar'
 import { loginParticipant } from './actions'
 import { useLanguage } from '@/lib/i18n/LanguageContext'
 
 export default function LoginPage() {
-  const [loading, setLoading] = useState(false)
+  const [isPending, startTransition] = useTransition()
   const [error, setError] = useState<string | null>(null)
   const { t, locale } = useLanguage()
+  const router = useRouter()
+
+  // Prefetch halaman peserta saat login page dimuat
+  // agar redirect terasa instan setelah login berhasil
+  useEffect(() => {
+    router.prefetch(`/${locale}/peserta`)
+  }, [router, locale])
 
   async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
-    setLoading(true)
     setError(null)
 
     const formData = new FormData(e.currentTarget)
     formData.append('locale', locale)
-    
-    try {
-      const result = await loginParticipant(formData)
-      if (result?.error) {
-        setError(result.error)
-        setLoading(false)
+
+    startTransition(async () => {
+      try {
+        const result = await loginParticipant(formData)
+        if (result?.error) {
+          setError(result.error)
+        }
+        // Jika berhasil, action akan me-redirect ke /peserta
+        // Router sudah prefetch halaman tersebut sehingga transisi lebih cepat
+      } catch (err: any) {
+        setError(err.message || 'Terjadi kesalahan sistem')
       }
-      // Jika berhasil, action akan me-redirect ke /peserta
-    } catch (err: any) {
-      setError(err.message || 'Terjadi kesalahan sistem')
-      setLoading(false)
-    }
+    })
   }
 
   return (
@@ -59,16 +67,37 @@ export default function LoginPage() {
               
               <div>
                 <label htmlFor="nomor_peserta" className="label-text">{t('login_number')}</label>
-                <input type="text" id="nomor_peserta" name="nomor_peserta" className="input" required placeholder={t('login_number_placeholder')} />
+                <input
+                  type="text"
+                  id="nomor_peserta"
+                  name="nomor_peserta"
+                  className="input"
+                  required
+                  placeholder={t('login_number_placeholder')}
+                  disabled={isPending}
+                />
               </div>
 
               <div>
                 <label htmlFor="password" className="label-text">{t('login_password')}</label>
-                <input type="password" id="password" name="password" className="input" required placeholder={t('login_password_placeholder')} />
+                <input
+                  type="password"
+                  id="password"
+                  name="password"
+                  className="input"
+                  required
+                  placeholder={t('login_password_placeholder')}
+                  disabled={isPending}
+                />
               </div>
 
-              <button type="submit" className="btn btn--primary" style={{ marginTop: '1.5rem', width: '100%' }} disabled={loading}>
-                {loading ? t('login_loading') : t('login_submit')}
+              <button
+                type="submit"
+                className="btn btn--primary"
+                style={{ marginTop: '1.5rem', width: '100%' }}
+                disabled={isPending}
+              >
+                {isPending ? t('login_loading') : t('login_submit')}
               </button>
 
               <div style={{ textAlign: 'center', marginTop: '1.5rem', fontSize: '0.9rem', color: 'var(--muted-fg)' }}>

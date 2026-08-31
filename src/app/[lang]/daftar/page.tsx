@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useTransition } from 'react'
 import Link from 'next/link'
 import Navbar from '@/components/Navbar'
 import { registerParticipant } from './actions'
@@ -14,7 +14,7 @@ const CATEGORIES = [
 ]
 
 export default function DaftarPage() {
-  const [loading, setLoading] = useState(false)
+  const [isPending, startTransition] = useTransition()
   const [error, setError] = useState<string | null>(null)
   const [successData, setSuccessData] = useState<{ nomor_peserta: string, nama: string, kategori: string } | null>(null)
   const [selectedKategori, setSelectedKategori] = useState<string | null>(null)
@@ -46,6 +46,30 @@ export default function DaftarPage() {
     } finally {
       setLoading(false)
     }
+
+    formData.set('no_passport', passport)
+
+    startTransition(async () => {
+      try {
+        const result = await registerParticipant(formData)
+        if (result.error) {
+          setError(result.error)
+        } else if (result.data) {
+          setSuccessData(result.data)
+        }
+      } catch (err: any) {
+        setError(err.message || 'Terjadi kesalahan sistem')
+      }
+    })
+  }
+
+  // #6 — Salin nomor peserta satu klik
+  const handleCopy = () => {
+    if (!successData) return
+    navigator.clipboard.writeText(successData.nomor_peserta).then(() => {
+      setCopied(true)
+      setTimeout(() => setCopied(false), 2500)
+    })
   }
 
   const catLabel = (cat: typeof CATEGORIES[0]) => cat.label[lang] ?? cat.label.en
@@ -63,12 +87,13 @@ export default function DaftarPage() {
           <div className="card ornate-frame">
             
             {successData ? (
+              // — Halaman sukses registrasi —
               <div style={{ textAlign: 'center' }}>
-                <div style={{ 
-                  width: '4rem', height: '4rem', borderRadius: '50%', 
+                <div style={{
+                  width: '4rem', height: '4rem', borderRadius: '50%',
                   background: 'var(--brass)', color: 'var(--on-brass)',
                   display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  margin: '0 auto 1.5rem', fontSize: '2rem'
+                  margin: '0 auto 1.5rem', fontSize: '2rem',
                 }}>
                   ✓
                 </div>
@@ -83,22 +108,59 @@ export default function DaftarPage() {
                 <p style={{ color: 'var(--muted-fg)', marginBottom: '1.5rem' }}>
                   {t('reg_success_desc')}
                 </p>
-                <div style={{ 
-                  background: 'var(--bg-alt)', border: '1px dashed var(--brass)', 
-                  padding: '1rem', borderRadius: '4px', marginBottom: '2rem',
-                  fontFamily: 'var(--font-display)', fontSize: '1.5rem', letterSpacing: '0.1em',
-                  color: 'var(--fg)'
+
+                {/* #6 — Nomor peserta dengan tombol salin */}
+                <div style={{
+                  background: 'var(--bg-alt)', border: '1.5px dashed var(--brass)',
+                  padding: '1.25rem', borderRadius: '4px', marginBottom: '0.75rem',
                 }}>
-                  {successData.nomor_peserta}
+                  <p style={{
+                    fontFamily: 'var(--font-display)', fontSize: '0.55rem',
+                    textTransform: 'uppercase', letterSpacing: '0.2em',
+                    color: 'var(--muted-fg)', marginBottom: '0.5rem',
+                  }}>Nomor Peserta Anda</p>
+                  <p style={{
+                    fontFamily: 'var(--font-display)', fontSize: '1.75rem',
+                    letterSpacing: '0.1em', color: 'var(--fg)', marginBottom: '1rem',
+                  }}>
+                    {successData.nomor_peserta}
+                  </p>
+                  <button
+                    onClick={handleCopy}
+                    className="btn btn--secondary"
+                    style={{ width: '100%', justifyContent: 'center', fontSize: '0.6rem' }}
+                  >
+                    {copied ? '✓ Tersalin ke Clipboard!' : '⎘ Salin Nomor Peserta'}
+                  </button>
                 </div>
+
+                {/* Peringatan penting */}
+                <div style={{
+                  padding: '0.875rem 1rem',
+                  background: '#FFFBF0',
+                  border: '1px solid #F0C040',
+                  borderRadius: '4px',
+                  marginBottom: '1.5rem',
+                  textAlign: 'left',
+                }}>
+                  <p style={{ fontSize: '0.85rem', color: '#7A5A00', lineHeight: 1.6 }}>
+                    ⚠️ <strong>Simpan nomor ini!</strong> Anda akan membutuhkannya setiap kali login. Nomor ini tidak dapat diganti.
+                  </p>
+                </div>
+
                 <p style={{ color: 'var(--muted-fg)', fontSize: '0.9rem', marginBottom: '2rem' }}>
                   {t('reg_success_note')}
                 </p>
-                <Link href={`/${locale}/login`} className="btn btn--primary" style={{ width: '100%', justifyContent: 'center' }}>
+                <Link
+                  href={`/${locale}/login`}
+                  className="btn btn--primary"
+                  style={{ width: '100%', justifyContent: 'center' }}
+                >
                   {t('reg_success_login')}
                 </Link>
               </div>
             ) : (
+              // — Form registrasi —
               <>
                 <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
                   <p className="label" style={{ marginBottom: '0.5rem' }}>{t('reg_title')}</p>
@@ -106,8 +168,8 @@ export default function DaftarPage() {
                 </div>
 
                 {error && (
-                  <div style={{ 
-                    padding: '1rem', background: '#FFF3F3', border: '1px solid #FFCDCD', 
+                  <div style={{
+                    padding: '1rem', background: '#FFF3F3', border: '1px solid #FFCDCD',
                     color: '#D8000C', borderRadius: '4px', marginBottom: '1.5rem', fontSize: '0.9rem'
                   }}>
                     {error}
@@ -119,13 +181,45 @@ export default function DaftarPage() {
                   {/* Nama Lengkap */}
                   <div>
                     <label htmlFor="nama_lengkap" className="label-text">{t('reg_name')}</label>
-                    <input type="text" id="nama_lengkap" name="nama_lengkap" className="input" required placeholder={t('reg_name_placeholder')} />
+                    <input
+                      type="text"
+                      id="nama_lengkap"
+                      name="nama_lengkap"
+                      className="input"
+                      required
+                      placeholder={t('reg_name_placeholder')}
+                      disabled={isPending}
+                    />
                   </div>
 
                   {/* No Passport */}
                   <div>
                     <label htmlFor="no_passport" className="label-text">{t('reg_passport')}</label>
-                    <input type="text" id="no_passport" name="no_passport" className="input" required placeholder={t('reg_passport_placeholder')} />
+                    <input
+                      type="text"
+                      id="no_passport"
+                      name="no_passport"
+                      className="input"
+                      required
+                      placeholder={t('reg_passport_placeholder')}
+                      disabled={isPending}
+                      onChange={handlePassportChange}
+                      style={{
+                        borderColor: passportError ? 'var(--crimson)' : undefined,
+                        boxShadow: passportError ? '0 0 0 3px rgba(139,38,53,0.12)' : undefined,
+                      }}
+                      maxLength={12}
+                    />
+                    {/* #3 — Real-time validation feedback */}
+                    {passportError ? (
+                      <p style={{ marginTop: '0.4rem', fontSize: '0.8rem', color: 'var(--crimson)' }}>
+                        {passportError}
+                      </p>
+                    ) : (
+                      <p style={{ marginTop: '0.4rem', fontSize: '0.78rem', color: 'var(--muted-fg)' }}>
+                        Contoh: A1234567 · Huruf kapital &amp; angka, 6–12 karakter
+                      </p>
+                    )}
                   </div>
 
                   {/* Pilih Bidang */}

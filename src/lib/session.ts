@@ -1,8 +1,14 @@
 import { jwtVerify, SignJWT } from 'jose'
 import { cookies } from 'next/headers'
 
-const secretKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'default_secret_for_jwt'
-const key = new TextEncoder().encode(secretKey)
+// Gunakan SESSION_SECRET yang terpisah dan tidak NEXT_PUBLIC_
+// Fallback ke SUPABASE_SERVICE_ROLE_KEY agar tidak expose anon key ke JWT
+const rawSecret =
+  process.env.SESSION_SECRET ||
+  process.env.SUPABASE_SERVICE_ROLE_KEY ||
+  'fallback_secret_ganti_di_production_min_32_chars!!'
+
+const key = new TextEncoder().encode(rawSecret)
 
 export async function encrypt(payload: any) {
   return await new SignJWT(payload)

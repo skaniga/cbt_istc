@@ -2,6 +2,12 @@ import { getSession, clearSession } from '@/lib/session'
 import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 import PesertaNavbar from './PesertaNavbar'
+import type { Metadata } from 'next'
+
+// Halaman peserta adalah private — jangan diindex Google
+export const metadata: Metadata = {
+  robots: { index: false, follow: false },
+}
 
 export const revalidate = 0
 

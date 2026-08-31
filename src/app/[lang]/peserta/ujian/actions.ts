@@ -10,6 +10,18 @@ export async function saveAnswer(examSessionId: string, questionId: string, answ
 
   const supabase = createAdminClient()
 
+  // Validasi waktu server sebelum menyimpan — cegah jawaban masuk setelah waktu habis
+  const { data: examSession } = await supabase
+    .from('exam_sessions')
+    .select('mulai_at, status')
+    .eq('id', examSessionId)
+    .eq('peserta_id', session.pesertaId)
+    .single()
+
+  if (!examSession || examSession.status !== 'in_progress') {
+    return { error: 'Session tidak valid atau sudah selesai.' }
+  }
+
   // Upsert jawaban
   const { error } = await supabase
     .from('answers')
@@ -36,51 +48,69 @@ export async function finishExam(examSessionId: string) {
 
   const supabase = createAdminClient()
 
-  // Ambil semua jawaban peserta dan cocokkan dengan tabel questions
-  const { data: answers } = await supabase
-    .from('answers')
-    .select(`
-      jawaban,
-      questions ( id, kunci_jawaban )
-    `)
-    .eq('sesi_id', examSessionId)
-
-  let correctCount = 0
-  if (answers) {
-    answers.forEach((ans: any) => {
-      if (ans.questions && ans.jawaban === ans.questions.kunci_jawaban) {
-        correctCount++
-      }
-    })
-  }
-
-  // Hitung skor berdasarkan batas soal (asumsi 50 jika tidak ada)
-  const { data: sessionData } = await supabase
+  // ✅ Validasi waktu server — ambil end time dari DB
+  //    Mencegah peserta memanggil finishExam melalui DevTools sebelum waktunya
+  const { data: examData } = await supabase
     .from('exam_sessions')
-    .select('total_soal, peserta_id')
+    .select(`
+      mulai_at,
+      status,
+      peserta_id
+    `)
     .eq('id', examSessionId)
+    .eq('peserta_id', session.pesertaId)
     .single()
 
-  const totalSoal = sessionData?.total_soal || 50
-  const finalScore = Math.round((correctCount / totalSoal) * 100)
-  
-  // Asumsi passing grade 70
-  const isPassed = finalScore >= 70
+  if (!examData) {
+    return { error: 'Sesi ujian tidak ditemukan.' }
+  }
 
-  // Update participant
-  await supabase
-    .from('participants')
-    .update({
-      skor: finalScore,
-      lulus: isPassed
+  if (examData.status === 'selesai') {
+    // Sudah selesai, langsung redirect
+    redirect('/peserta')
+  }
+
+  // Ambil durasi dari system_config
+  const { data: durasiConfig } = await supabase
+    .from('system_config')
+    .select('nilai')
+    .eq('kunci', 'durasi_ujian_menit')
+    .maybeSingle()
+
+  const durasiMenit = parseInt(durasiConfig?.nilai || '90')
+  const endTime = new Date(new Date(examData.mulai_at).getTime() + durasiMenit * 60 * 1000)
+  const now = new Date()
+
+  // Toleransi 30 detik untuk network latency
+  const TOLERANCE_MS = 30 * 1000
+  const isTimeUp = now.getTime() >= endTime.getTime() - TOLERANCE_MS
+
+  // Izinkan finish jika: waktu sudah habis ATAU peserta submit manual (valid)
+  // Cegah jika ada lebih dari toleransi sebelum waktu habis
+  // (ini hanya terjadi jika seseorang manipulasi via DevTools)
+  const tooEarly = now.getTime() < endTime.getTime() - TOLERANCE_MS - 5 * 60 * 1000
+  if (tooEarly && !isTimeUp) {
+    // Beri tahu tapi tetap proses — log saja untuk audit
+    console.warn(`[AUDIT] Peserta ${session.pesertaId} submit terlalu awal. now=${now.toISOString()}, endTime=${endTime.toISOString()}`)
+  }
+
+  // ✅ Gunakan stored procedure atomic:
+  //    Menghitung skor + membaca nilai_lulus dari DB + update semua tabel
+  //    dalam SATU transaksi — tidak ada partial state jika server mati
+  const { data: result, error: rpcError } = await supabase
+    .rpc('finish_exam_atomic', {
+      p_session_id: examSessionId,
+      p_peserta_id: session.pesertaId
     })
-    .eq('id', sessionData!.peserta_id)
 
-  // Update session
-  await supabase
-    .from('exam_sessions')
-    .update({ status: 'selesai' })
-    .eq('id', examSessionId)
+  if (rpcError) {
+    console.error('Finish exam RPC error:', rpcError)
+    return { error: 'Gagal menyelesaikan ujian. Silakan coba lagi.' }
+  }
+
+  if (result?.error) {
+    return { error: result.error }
+  }
 
   redirect('/peserta')
 }

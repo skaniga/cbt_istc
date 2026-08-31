@@ -11,47 +11,44 @@ export default async function PesertaDashboard() {
 
   const supabase = await createClient()
 
-  // 1. Ambil data peserta
+  // Ambil data peserta
   const { data: participant } = await supabase
     .from('participants')
     .select('*')
     .eq('id', session.pesertaId)
     .single()
 
-  if (!participant) {
-    redirect('/login')
-  }
+  if (!participant) redirect('/login')
 
-  // 2. Cek status ujian (exam_sessions)
+  // Ambil semua config yang dibutuhkan dalam satu query
+  const { data: configs } = await supabase
+    .from('system_config')
+    .select('kunci, nilai')
+    .in('kunci', ['akses_ujian_terbuka', 'batas_soal', 'durasi_ujian_menit', 'nilai_lulus'])
+
+  const configMap: Record<string, string> = {}
+  configs?.forEach(c => { configMap[c.kunci] = c.nilai })
+
+  const isAksesTerbuka = configMap['akses_ujian_terbuka'] === 'true'
+  const batasSoal = configMap['batas_soal'] || '50'
+  const durasiMenit = configMap['durasi_ujian_menit'] || '90'
+  const nilaiLulus = configMap['nilai_lulus'] || '70'
+
+  // Cek status ujian (exam_sessions)
   const { data: examSession } = await supabase
     .from('exam_sessions')
     .select('*')
     .eq('peserta_id', participant.id)
     .maybeSingle()
 
-  // 3. Cek apakah ujian sedang dibuka
-  const { data: configAccess } = await supabase
-    .from('system_config')
-    .select('nilai')
-    .eq('kunci', 'akses_ujian_terbuka')
-    .maybeSingle()
-    
-  const isAksesTerbuka = configAccess?.nilai === 'true'
-
-  // 4. Ambil batas soal
-  const { data: configBatas } = await supabase
-    .from('system_config')
-    .select('nilai')
-    .eq('kunci', 'batas_soal')
-    .maybeSingle()
-  const batasSoal = configBatas?.nilai || '50'
-
   return (
-    <PesertaClient 
-      participant={participant} 
-      examSession={examSession} 
-      isAksesTerbuka={isAksesTerbuka} 
+    <PesertaClient
+      participant={participant}
+      examSession={examSession}
+      isAksesTerbuka={isAksesTerbuka}
       batasSoal={batasSoal}
+      durasiMenit={durasiMenit}
+      nilaiLulus={nilaiLulus}
     />
   )
 }

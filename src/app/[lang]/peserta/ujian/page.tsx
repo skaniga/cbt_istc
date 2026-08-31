@@ -2,6 +2,7 @@ import { createClient } from '@/lib/supabase/server'
 import { getSession } from '@/lib/session'
 import { redirect } from 'next/navigation'
 import CbtClient from './CbtClient'
+import ExamErrorBoundary from './ExamErrorBoundary'
 
 export const revalidate = 0
 
