@@ -20,7 +20,7 @@ export async function registerParticipant(formData: FormData) {
 
     const supabase = await createClient()
 
-    // Generate Nomor Peserta via RPC
+    // Generate Nomor Peserta via RPC (sekarang pakai SEQUENCE — atomic, tidak duplikat)
     const { data: nomor_peserta, error: rpcError } = await supabase.rpc('generate_nomor_peserta')
 
     if (rpcError || !nomor_peserta) {
@@ -28,67 +28,30 @@ export async function registerParticipant(formData: FormData) {
       return { error: 'Gagal membuat nomor peserta. Silakan coba lagi nanti.' }
     }
 
-    // Insert langsung — tidak ada pre-check untuk menghindari race condition TOCTOU.
-    // Unique constraint di DB akan menangkap duplikasi no_passport atau nomor_peserta.
-    let insertError: any = null
-    let finalNomorPeserta = nomor_peserta
-
-    for (let attempt = 0; attempt < 3; attempt++) {
-      if (attempt > 0) {
-        // Ambil nomor peserta baru untuk retry (hanya jika konflik di nomor_peserta)
-        const { data: newNomor, error: retryRpcError } = await supabase.rpc('generate_nomor_peserta')
-        if (retryRpcError || !newNomor) break
-        finalNomorPeserta = newNomor
-      }
-
-      const { error } = await supabase
-        .from('participants')
-        .insert({
-          nomor_peserta: finalNomorPeserta,
-          nama_lengkap,
-          no_passport,
-          kategori,
-        })
-
-      insertError = error
-
-      if (!error) break // Berhasil
-
-      // Hanya retry jika konflik di nomor_peserta (bukan no_passport)
-      if (error.code !== '23505') break // Error lain, langsung keluar
-
-      const isPassportConflict =
-        error.message?.toLowerCase().includes('no_passport') ||
-        error.details?.toLowerCase().includes('no_passport') ||
-        error.message?.toLowerCase().includes('passport')
-
-      if (isPassportConflict) break // Jangan retry untuk konflik passport
-    }
+    // Insert langsung — SEQUENCE menjamin nomor_peserta unik tanpa retry
+    const { error: insertError } = await supabase
+      .from('participants')
+      .insert({
+        nomor_peserta,
+        nama_lengkap,
+        no_passport,
+        kategori,
+      })
 
     if (insertError) {
       console.error('Insert Error:', JSON.stringify(insertError))
 
+      // Duplikat no_passport — peserta sudah terdaftar
       if (insertError.code === '23505') {
-        // Post-check: cari tahu constraint mana yang dilanggar
-        const { data: existingCheck } = await supabase
-          .from('participants')
-          .select('id')
-          .eq('no_passport', no_passport)
-          .maybeSingle()
-
-        if (existingCheck) {
-          return { error: 'No Passport ini sudah terdaftar. Silakan login menggunakan nomor peserta Anda.' }
-        }
-        return { error: 'Gagal menyimpan data pendaftaran (nomor bentrok). Silakan coba lagi.' }
+        return { error: 'No Passport ini sudah terdaftar. Silakan login menggunakan nomor peserta Anda.' }
       }
 
-      // Tampilkan kode error untuk diagnosis — akan dihapus setelah bug ditemukan
-      return { error: `Gagal menyimpan data [${insertError.code}]: ${insertError.message ?? 'unknown'}` }
+      return { error: 'Gagal menyimpan data pendaftaran. Silakan coba lagi.' }
     }
 
     return {
       data: {
-        nomor_peserta: finalNomorPeserta,
+        nomor_peserta,
         nama: nama_lengkap,
         kategori,
       }
