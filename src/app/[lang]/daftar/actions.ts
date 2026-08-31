@@ -69,14 +69,21 @@ export async function registerParticipant(formData: FormData) {
       console.error('Insert Error:', JSON.stringify(insertError))
 
       if (insertError.code === '23505') {
-        const msg = (insertError.message ?? '') + (insertError.details ?? '')
-        const isPassport = msg.toLowerCase().includes('no_passport') || msg.toLowerCase().includes('passport')
-        if (isPassport) {
+        // Post-check: cari tahu constraint mana yang dilanggar
+        const { data: existingCheck } = await supabase
+          .from('participants')
+          .select('id')
+          .eq('no_passport', no_passport)
+          .maybeSingle()
+
+        if (existingCheck) {
           return { error: 'No Passport ini sudah terdaftar. Silakan login menggunakan nomor peserta Anda.' }
         }
+        return { error: 'Gagal menyimpan data pendaftaran (nomor bentrok). Silakan coba lagi.' }
       }
 
-      return { error: 'Gagal menyimpan data pendaftaran. Silakan coba lagi.' }
+      // Tampilkan kode error untuk diagnosis — akan dihapus setelah bug ditemukan
+      return { error: `Gagal menyimpan data [${insertError.code}]: ${insertError.message ?? 'unknown'}` }
     }
 
     return {
