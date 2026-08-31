@@ -59,6 +59,7 @@ export default function DaftarPage() {
 
     const formData = new FormData(e.currentTarget)
     formData.set('kategori', selectedKategori)
+    formData.set('locale', locale)
 
     startTransition(async () => {
       try {

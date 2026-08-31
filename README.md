@@ -1,12 +1,15 @@
 # 🏛️ International Science and Technology Competitions — CBT Platform
 
-> **Platform Manajemen Ujian Berbasis Web** untuk International Science and Technology Competitions (ISTC) 2025.
+> **Platform Manajemen Ujian Berbasis Web** untuk International Science and Technology Competitions (ISTC) 2026.  
 > Dibangun dengan Next.js 14, Supabase, dan desain *Academia / Classical* yang premium.
 
 ![Next.js](https://img.shields.io/badge/Next.js-14.x-black?style=flat-square&logo=next.js)
 ![Supabase](https://img.shields.io/badge/Supabase-PostgreSQL-3ECF8E?style=flat-square&logo=supabase)
 ![TypeScript](https://img.shields.io/badge/TypeScript-5.x-3178C6?style=flat-square&logo=typescript)
+![Vercel](https://img.shields.io/badge/Deploy-Vercel-black?style=flat-square&logo=vercel)
 ![License](https://img.shields.io/badge/License-Private-red?style=flat-square)
+
+🌐 **Live**: [istcompetition.my](https://istcompetition.my)
 
 ---
 
@@ -14,17 +17,18 @@
 
 1. [Tentang Platform](#tentang-platform)
 2. [Fitur Utama](#fitur-utama)
-3. [Alur Sistem](#alur-sistem)
-4. [Teknologi yang Digunakan](#teknologi-yang-digunakan)
-5. [Persyaratan Sistem](#persyaratan-sistem)
-6. [Instalasi & Setup Awal](#instalasi--setup-awal)
-7. [Konfigurasi Database (Supabase)](#konfigurasi-database-supabase)
-8. [Panduan Penggunaan — Peserta](#panduan-penggunaan--peserta)
-9. [Panduan Penggunaan — Admin / Panitia](#panduan-penggunaan--admin--panitia)
-10. [Struktur Proyek](#struktur-proyek)
-11. [Peta Halaman (Sitemap)](#peta-halaman-sitemap)
-12. [Troubleshooting](#troubleshooting)
-13. [FAQ](#faq)
+3. [Bidang Kompetisi](#bidang-kompetisi)
+4. [Alur Sistem](#alur-sistem)
+5. [Teknologi yang Digunakan](#teknologi-yang-digunakan)
+6. [Persyaratan Sistem](#persyaratan-sistem)
+7. [Instalasi & Setup Awal](#instalasi--setup-awal)
+8. [Konfigurasi Database (Supabase)](#konfigurasi-database-supabase)
+9. [Panduan Penggunaan — Peserta](#panduan-penggunaan--peserta)
+10. [Panduan Penggunaan — Admin / Panitia](#panduan-penggunaan--admin--panitia)
+11. [Struktur Proyek](#struktur-proyek)
+12. [Peta Halaman (Sitemap)](#peta-halaman-sitemap)
+13. [Troubleshooting](#troubleshooting)
+14. [FAQ](#faq)
 
 ---
 
@@ -32,7 +36,9 @@
 
 Platform ISTC CBT dirancang khusus untuk mendukung proses seleksi peserta **International Science and Technology Competitions** secara digital dan efisien. Sistem ini menggantikan ujian konvensional berbasis kertas dengan pengalaman berbasis web yang elegan, aman, dan mudah diakses dari perangkat manapun.
 
-**Desain filosofi**: *Academia / Classical* — menghadirkan nuansa keagungan galeri seni dengan palet warna putih gading, hitam elegan, dan aksen kuningan (*brass*), terinspirasi dari estetika pameran fotografi internasional bertaraf dunia.
+**Desain filosofi**: *Academia / Classical* — menghadirkan nuansa keagungan galeri seni dengan palet warna putih gading, hitam elegan, dan aksen kuningan (*brass*), terinspirasi dari estetika pameran ilmu pengetahuan internasional.
+
+**Multilingual**: Platform mendukung 3 bahasa — **English (EN)**, **Bahasa Indonesia (ID)**, dan **Bahasa Melayu (MS)** — dengan deteksi bahasa browser otomatis saat kunjungan pertama.
 
 ---
 
@@ -41,58 +47,76 @@ Platform ISTC CBT dirancang khusus untuk mendukung proses seleksi peserta **Inte
 ### 👥 Untuk Peserta
 | Fitur | Deskripsi |
 |-------|-----------|
-| **Pendaftaran Online** | Daftar cukup dengan Nama Lengkap & Nomor Passport — tanpa kerumitan |
-| **Login Sederhana** | Masuk dengan Nomor Peserta + kata sandi universal |
-| **Dashboard Peserta** | Pantau status ujian secara real-time dari satu halaman |
-| **CBT Ujian Digital** | Antarmuka ujian modern dengan timer, navigasi soal, dan auto-save |
-| **Sertifikat PDF Otomatis** | Unduh sertifikat digital ber-desain premium setelah ujian selesai |
-| **Mobile Responsive** | Dapat diakses dari HP, tablet, maupun laptop tanpa performa menurun |
+| **Pendaftaran Online** | Daftar dengan Nama Lengkap, No Passport, dan pilih **bidang kompetisi** |
+| **Pilih Bidang** | 4 bidang kompetisi tersedia — dipilih saat mendaftar, tidak bisa diubah |
+| **Login Sederhana** | Masuk dengan Nomor Peserta + kata sandi universal `ISTC2026` |
+| **Dashboard Peserta** | Pantau status ujian & lihat badge bidang kompetisi |
+| **CBT Ujian Digital** | Soal difilter otomatis sesuai bidang, timer, auto-save, navigasi grid |
+| **Sertifikat PDF Otomatis** | Sertifikat digital premium dengan nama, skor, bidang, dan logo ISTC |
+| **Multilingual** | UI tersedia dalam EN / ID / MS, ganti kapan saja via navbar |
+| **Mobile Responsive** | Dapat diakses dari HP, tablet, dan laptop |
 
 ### 🛡️ Untuk Admin / Panitia
 | Fitur | Deskripsi |
 |-------|-----------|
-| **Login Aman** | Autentikasi berbasis Supabase Auth (email + password terenkripsi) |
+| **Login Aman** | Autentikasi berbasis Supabase Auth (email + password) |
 | **Toggle Akses Ujian** | Buka/tutup akses ujian peserta dengan satu klik |
-| **Manajemen Peserta** | Lihat semua peserta terdaftar beserta skor dan status kelulusan |
-| **Bank Soal** | Kelola dan pratinjau soal-soal yang digunakan dalam ujian |
-| **Keep Alive Log** | Monitor keaktifan database Supabase secara visual |
+| **Manajemen Peserta** | Lihat peserta dengan kolom **Bidang**, Skor, Status; edit nama/passport/bidang |
+| **Bank Soal** | Kelola soal per bidang kompetisi — 50 soal per bidang (200 total) |
+| **Keep Alive Log** | Monitor keaktifan database Supabase |
+
+---
+
+## 🏆 Bidang Kompetisi
+
+ISTC 2026 memiliki **4 bidang kompetisi**, masing-masing dengan 50 soal khusus:
+
+| Bidang | Ikon | Deskripsi |
+|--------|------|-----------|
+| **Environmental Technology** | 🌱 | Teknologi lingkungan & keberlanjutan |
+| **Smart Robotics** | 🤖 | Robotika & otomasi cerdas |
+| **Science In Action** | 🔬 | Sains terapan & eksperimen |
+| **Mathematic** | 📐 | Matematika & logika |
+
+> Peserta memilih bidang **saat pendaftaran**. Soal ujian yang ditampilkan akan **otomatis difilter** sesuai bidang yang dipilih.
 
 ---
 
 ## 🔄 Alur Sistem
 
 ```
-[PESERTA]                            [ADMIN]
-    │                                    │
-    ▼                                    ▼
-Mendaftar di /daftar              Login di /admin/login
-(Nama + No. Passport)             (Email + Password Supabase)
-    │                                    │
-    ▼                                    ▼
-Dapat Nomor Peserta          Dashboard Admin terbuka
-(contoh: ISTC-2025-0001)      ─ Buka/Tutup Akses Ujian
-    │                        ─ Lihat Daftar Peserta
-    ▼                        ─ Kelola Soal
-Login di /login
-(Nomor Peserta + Sandi)
+[PESERTA]                                    [ADMIN]
+    │                                            │
+    ▼                                            ▼
+Mendaftar di /{lang}/daftar            Login di /admin/login
+(Nama + No. Passport + Bidang)         (Email + Password Supabase)
+    │                                            │
+    ▼                                            ▼
+Dapat Nomor Peserta              Dashboard Admin terbuka
+(format: IPE-2026-XXXX)          ─ Buka/Tutup Akses Ujian
+    │                            ─ Lihat Daftar Peserta + Bidang
+    ▼                            ─ Edit Data Peserta
+Login di /{lang}/login           ─ Kelola Soal per Bidang
+(Nomor Peserta + ISTC2026)
     │
     ▼
-Dashboard Peserta (/peserta)
-─ Jika akses TERBUKA: Mulai Ujian
-─ Jika akses TERTUTUP: Tunggu panitia
+Dashboard Peserta (/{lang}/peserta)
+─ Badge bidang kompetisi
+─ Status ujian real-time
+─ Mulai / Lanjutkan Ujian
     │
     ▼
-Halaman Ujian (/peserta/ujian)
-─ Jawab soal pilihan ganda
-─ Navigasi antar soal via grid
+Halaman Ujian (/{lang}/peserta/ujian)
+─ 50 soal sesuai bidang peserta
 ─ Jawaban tersimpan otomatis
-─ Timer hitung mundur
+─ Timer 90 menit hitung mundur
     │
     ▼
 Selesai → Skor & Status dihitung
     │
     ▼
-Unduh Sertifikat PDF (/peserta/sertifikat)
+Unduh Sertifikat PDF (/{lang}/peserta/sertifikat)
+─ Nama, bidang, skor, tanggal, logo ISTC
 ```
 
 ---
@@ -109,6 +133,7 @@ Unduh Sertifikat PDF (/peserta/sertifikat)
 | **jsPDF** | Latest | Konversi gambar ke file PDF |
 | **Vanilla CSS** | — | Design system tanpa framework CSS eksternal |
 | **Google Fonts** | — | Cormorant Garamond, Crimson Pro, Cinzel |
+| **Vercel** | — | Deployment & CDN global |
 
 ---
 
@@ -126,7 +151,7 @@ Unduh Sertifikat PDF (/peserta/sertifikat)
 ### 1. Clone Repositori
 
 ```bash
-git clone <url-repositori>
+git clone https://github.com/krido19/computer-service-shop.git
 cd computer-service-shop
 ```
 
@@ -138,7 +163,7 @@ npm install
 
 ### 3. Buat File Environment
 
-Buat file `.env.local` di root proyek, lalu isi dengan kredensial Supabase Anda:
+Buat file `.env.local` di root proyek:
 
 ```env
 NEXT_PUBLIC_SUPABASE_URL=https://XXXXXXXXXXXX.supabase.co
@@ -162,122 +187,139 @@ Buka browser dan kunjungi `http://localhost:3000`.
 
 ## 🗄️ Konfigurasi Database (Supabase)
 
-### Langkah 1: Jalankan Skema Database
+Jalankan file SQL berikut di **Supabase Dashboard → SQL Editor** secara **berurutan**:
 
-1. Buka **Supabase Dashboard** → **SQL Editor**
-2. Copy seluruh isi file [`supabase/seed.sql`](./supabase/seed.sql)
-3. Paste ke SQL Editor, lalu klik **Run**
+### Step 1 — Skema Database Utama
+```
+supabase/seed.sql
+```
+Membuat semua tabel, RLS policies, fungsi, dan data konfigurasi awal.
 
-> Skrip ini akan membuat semua tabel, RLS policies, fungsi, dan data konfigurasi awal secara otomatis.
-
-### Langkah 2: Aktifkan RLS & Tambah Fungsi Login
-
-Jalankan juga isi file [`supabase/fix-login.sql`](./supabase/fix-login.sql) untuk menambahkan fungsi keamanan login peserta:
-
-```sql
--- Sudah otomatis jika menjalankan seed.sql lengkap.
--- Jika diperlukan secara terpisah, jalankan file ini.
+### Step 2 — Fix RLS Policies
+```
+supabase/fix-rls.sql
 ```
 
-### Langkah 3: Tambahkan Soal Ujian
+### Step 3 — Fungsi Login & Index
+```
+supabase/optimize_login.sql
+```
+Menambahkan RPC `verify_participant_login` dan indexes untuk performa login.
 
-Untuk ujian production, masukkan soal-soal Anda melalui SQL Editor:
-
+### Step 4 — Tambah Kolom Bidang ke Peserta
+```
+supabase/add_kategori_to_participants.sql
+```
 ```sql
-INSERT INTO public.questions (nomor_soal, pertanyaan, pilihan_a, pilihan_b, pilihan_c, pilihan_d, kunci_jawaban, kategori)
-VALUES 
-  (1, 'Pertanyaan pertama?', 'Opsi A', 'Opsi B', 'Opsi C', 'Opsi D', 'A', 'umum'),
-  (2, 'Pertanyaan kedua?',   'Opsi A', 'Opsi B', 'Opsi C', 'Opsi D', 'B', 'teknik');
+ALTER TABLE public.participants
+  ADD COLUMN IF NOT EXISTS kategori TEXT DEFAULT NULL;
 ```
 
-> 💡 Untuk pengujian cepat, gunakan 5 soal contoh di file [`supabase/dummy_soal.sql`](./supabase/dummy_soal.sql).
+### Step 5 — Fix Nomor Peserta (SEQUENCE atomic)
+```
+supabase/fix_nomor_peserta_sequence.sql
+```
+Mengganti `COUNT(*)+1` dengan PostgreSQL SEQUENCE untuk mencegah race condition pada registrasi bersamaan.
 
-### Langkah 4: Buat Akun Admin
+### Step 6 — Soal Ujian 2026
+Pilih sesuai bahasa soal yang diinginkan:
+```
+supabase/seed_soal_2026.sql      ← Soal Bahasa Indonesia
+supabase/seed_soal_2026_en.sql   ← Soal Bahasa Inggris  
+supabase/seed_soal_2026_ms.sql   ← Soal Bahasa Melayu
+```
+
+### Step 7 — Set Kategori Soal (4 bidang × 50 soal)
+```
+supabase/set_kategori_questions.sql
+```
+Membagi 200 soal menjadi 4 bidang kompetisi (50 soal per bidang).
+
+### Step 8 — QA Fixes (Index & Constraint)
+```
+supabase/qa_fixes.sql
+```
+
+### Step 9 — Buat Akun Admin
 
 1. Buka **Supabase Dashboard** → **Authentication** → **Users**
 2. Klik **Add User** → **Create New User**
-3. Masukkan **Email** dan **Password** pilihan Anda
+3. Masukkan Email dan Password
 4. Gunakan kredensial tersebut untuk login di `/admin/login`
 
+### Verifikasi Database
 
+```sql
+-- Cek distribusi soal per bidang
+SELECT kategori, COUNT(*) as jumlah_soal
+FROM public.questions
+GROUP BY kategori
+ORDER BY kategori;
+-- Expected: 4 baris, masing-masing 50 soal
+
+-- Cek kolom kategori di participants
+SELECT column_name, data_type
+FROM information_schema.columns
+WHERE table_name = 'participants' AND column_name = 'kategori';
+```
 
 ---
 
 ## 👤 Panduan Penggunaan — Peserta
 
-### 1️⃣ Pendaftaran
+### 1️⃣ Pendaftaran (`/{lang}/daftar`)
 
-1. Buka halaman utama dan klik tombol **"Daftar Sekarang"** (atau langsung ke `/daftar`)
-2. Isi formulir:
-   - **Nama Lengkap** — Sesuai identitas resmi (paspor/KTP)
-   - **Nomor Passport / ID** — Nomor identitas unik Anda
+1. Isi formulir:
+   - **Nama Lengkap** — Sesuai identitas resmi
+   - **Nomor Passport / ID** — Huruf kapital & angka, 6–12 karakter (contoh: `A1234567`)
+2. Pilih **Bidang Kompetisi** (salah satu dari 4 bidang)
 3. Klik **"Daftar Sekarang"**
-4. Sistem akan menampilkan **Nomor Peserta** Anda (format: `ISTC-2025-XXXX`)
+4. Sistem menampilkan **Nomor Peserta** (format: `IPE-2026-XXXX`) — **salin & simpan!**
 
-> 🔑 **Simpan Nomor Peserta ini!** Anda akan membutuhkannya untuk login.
-
----
-
-### 2️⃣ Login
-
-1. Buka `/login`
-2. Masukkan kredensial berikut:
-   - **Nomor Peserta** (atau No Passport) — Contoh: `ISTC-2025-0001`
-   - **Kata Sandi** — `123456` *(kata sandi universal untuk semua peserta)*
-3. Klik **"Masuk Ujian"**
+> 🔑 Bidang kompetisi **tidak dapat diubah** setelah mendaftar.
 
 ---
 
-### 3️⃣ Dashboard Peserta
+### 2️⃣ Login (`/{lang}/login`)
 
-Setelah login, Anda akan melihat Dashboard dengan salah satu dari tiga status:
-
-| Status | Tampilan | Tindakan |
-|--------|----------|----------|
-| **Belum Dimulai** | "Mulai Ujian" tersedia | Klik untuk memulai (jika akses dibuka panitia) |
-| **Akses Ditutup** | Pesan "Akses Sedang Ditutup" | Tunggu pengumuman panitia |
-| **Sedang Berlangsung** | "Lanjutkan Ujian" | Kembali ke halaman ujian yang belum selesai |
-| **Selesai** | Skor + Status Lulus/Tidak | Unduh sertifikat PDF |
+| Field | Nilai |
+|-------|-------|
+| **Nomor Peserta / No Passport** | Contoh: `IPE-2026-0001` atau `A1234567` |
+| **Kata Sandi** | `ISTC2026` *(universal untuk semua peserta)* |
 
 ---
 
-### 4️⃣ Mengerjakan Ujian
+### 3️⃣ Dashboard Peserta (`/{lang}/peserta`)
 
-Halaman ujian (`/peserta/ujian`) memiliki tampilan dua panel:
+Menampilkan:
+- **Badge bidang kompetisi** yang dipilih saat daftar
+- Status ujian saat ini
 
-**Panel Kiri/Utama — Soal:**
-- Teks soal ditampilkan jelas dengan opsi A, B, C, D
-- Klik opsi untuk memilih jawaban (langsung tersimpan otomatis)
-- Navigasi dengan tombol **← Sebelumnya** dan **Selanjutnya →**
-
-**Panel Kanan/Navigasi Soal:**
-- Grid nomor soal menampilkan warna berbeda:
-  - **Emas** = soal yang sedang aktif
-  - **Gelap** = sudah dijawab
-  - **Terang** = belum dijawab
-- Klik nomor berapa saja untuk langsung pindah ke soal tersebut
-
-**Timer:**
-- Hitung mundur ditampilkan di pojok kanan atas
-- Jika waktu hampir habis (< 5 menit), timer berubah merah
-- Saat waktu 0, ujian **otomatis dikumpulkan**
-
-**Di layar HP/Mobile:**
-- Tombol **"☰ Soal"** akan membuka laci navigasi dari sisi kiri
-
-> ⚠️ **Jangan tutup tab/browser** saat ujian berlangsung. Jawaban tetap tersimpan, namun timer terus berjalan.
+| Status | Tindakan |
+|--------|----------|
+| **Belum Dimulai** | Klik "Mulai Ujian" (jika akses dibuka panitia) |
+| **Akses Ditutup** | Tunggu pengumuman panitia |
+| **Sedang Berlangsung** | Klik "Lanjutkan Ujian" |
+| **Selesai** | Lihat skor & unduh sertifikat |
 
 ---
 
-### 5️⃣ Mengunduh Sertifikat
+### 4️⃣ Mengerjakan Ujian (`/{lang}/peserta/ujian`)
 
-1. Setelah ujian selesai, kembali ke Dashboard Peserta
-2. Lihat **Skor Akhir** dan **Status** (Lulus / Tidak Lulus)
-3. Klik **"Unduh Sertifikat PDF"**
-4. Anda akan diarahkan ke halaman pratinjau sertifikat
-5. Klik tombol **"Unduh Sertifikat (PDF)"** untuk menyimpan file
+- **50 soal** sesuai bidang kompetisi yang dipilih
+- Jawaban tersimpan **otomatis** saat diklik
+- **Timer 90 menit** (merah saat < 5 menit)
+- Grid navigasi soal (emas = aktif, gelap = dijawab, terang = belum)
+- Ujian **otomatis dikumpulkan** saat waktu habis
 
-> 📄 Sertifikat berformat **A4 Landscape** berdesain elegan, siap dicetak langsung.
+---
+
+### 5️⃣ Sertifikat (`/{lang}/peserta/sertifikat`)
+
+Sertifikat A4 Landscape berisi:
+- Nama peserta, bidang kompetisi, skor, tanggal
+- Logo ISTC resmi
+- Nomor peserta unik
 
 ---
 
@@ -285,49 +327,31 @@ Halaman ujian (`/peserta/ujian`) memiliki tampilan dua panel:
 
 ### Cara Akses
 
-Buka `/admin/login` dan masukkan **Email + Password** akun admin yang dibuat di Supabase Authentication.
+Buka `/admin/login` → masukkan Email + Password Supabase Auth.
 
 ---
 
 ### Dashboard Utama (`/admin`)
 
-#### Kontrol Akses Ujian
-- Melihat status ujian saat ini: **TERBUKA** atau **DITUTUP**
-- Klik tombol **"Buka Akses Ujian"** → peserta dapat mulai mengerjakan
-- Klik tombol **"Tutup Akses Ujian"** → peserta tidak dapat memulai sesi baru
-
-> 💡 Pastikan Anda membuka akses ujian tepat waktu sesuai jadwal. Peserta yang sudah masuk di sesi ujian tidak akan terpengaruh oleh penutupan akses.
-
-#### Keep Alive Log
-- Memantau apakah sistem telah melakukan *ping* ke database secara berkala
-- Mencegah database Supabase free tier *pause* setelah 7 hari tidak aktif
-- Klik **"Trigger Keep Alive (Ping DB)"** untuk melakukan ping manual
+- **Buka/Tutup Akses Ujian** — satu klik mengontrol semua peserta
+- **Keep Alive** — ping database agar tidak pause (Supabase free tier)
 
 ---
 
 ### Manajemen Peserta (`/admin/peserta`)
 
-Menampilkan tabel lengkap seluruh peserta dengan kolom:
-- **No. Peserta** — Kode unik peserta (format: `ISTC-2025-XXXX`)
-- **Nama Lengkap** — Nama sesuai identitas
-- **No Passport / ID** — Nomor identitas yang digunakan saat daftar
-- **Tgl Daftar** — Tanggal pendaftaran
-- **Skor** — Hasil ujian (tampil setelah ujian selesai, dalam skala 0–100)
-- **Status** — BELUM UJIAN / LULUS / TIDAK LULUS
+Tabel menampilkan:
+- Nomor Peserta · Nama · No Passport · **Bidang** · Skor · Status · Tgl Daftar
+
+**Edit Peserta**: klik ikon edit → ubah Nama, No Passport, atau **Bidang Kompetisi**.
 
 ---
 
 ### Manajemen Soal (`/admin/soal`)
 
-Menampilkan daftar semua soal dalam bank soal dengan kolom:
-- **No.** — Nomor urut soal
-- **Pertanyaan** — Pratinjau teks soal (dipotong jika terlalu panjang)
-- **Kunci** — Jawaban benar (A/B/C/D)
-- **Kategori** — Klasifikasi soal (teknik / estetika / sejarah / umum)
-- **Bobot** — Poin per soal
-- **Status** — AKTIF / NON-AKTIF
-
-> 📝 Untuk menambah/mengubah soal, gunakan **Supabase SQL Editor** secara langsung hingga fitur CRUD soal tersedia di versi berikutnya.
+- Filter soal per **bidang kompetisi**
+- Tambah / Edit soal langsung dari UI admin
+- Kolom: Nomor · Pertanyaan · Kunci Jawaban · **Kategori/Bidang** · Bobot · Status
 
 ---
 
@@ -337,56 +361,99 @@ Menampilkan daftar semua soal dalam bank soal dengan kolom:
 computer-service-shop/
 ├── src/
 │   ├── app/
-│   │   ├── page.tsx              # Landing Page (publik)
-│   │   ├── layout.tsx            # Root layout + font
-│   │   ├── globals.css           # Design system & CSS variables
-│   │   ├── daftar/
-│   │   │   ├── page.tsx          # Form Pendaftaran Peserta
-│   │   │   └── actions.ts        # Server action: registerParticipant
-│   │   ├── login/
-│   │   │   ├── page.tsx          # Form Login Peserta
-│   │   │   └── actions.ts        # Server action: loginParticipant
-│   │   ├── peserta/
-│   │   │   ├── layout.tsx        # Layout area peserta (navbar)
-│   │   │   ├── page.tsx          # Dashboard Peserta
-│   │   │   ├── components.tsx    # StartExamForm (client component)
-│   │   │   ├── actions.ts        # Server action: startExam
-│   │   │   ├── ujian/
-│   │   │   │   ├── page.tsx      # Halaman CBT (Server Component)
-│   │   │   │   ├── CbtClient.tsx # UI ujian interaktif (Client Component)
-│   │   │   │   └── actions.ts    # saveAnswer, finishExam
-│   │   │   └── sertifikat/
-│   │   │       ├── page.tsx      # Halaman Sertifikat (Server Component)
-│   │   │       └── SertifikatClient.tsx # Render & download PDF
-│   │   └── admin/
-│   │       ├── layout.tsx        # Layout admin (sidebar + auth check)
-│   │       ├── page.tsx          # Dashboard Admin
-│   │       ├── actions.ts        # logoutAdmin, toggleAkses, keepAlive
-│   │       ├── components.tsx    # ToggleAksesForm, KeepAliveForm
+│   │   ├── layout.tsx                    # Root layout + JSON-LD + Fonts
+│   │   ├── globals.css                   # Design system & CSS variables
+│   │   ├── not-found.tsx                 # Halaman 404 custom
+│   │   ├── robots.ts                     # robots.txt dinamis
+│   │   ├── sitemap.ts                    # Sitemap XML dinamis
+│   │   ├── opengraph-image.tsx           # OG Image generator
+│   │   └── [lang]/                       # Routing multilingual (en/id/ms)
+│   │       ├── page.tsx                  # Landing Page per bahasa
+│   │       ├── daftar/
+│   │       │   ├── page.tsx              # Form Pendaftaran + pilih bidang
+│   │       │   ├── actions.ts            # registerParticipant (sequence atomic)
+│   │       │   └── layout.tsx            # Metadata pendaftaran
 │   │       ├── login/
-│   │       │   ├── page.tsx      # Form Login Admin
-│   │       │   └── actions.ts    # Server action: loginAdmin
-│   │       ├── peserta/
-│   │       │   └── page.tsx      # Tabel Manajemen Peserta
-│   │       ├── soal/
-│   │       │   └── page.tsx      # Tabel Bank Soal
-│   │       ├── dokumen/
-│   │       │   └── page.tsx      # Placeholder: Dokumen & Seleksi
-│   │       └── sarana/
-│   │           └── page.tsx      # Placeholder: Sarana & Arsip
-│   ├── components/
-│   │   └── Navbar.tsx            # Komponen Navbar (publik)
-│   └── lib/
-│       ├── session.ts            # JWT session management (jose)
-│       ├── types.ts              # TypeScript interfaces
-│       └── supabase/
-│           ├── client.ts         # Supabase Browser Client
-│           └── server.ts         # Supabase Server Client (async)
+│   │       │   ├── page.tsx              # Form Login Peserta (multilingual)
+│   │       │   ├── actions.ts            # loginParticipant via RPC
+│   │       │   └── layout.tsx            # Metadata login (noindex)
+│   │       └── peserta/
+│   │           ├── layout.tsx            # Layout peserta (auth guard)
+│   │           ├── page.tsx              # Dashboard Peserta
+│   │           ├── PesertaClient.tsx     # UI dashboard + badge bidang
+│   │           ├── PesertaNavbar.tsx     # Navbar area peserta
+│   │           ├── components.tsx        # StartExamForm
+│   │           ├── actions.ts            # startExam (validasi kategori)
+│   │           ├── loading.tsx           # Loading skeleton
+│   │           ├── ujian/
+│   │           │   ├── page.tsx          # CBT Server Component
+│   │           │   ├── CbtClient.tsx     # UI ujian interaktif
+│   │           │   ├── actions.ts        # saveAnswer, finishExam (atomic)
+│   │           │   ├── useExamGuard.ts   # Hook proteksi sesi ujian
+│   │           │   ├── ExamErrorBoundary.tsx # Error boundary CBT
+│   │           │   └── loading.tsx       # Loading skeleton ujian
+│   │           └── sertifikat/
+│   │               ├── page.tsx          # Sertifikat Server Component
+│   │               └── SertifikatClient.tsx # Render & download PDF
+│   │
+│   └── admin/
+│       ├── layout.tsx                    # Layout admin (Supabase Auth check)
+│       ├── login/                        # Form Login Admin
+│       └── (dashboard)/
+│           ├── page.tsx                  # Dashboard + toggle ujian
+│           ├── components.tsx            # ToggleAksesForm, KeepAlive
+│           ├── peserta/
+│           │   ├── page.tsx              # Tabel peserta + kolom bidang
+│           │   ├── PesertaClient.tsx     # UI tabel + edit modal bidang
+│           │   └── actions.ts            # updateParticipant (inkl. kategori)
+│           └── soal/
+│               ├── page.tsx              # Tabel bank soal
+│               └── SoalClient.tsx        # UI soal + filter bidang
+│
+├── components/
+│   ├── Navbar.tsx                        # Navbar publik + language switcher
+│   └── LandingContent.tsx                # Landing page multilingual
+│
+├── lib/
+│   ├── session.ts                        # JWT session (jose)
+│   ├── types.ts                          # TypeScript interfaces
+│   ├── supabase/
+│   │   ├── client.ts                     # Supabase Browser Client
+│   │   └── server.ts                     # Supabase Server Client
+│   └── i18n/
+│       ├── LanguageContext.tsx           # Context + cookie locale detection
+│       └── translations.ts              # Terjemahan EN/ID/MS
+│
+├── middleware.ts                         # Auto-detect bahasa browser (Accept-Language)
+│
+├── public/
+│   ├── logo.png                          # Logo ISTC resmi
+│   ├── hero.jpg / hero.webp              # Hero image landing
+│   ├── Guidelines_ISTC_2026_EN.pdf       # Panduan EN
+│   ├── Syllabi_ISTC_2026_EN.pdf          # Silabus EN
+│   ├── Panduan_ISTC_2026_MS.pdf          # Panduan MS
+│   ├── Silibus_ISTC_2026_MS.pdf          # Silabus MS
+│   ├── Juknis_ISTC_2026.pdf              # Juknis ID
+│   └── Kisi_Kisi_ISTC_2026.pdf           # Kisi-kisi ID
+│
 ├── supabase/
-│   ├── seed.sql                  # Skema DB lengkap (jalankan di Supabase)
-│   ├── fix-login.sql             # RPC fungsi login (sudah ada di seed.sql)
-│   └── dummy_soal.sql            # 5 soal contoh untuk testing
-├── .env.local                    # ⚠️ JANGAN di-commit! Kredensial Supabase
+│   ├── seed.sql                          # Skema DB utama (jalankan pertama)
+│   ├── fix-rls.sql                       # RLS policies
+│   ├── optimize_login.sql               # RPC login + indexes
+│   ├── add_kategori_to_participants.sql  # Kolom bidang ke participants
+│   ├── fix_nomor_peserta_sequence.sql    # SEQUENCE atomic (race condition fix)
+│   ├── set_kategori_questions.sql        # Distribusi soal per bidang
+│   ├── qa_fixes.sql                      # Index & constraint tambahan
+│   ├── seed_soal_2026.sql               # 200 soal ID
+│   ├── seed_soal_2026_en.sql            # 200 soal EN
+│   ├── seed_soal_2026_ms.sql            # 200 soal MS
+│   └── finish_exam_atomic.sql           # RPC penyelesaian ujian atomic
+│
+├── SEO_GUIDE.md                          # Panduan SEO platform
+├── TECH_STACK.md                         # Dokumentasi teknis detail
+├── .env.local                            # ⚠️ JANGAN di-commit!
+├── .gitignore
+├── next.config.ts
 ├── package.json
 └── README.md
 ```
@@ -397,96 +464,99 @@ computer-service-shop/
 
 | URL | Akses | Deskripsi |
 |-----|-------|-----------|
-| `/` | Publik | Landing Page (tentang ISTC, alur, CTA) |
-| `/daftar` | Publik | Form pendaftaran peserta baru |
-| `/login` | Publik | Login peserta dengan nomor + sandi |
-| `/peserta` | 🔐 Peserta | Dashboard peserta (status ujian) |
-| `/peserta/ujian` | 🔐 Peserta | Halaman ujian CBT |
-| `/peserta/sertifikat` | 🔐 Peserta | Pratinjau & unduh sertifikat PDF |
-| `/admin/login` | Publik | Login admin (via Supabase Auth) |
+| `/` → `/en` atau `/id` atau `/ms` | Publik | Redirect otomatis berdasarkan bahasa browser |
+| `/{lang}` | Publik | Landing Page (tentang ISTC, bidang, alur, statistik) |
+| `/{lang}/daftar` | Publik | Form pendaftaran + pilih bidang kompetisi |
+| `/{lang}/login` | Publik | Login peserta |
+| `/{lang}/peserta` | 🔐 Peserta | Dashboard peserta + badge bidang |
+| `/{lang}/peserta/ujian` | 🔐 Peserta | Halaman CBT (soal sesuai bidang) |
+| `/{lang}/peserta/sertifikat` | 🔐 Peserta | Pratinjau & unduh sertifikat PDF |
+| `/admin/login` | Publik | Login admin |
 | `/admin` | 🔐 Admin | Dashboard kontrol utama |
-| `/admin/peserta` | 🔐 Admin | Tabel manajemen peserta |
-| `/admin/soal` | 🔐 Admin | Tabel bank soal ujian |
-| `/admin/dokumen` | 🔐 Admin | Modul dokumen (segera hadir) |
-| `/admin/sarana` | 🔐 Admin | Modul sarana & arsip (segera hadir) |
+| `/admin/peserta` | 🔐 Admin | Manajemen peserta + bidang |
+| `/admin/soal` | 🔐 Admin | Bank soal per bidang |
+
+> `{lang}` = `en` / `id` / `ms`
 
 ---
 
 ## 🔧 Troubleshooting
 
 ### ❌ "Gagal menyimpan data pendaftaran"
-**Penyebab**: RLS (Row Level Security) di Supabase memblokir insert.  
-**Solusi**: Pastikan Anda sudah menjalankan `seed.sql` **secara lengkap** di Supabase SQL Editor. File ini sudah mencakup semua policy yang diperlukan.
+**Penyebab**: RLS Supabase memblokir insert atau fungsi `generate_nomor_peserta` error.  
+**Solusi**:
+1. Pastikan `seed.sql` sudah dijalankan lengkap
+2. Jalankan `fix_nomor_peserta_sequence.sql` untuk fix race condition pada nomor peserta
 
 ---
 
 ### ❌ "Nomor peserta atau No Passport tidak ditemukan" saat login
-**Penyebab 1**: Peserta belum terdaftar (pendaftaran gagal tanpa disadari).  
-**Solusi**: Coba daftar ulang di `/daftar`.
-
-**Penyebab 2**: Fungsi RPC `verify_participant_login` belum dibuat.  
-**Solusi**: Jalankan `supabase/fix-login.sql` di Supabase SQL Editor.
+**Penyebab**: RPC `verify_participant_login` belum ada atau registrasi gagal.  
+**Solusi**: Jalankan `optimize_login.sql` di Supabase SQL Editor.
 
 ---
 
 ### ❌ "Kata sandi salah"
-**Penyebab**: Kata sandi yang dimasukkan bukan `123456`.  
-**Solusi**: Gunakan kata sandi universal `123456` untuk semua peserta.
+Kata sandi universal untuk peserta ISTC 2026 adalah `ISTC2026`.
 
 ---
 
-### ❌ Halaman ujian menampilkan "Soal Belum Tersedia"
-**Penyebab**: Tabel `questions` masih kosong.  
-**Solusi**: Jalankan `supabase/dummy_soal.sql` untuk memasukkan soal contoh, atau tambahkan soal production via SQL Editor.
-
----
-
-### ❌ Database Supabase tidak aktif / timeout
-**Penyebab**: Proyek Supabase free tier di-*pause* setelah 7 hari tidak aktif.  
+### ❌ "Questions Unavailable" / Soal tidak muncul
+**Penyebab**: Kolom `kategori` di tabel `questions` kosong atau soal belum di-seed.  
 **Solusi**:
-1. Login ke panel admin (`/admin`)
-2. Klik **"Trigger Keep Alive (Ping DB)"**
-3. Atau aktifkan kembali database melalui Supabase Dashboard online
+1. Jalankan `seed_soal_2026_en.sql` (atau varian bahasa lain)
+2. Jalankan `set_kategori_questions.sql`
+3. Verifikasi: `SELECT kategori, COUNT(*) FROM questions GROUP BY kategori` → harus 4 baris × 50
 
 ---
 
-### ❌ Build error: module not found `html2canvas` / `jspdf`
-**Penyebab**: Dependency belum terinstall.  
+### ❌ Halaman blank / Application error di browser
+**Penyebab**: Cache `.next` rusak atau merge conflict residue.  
 **Solusi**:
 ```bash
-npm install html2canvas jspdf
+Remove-Item -Recurse -Force .next
+npm run dev
 ```
+
+---
+
+### ❌ Database Supabase timeout
+**Penyebab**: Proyek Supabase free tier di-pause setelah 7 hari tidak aktif.  
+**Solusi**: Login ke `/admin` → klik **"Trigger Keep Alive"**.
 
 ---
 
 ## ❓ FAQ
 
 **Q: Apakah peserta bisa mendaftar lebih dari sekali?**  
-A: Tidak. Sistem akan menolak pendaftaran dengan Nomor Passport yang sama dan menampilkan pesan bahwa identitas tersebut sudah terdaftar.
+A: Tidak. Sistem menolak nomor Passport yang sama dengan pesan "sudah terdaftar".
+
+**Q: Bisakah peserta ganti bidang kompetisi setelah mendaftar?**  
+A: Tidak bisa sendiri. Admin dapat mengubahnya melalui `/admin/peserta` → Edit.
 
 **Q: Apakah jawaban tersimpan jika browser tiba-tiba tertutup?**  
-A: Ya. Setiap kali peserta mengklik jawaban, data langsung disimpan ke database secara otomatis. Saat peserta membuka kembali halaman ujian, jawaban sebelumnya akan dimuat ulang.
+A: Ya. Setiap jawaban langsung tersimpan ke database. Halaman ujian akan memuat ulang jawaban sebelumnya.
 
 **Q: Berapa lama durasi ujian?**  
-A: Durasi default adalah **90 menit**. Dapat diubah melalui tabel `system_config` di Supabase (kolom `kunci = 'durasi_menit'`, ubah nilainya).
+A: Default **90 menit**. Dapat diubah via `system_config` di Supabase (`kunci = 'durasi_menit'`).
 
-**Q: Berapa soal yang ditampilkan per sesi ujian?**  
-A: Default **50 soal**. Dapat diubah melalui `system_config` (`kunci = 'jumlah_soal'`).
+**Q: Berapa soal per sesi ujian?**  
+A: **50 soal** sesuai bidang peserta. Dapat diubah via `system_config` (`kunci = 'jumlah_soal'`).
 
-**Q: Berapa passing grade untuk dinyatakan Lulus?**  
-A: Passing grade default adalah **70** (dari skala 100). Dapat diubah langsung di kode `src/app/peserta/ujian/actions.ts`, baris `const isPassed = finalScore >= 70`.
+**Q: Berapa passing grade?**  
+A: Default **70** dari 100. Dapat diubah di `src/app/[lang]/peserta/ujian/actions.ts`.
 
-**Q: Bagaimana cara mengubah kata sandi universal peserta?**  
-A: Ubah nilai `'123456'` di file `src/app/login/actions.ts`:
-```typescript
-if (password !== '123456') { // Ganti nilai ini
-```
-
-**Q: Bisakah admin melihat jawaban detail tiap peserta?**  
-A: Belum tersedia di UI admin saat ini. Data mentah jawaban tersimpan di tabel `answers` dan dapat diakses langsung melalui Supabase Dashboard.
+**Q: Bagaimana cara ganti kata sandi universal peserta?**  
+A: Ubah nilai `'ISTC2026'` di file `src/app/[lang]/login/actions.ts`.
 
 **Q: Apakah platform ini mendukung multiple admin?**  
-A: Ya. Tambahkan pengguna baru di Supabase Dashboard → Authentication → Users. Semua akun yang terdaftar di sana otomatis mendapat akses admin.
+A: Ya. Tambahkan user di Supabase Dashboard → Authentication → Users.
+
+**Q: Bagaimana deteksi bahasa otomatis bekerja?**  
+A: Middleware membaca header `Accept-Language` dari browser. Jika cocok dengan EN/ID/MS, diarahkan ke bahasa tersebut. Default: EN. Pilihan bahasa disimpan ke cookie 1 tahun.
+
+**Q: Mengapa ada gap pada nomor peserta (misal loncat dari 0057 ke 0061)?**  
+A: Normal. Nomor peserta menggunakan PostgreSQL SEQUENCE yang mengonsumsi nilai meskipun saat testing. Gap kecil tidak mempengaruhi fungsi sistem.
 
 ---
 
