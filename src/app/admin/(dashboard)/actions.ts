@@ -57,22 +57,36 @@ export async function saveSettings(formData: FormData) {
   if (!user) return { error: 'Unauthorized' }
 
   const batasSoal = formData.get('batas_soal') as string
-  const acakSoal  = formData.get('acak_soal')  as string // 'true' | 'false'
+  const acakSoal  = formData.get('acak_soal')  as string
 
-  // Upsert — insert jika belum ada, update jika sudah ada
-  const upserts = [
-    { kunci: 'batas_soal', nilai: batasSoal || '50' },
-    { kunci: 'acak_soal',  nilai: acakSoal === 'true' ? 'true' : 'false' },
+  const settings = [
+    { kunci: 'batas_soal', nilai: batasSoal || '50',                       keterangan: 'Jumlah soal per sesi ujian' },
+    { kunci: 'acak_soal',  nilai: acakSoal === 'true' ? 'true' : 'false',  keterangan: 'Acak urutan soal: true/false' },
   ]
 
-  for (const row of upserts) {
-    const { error } = await supabase
+  for (const s of settings) {
+    // Coba UPDATE dulu
+    const { data: updated, error: updErr } = await supabase
       .from('system_config')
-      .upsert(row, { onConflict: 'kunci' })
+      .update({ nilai: s.nilai, updated_at: new Date().toISOString() })
+      .eq('kunci', s.kunci)
+      .select('id')
 
-    if (error) {
-      console.error('saveSettings error:', error)
-      return { error: `Gagal menyimpan ${row.kunci}: ${error.message}` }
+    if (updErr) {
+      console.error('Update error:', updErr)
+      return { error: `Gagal menyimpan ${s.kunci}: ${updErr.message}` }
+    }
+
+    // Jika tidak ada row yang terupdate (row belum ada), INSERT baru
+    if (!updated || updated.length === 0) {
+      const { error: insErr } = await supabase
+        .from('system_config')
+        .insert({ kunci: s.kunci, nilai: s.nilai, keterangan: s.keterangan })
+
+      if (insErr) {
+        console.error('Insert error:', insErr)
+        return { error: `Gagal membuat ${s.kunci}: ${insErr.message}` }
+      }
     }
   }
 
