@@ -1,5 +1,5 @@
 import { createClient } from '@/lib/supabase/server'
-import { ToggleAksesForm, KeepAliveForm } from './components'
+import { ToggleAksesForm, KeepAliveForm, SettingsForm } from './components'
 
 export const revalidate = 0
 
@@ -20,6 +20,17 @@ export default async function AdminDashboardPage() {
   
   const aksesTerbuka = configAkses?.nilai || 'false'
   const isAksesTerbuka = aksesTerbuka === 'true'
+
+  // Ambil exam settings (acak_soal, batas_soal)
+  const { data: examSettings } = await supabase
+    .from('system_config')
+    .select('kunci, nilai')
+    .in('kunci', ['acak_soal', 'batas_soal'])
+
+  const settingsMap: Record<string, string> = {}
+  examSettings?.forEach(c => { settingsMap[c.kunci] = c.nilai })
+  const currentAcakSoal  = settingsMap['acak_soal']  ?? 'false'
+  const currentBatasSoal = settingsMap['batas_soal'] ?? '50'
 
   // Ambil history keep alive (3 terakhir)
   const { data: keepAlives } = await supabase
@@ -66,6 +77,12 @@ export default async function AdminDashboardPage() {
           </div>
         </div>
 
+      </div>
+
+      {/* Exam Settings */}
+      <div className="card" style={{ background: '#fff', marginTop: '2rem' }}>
+        <h2 style={{ fontSize: '1.25rem', marginBottom: '1.5rem', fontFamily: 'var(--font-heading)' }}>Exam Settings</h2>
+        <SettingsForm currentBatasSoal={currentBatasSoal} currentAcakSoal={currentAcakSoal} />
       </div>
 
       {/* Widget Keep Alive */}

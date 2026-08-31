@@ -49,3 +49,33 @@ export async function manualKeepAlive() {
   revalidatePath('/admin')
   return { success: true }
 }
+
+export async function saveSettings(formData: FormData) {
+  const supabase = await createClient()
+
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) return { error: 'Unauthorized' }
+
+  const batasSoal = formData.get('batas_soal') as string
+  const acakSoal  = formData.get('acak_soal')  as string // 'true' | 'false'
+
+  // Upsert — insert jika belum ada, update jika sudah ada
+  const upserts = [
+    { kunci: 'batas_soal', nilai: batasSoal || '50' },
+    { kunci: 'acak_soal',  nilai: acakSoal === 'true' ? 'true' : 'false' },
+  ]
+
+  for (const row of upserts) {
+    const { error } = await supabase
+      .from('system_config')
+      .upsert(row, { onConflict: 'kunci' })
+
+    if (error) {
+      console.error('saveSettings error:', error)
+      return { error: `Gagal menyimpan ${row.kunci}: ${error.message}` }
+    }
+  }
+
+  revalidatePath('/admin')
+  return { success: true }
+}
