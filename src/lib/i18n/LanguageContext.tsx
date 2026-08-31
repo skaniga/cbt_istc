@@ -28,11 +28,11 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
   const setLocale = (newLocale: Locale) => {
     if (newLocale === locale) return
     
+    // Simpan preferensi bahasa ke cookie agar middleware ingat di kunjungan berikutnya
+    document.cookie = `NEXT_LOCALE=${newLocale};path=/;max-age=31536000;SameSite=Lax`
+
     // Replace the current locale in the URL path with the new one
-    // Example: /id/peserta -> /en/peserta
     const currentPath = pathname || `/${locale}`
-    
-    // We assume the first segment is always the locale since we're in [lang]
     let newPath = currentPath
     
     if (currentPath.startsWith(`/${locale}`)) {
