@@ -1,4 +1,4 @@
--- ================================================================
+﻿-- ================================================================
 -- SOAL BAHASA MELAYU (MS) — UPDATE KOLOM pertanyaan_ms, pilihan_*_ms
 -- Jalankan setelah ALTER TABLE add_kolom_multilang.sql
 -- ================================================================
@@ -337,7 +337,7 @@ UPDATE public.questions SET pertanyaan_ms='Sehelai baju berharga RM 150.00 menda
 
 UPDATE public.questions SET pertanyaan_ms='Nilai daripada akar kuasa dua 169 ialah...', pilihan_a_ms='19', pilihan_b_ms='21', pilihan_c_ms='13', pilihan_d_ms='25' WHERE nomor_soal=155;
 
-UPDATE public.questions SET pertanyaan_ms='Sebuah segi empat sama mempunyai panjang sisi 12 cm. Luas segi empat tersebut ialah...', pilihan_a_ms='48 cm2', pilihan_b_ms='144 cm2', pilihan_c_ms='120 cm2', pilihan_d_ms='240 cm2' WHERE nomor_soal=156;
+UPDATE public.questions SET pertanyaan_ms='Sebuah segi empat sama mempunyai panjang sisi 12 cm. Luas segi empat tersebut ialah...', pilihan_a_ms='48 cm²', pilihan_b_ms='144 cm²', pilihan_c_ms='120 cm²', pilihan_d_ms='240 cm²' WHERE nomor_soal=156;
 
 UPDATE public.questions SET pertanyaan_ms='FSTB (Faktor Sepunya Terbesar) bagi 24 dan 36 ialah...', pilihan_a_ms='6', pilihan_b_ms='12', pilihan_c_ms='18', pilihan_d_ms='72' WHERE nomor_soal=157;
 
@@ -355,7 +355,7 @@ UPDATE public.questions SET pertanyaan_ms='Sebiji dadu 6 permukaan dilambung sek
 
 UPDATE public.questions SET pertanyaan_ms='Lilitan bulatan yang mempunyai jejari 7 cm ialah (pi = 22/7)...', pilihan_a_ms='22 cm', pilihan_b_ms='44 cm', pilihan_c_ms='154 cm', pilihan_d_ms='88 cm' WHERE nomor_soal=164;
 
-UPDATE public.questions SET pertanyaan_ms='Luas bulatan berjejari 7 cm ialah (pi = 22/7)...', pilihan_a_ms='44 cm2', pilihan_b_ms='154 cm2', pilihan_c_ms='308 cm2', pilihan_d_ms='616 cm2' WHERE nomor_soal=165;
+UPDATE public.questions SET pertanyaan_ms='Luas bulatan berjejari 7 cm ialah (pi = 22/7)...', pilihan_a_ms='44 cm²', pilihan_b_ms='154 cm²', pilihan_c_ms='308 cm²', pilihan_d_ms='616 cm²' WHERE nomor_soal=165;
 
 UPDATE public.questions SET pertanyaan_ms='Nilai bagi 2 pangkat 4 ialah...', pilihan_a_ms='8', pilihan_b_ms='12', pilihan_c_ms='16', pilihan_d_ms='32' WHERE nomor_soal=166;
 
@@ -363,7 +363,7 @@ UPDATE public.questions SET pertanyaan_ms='Hasil kembangan daripada (x + 4)(x + 
 
 UPDATE public.questions SET pertanyaan_ms='Sebuah kereta memerlukan 3 liter petrol untuk perjalanan 45 km. Jarak yang boleh dilalui jika diisi dengan 5 liter petrol ialah...', pilihan_a_ms='60 km', pilihan_b_ms='75 km', pilihan_c_ms='90 km', pilihan_d_ms='100 km' WHERE nomor_soal=168;
 
-UPDATE public.questions SET pertanyaan_ms='Isi padu kubus yang mempunyai panjang sisi 5 cm ialah...', pilihan_a_ms='25 cm3', pilihan_b_ms='100 cm3', pilihan_c_ms='125 cm3', pilihan_d_ms='150 cm3' WHERE nomor_soal=169;
+UPDATE public.questions SET pertanyaan_ms='Isi padu kubus yang mempunyai panjang sisi 5 cm ialah...', pilihan_a_ms='25 cm³', pilihan_b_ms='100 cm³', pilihan_c_ms='125 cm³', pilihan_d_ms='150 cm³' WHERE nomor_soal=169;
 
 UPDATE public.questions SET pertanyaan_ms='Jika f(x) = 2x + 5, nilai bagi f(3) ialah...', pilihan_a_ms='8', pilihan_b_ms='11', pilihan_c_ms='13', pilihan_d_ms='16' WHERE nomor_soal=170;
 
@@ -371,7 +371,7 @@ UPDATE public.questions SET pertanyaan_ms='Penyelesaian bagi 2x - 4 > 6 ialah...
 
 UPDATE public.questions SET pertanyaan_ms='Kecerunan (gradien) garis bagi persamaan y = 3x - 2 ialah...', pilihan_a_ms='-2', pilihan_b_ms='2', pilihan_c_ms='3', pilihan_d_ms='-3' WHERE nomor_soal=172;
 
-UPDATE public.questions SET pertanyaan_ms='Luas segi tiga dengan tapak 10 cm dan tinggi 6 cm ialah...', pilihan_a_ms='60 cm2', pilihan_b_ms='30 cm2', pilihan_c_ms='20 cm2', pilihan_d_ms='15 cm2' WHERE nomor_soal=173;
+UPDATE public.questions SET pertanyaan_ms='Luas segi tiga dengan tapak 10 cm dan tinggi 6 cm ialah...', pilihan_a_ms='60 cm²', pilihan_b_ms='30 cm²', pilihan_c_ms='20 cm²', pilihan_d_ms='15 cm²' WHERE nomor_soal=173;
 
 UPDATE public.questions SET pertanyaan_ms='Median bagi set data yang telah disusun: 3, 5, 7, 8, 9 ialah...', pilihan_a_ms='5', pilihan_b_ms='7', pilihan_c_ms='8', pilihan_d_ms='6' WHERE nomor_soal=174;
 
@@ -383,7 +383,7 @@ UPDATE public.questions SET pertanyaan_ms='Hasil tambah sudut-sudut pedalaman da
 
 UPDATE public.questions SET pertanyaan_ms='Hasil bagi 4 pangkat 3 ialah...', pilihan_a_ms='12', pilihan_b_ms='16', pilihan_c_ms='64', pilihan_d_ms='256' WHERE nomor_soal=178;
 
-UPDATE public.questions SET pertanyaan_ms='Sebuah kuboid mempunyai ukuran panjang 10 cm, lebar 4 cm, dan tinggi 5 cm. Isi padu kuboid tersebut ialah...', pilihan_a_ms='200 cm3', pilihan_b_ms='100 cm3', pilihan_c_ms='19 cm3', pilihan_d_ms='400 cm3' WHERE nomor_soal=179;
+UPDATE public.questions SET pertanyaan_ms='Sebuah kuboid mempunyai ukuran panjang 10 cm, lebar 4 cm, dan tinggi 5 cm. Isi padu kuboid tersebut ialah...', pilihan_a_ms='200 cm³', pilihan_b_ms='100 cm³', pilihan_c_ms='19 cm³', pilihan_d_ms='400 cm³' WHERE nomor_soal=179;
 
 UPDATE public.questions SET pertanyaan_ms='Sebutan ke-5 bagi janjang aritmetik 2, 5, 8, 11, ... ialah...', pilihan_a_ms='13', pilihan_b_ms='14', pilihan_c_ms='15', pilihan_d_ms='16' WHERE nomor_soal=180;
 
@@ -391,7 +391,7 @@ UPDATE public.questions SET pertanyaan_ms='Hasil bagi (-4) pangkat 2 ialah...', 
 
 UPDATE public.questions SET pertanyaan_ms='Nisbah umur Ani kepada Budi ialah 2 : 3. Jika jumlah umur mereka ialah 20 tahun, umur Budi ialah...', pilihan_a_ms='8 tahun', pilihan_b_ms='12 tahun', pilihan_c_ms='10 tahun', pilihan_d_ms='15 tahun' WHERE nomor_soal=182;
 
-UPDATE public.questions SET pertanyaan_ms='Luas segi empat selari dengan tapak 8 cm dan tinggi 5 cm ialah...', pilihan_a_ms='20 cm2', pilihan_b_ms='40 cm2', pilihan_c_ms='13 cm2', pilihan_d_ms='80 cm2' WHERE nomor_soal=183;
+UPDATE public.questions SET pertanyaan_ms='Luas segi empat selari dengan tapak 8 cm dan tinggi 5 cm ialah...', pilihan_a_ms='20 cm²', pilihan_b_ms='40 cm²', pilihan_c_ms='13 cm²', pilihan_d_ms='80 cm²' WHERE nomor_soal=183;
 
 UPDATE public.questions SET pertanyaan_ms='Nilai bagi sudut tegak ialah...', pilihan_a_ms='45 darjah', pilihan_b_ms='90 darjah', pilihan_c_ms='180 darjah', pilihan_d_ms='360 darjah' WHERE nomor_soal=184;
 
@@ -399,7 +399,7 @@ UPDATE public.questions SET pertanyaan_ms='Jika x + 5 = 12, maka nilai 2x ialah.
 
 UPDATE public.questions SET pertanyaan_ms='Sekeping syiling dilambung sekali. Kebarangkalian mendapat bahagian Kepala (Angka) ialah...', pilihan_a_ms='1/4', pilihan_b_ms='1/2', pilihan_c_ms='1', pilihan_d_ms='0' WHERE nomor_soal=186;
 
-UPDATE public.questions SET pertanyaan_ms='Perimeter segi empat sama yang mempunyai luas 81 cm2 ialah...', pilihan_a_ms='9 cm', pilihan_b_ms='36 cm', pilihan_c_ms='18 cm', pilihan_d_ms='81 cm' WHERE nomor_soal=187;
+UPDATE public.questions SET pertanyaan_ms='Perimeter segi empat sama yang mempunyai luas 81 cm² ialah...', pilihan_a_ms='9 cm', pilihan_b_ms='36 cm', pilihan_c_ms='18 cm', pilihan_d_ms='81 cm' WHERE nomor_soal=187;
 
 UPDATE public.questions SET pertanyaan_ms='Hasil bagi 10 pangkat 0 ialah...', pilihan_a_ms='0', pilihan_b_ms='1', pilihan_c_ms='10', pilihan_d_ms='Tidak tertakrif' WHERE nomor_soal=188;
 
@@ -417,7 +417,7 @@ UPDATE public.questions SET pertanyaan_ms='Hasil bagi 2/5 darab 15/4 ialah...', 
 
 UPDATE public.questions SET pertanyaan_ms='Bentuk 2 pangkat 3 darab 2 pangkat 2 jika dipermudahkan akan menjadi...', pilihan_a_ms='2 pangkat 5', pilihan_b_ms='2 pangkat 6', pilihan_c_ms='4 pangkat 5', pilihan_d_ms='4 pangkat 6' WHERE nomor_soal=195;
 
-UPDATE public.questions SET pertanyaan_ms='Sebuah silinder mempunyai jejari 7 cm dan tinggi 10 cm. Luas tapak silinder tersebut ialah...', pilihan_a_ms='154 cm2', pilihan_b_ms='440 cm2', pilihan_c_ms='70 cm2', pilihan_d_ms='308 cm2' WHERE nomor_soal=196;
+UPDATE public.questions SET pertanyaan_ms='Sebuah silinder mempunyai jejari 7 cm dan tinggi 10 cm. Luas tapak silinder tersebut ialah...', pilihan_a_ms='154 cm²', pilihan_b_ms='440 cm²', pilihan_c_ms='70 cm²', pilihan_d_ms='308 cm²' WHERE nomor_soal=196;
 
 UPDATE public.questions SET pertanyaan_ms='Dua garis lurus yang selari mempunyai nilai kecerunan yang...', pilihan_a_ms='Bertentangan', pilihan_b_ms='Sama', pilihan_c_ms='Jauh berbeza', pilihan_d_ms='Bernilai sifar' WHERE nomor_soal=197;
 

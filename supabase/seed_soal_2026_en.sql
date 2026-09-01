@@ -1,4 +1,4 @@
--- ================================================================
+﻿-- ================================================================
 -- SOAL BAHASA INGGRIS (EN) — UPDATE KOLOM pertanyaan_en, pilihan_*_en
 -- ================================================================
 
@@ -335,7 +335,7 @@ UPDATE public.questions SET pertanyaan_en='A shirt priced at 150,000 gets a 20% 
 
 UPDATE public.questions SET pertanyaan_en='The value of the square root of 169 is...', pilihan_a_en='19', pilihan_b_en='21', pilihan_c_en='13', pilihan_d_en='25' WHERE nomor_soal=155;
 
-UPDATE public.questions SET pertanyaan_en='A square has a side length of 12 cm. The area of the square is...', pilihan_a_en='48 cm2', pilihan_b_en='144 cm2', pilihan_c_en='120 cm2', pilihan_d_en='240 cm2' WHERE nomor_soal=156;
+UPDATE public.questions SET pertanyaan_en='A square has a side length of 12 cm. The area of the square is...', pilihan_a_en='48 cm²', pilihan_b_en='144 cm²', pilihan_c_en='120 cm²', pilihan_d_en='240 cm²' WHERE nomor_soal=156;
 
 UPDATE public.questions SET pertanyaan_en='The Greatest Common Factor (GCF) of 24 and 36 is...', pilihan_a_en='6', pilihan_b_en='12', pilihan_c_en='18', pilihan_d_en='72' WHERE nomor_soal=157;
 
@@ -353,15 +353,15 @@ UPDATE public.questions SET pertanyaan_en='A 6-sided die is rolled once. The pro
 
 UPDATE public.questions SET pertanyaan_en='The circumference of a circle with a radius of 7 cm is (pi = 22/7)...', pilihan_a_en='22 cm', pilihan_b_en='44 cm', pilihan_c_en='154 cm', pilihan_d_en='88 cm' WHERE nomor_soal=164;
 
-UPDATE public.questions SET pertanyaan_en='The area of a circle with a radius of 7 cm is (pi = 22/7)...', pilihan_a_en='44 cm2', pilihan_b_en='154 cm2', pilihan_c_en='308 cm2', pilihan_d_en='616 cm2' WHERE nomor_soal=165;
+UPDATE public.questions SET pertanyaan_en='The area of a circle with a radius of 7 cm is (pi = 22/7)...', pilihan_a_en='44 cm²', pilihan_b_en='154 cm²', pilihan_c_en='308 cm²', pilihan_d_en='616 cm²' WHERE nomor_soal=165;
 
 UPDATE public.questions SET pertanyaan_en='The value of 2 to the power of 4 is...', pilihan_a_en='8', pilihan_b_en='12', pilihan_c_en='16', pilihan_d_en='32' WHERE nomor_soal=166;
 
-UPDATE public.questions SET pertanyaan_en='The expansion result of (x + 4)(x + 2) is...', pilihan_a_en='x^2 + 6x + 8', pilihan_b_en='x^2 + 8x + 6', pilihan_c_en='x^2 + 2x + 8', pilihan_d_en='x^2 + 4x + 2' WHERE nomor_soal=167;
+UPDATE public.questions SET pertanyaan_en='The expansion result of (x + 4)(x + 2) is...', pilihan_a_en='x² + 6x + 8', pilihan_b_en='x² + 8x + 6', pilihan_c_en='x² + 2x + 8', pilihan_d_en='x² + 4x + 2' WHERE nomor_soal=167;
 
 UPDATE public.questions SET pertanyaan_en='A car needs 3 liters of gasoline to travel 45 km. The distance traveled with 5 liters of gasoline is...', pilihan_a_en='60 km', pilihan_b_en='75 km', pilihan_c_en='90 km', pilihan_d_en='100 km' WHERE nomor_soal=168;
 
-UPDATE public.questions SET pertanyaan_en='The volume of a cube with an edge length of 5 cm is...', pilihan_a_en='25 cm3', pilihan_b_en='100 cm3', pilihan_c_en='125 cm3', pilihan_d_en='150 cm3' WHERE nomor_soal=169;
+UPDATE public.questions SET pertanyaan_en='The volume of a cube with an edge length of 5 cm is...', pilihan_a_en='25 cm³', pilihan_b_en='100 cm³', pilihan_c_en='125 cm³', pilihan_d_en='150 cm³' WHERE nomor_soal=169;
 
 UPDATE public.questions SET pertanyaan_en='If f(x) = 2x + 5, the value of f(3) is...', pilihan_a_en='8', pilihan_b_en='11', pilihan_c_en='13', pilihan_d_en='16' WHERE nomor_soal=170;
 
@@ -369,7 +369,7 @@ UPDATE public.questions SET pertanyaan_en='The solution to 2x - 4 > 6 is...', pi
 
 UPDATE public.questions SET pertanyaan_en='The gradient of the line from the equation y = 3x - 2 is...', pilihan_a_en='-2', pilihan_b_en='2', pilihan_c_en='3', pilihan_d_en='-3' WHERE nomor_soal=172;
 
-UPDATE public.questions SET pertanyaan_en='The area of a triangle with a base of 10 cm and a height of 6 cm is...', pilihan_a_en='60 cm2', pilihan_b_en='30 cm2', pilihan_c_en='20 cm2', pilihan_d_en='15 cm2' WHERE nomor_soal=173;
+UPDATE public.questions SET pertanyaan_en='The area of a triangle with a base of 10 cm and a height of 6 cm is...', pilihan_a_en='60 cm²', pilihan_b_en='30 cm²', pilihan_c_en='20 cm²', pilihan_d_en='15 cm²' WHERE nomor_soal=173;
 
 UPDATE public.questions SET pertanyaan_en='The median of the ordered data: 3, 5, 7, 8, 9 is...', pilihan_a_en='5', pilihan_b_en='7', pilihan_c_en='8', pilihan_d_en='6' WHERE nomor_soal=174;
 
@@ -381,7 +381,7 @@ UPDATE public.questions SET pertanyaan_en='The sum of the interior angles of a t
 
 UPDATE public.questions SET pertanyaan_en='The result of 4 to the power of 3 is...', pilihan_a_en='12', pilihan_b_en='16', pilihan_c_en='64', pilihan_d_en='256' WHERE nomor_soal=178;
 
-UPDATE public.questions SET pertanyaan_en='A rectangular cuboid has dimensions of length 10 cm, width 4 cm, and height 5 cm. The volume is...', pilihan_a_en='200 cm3', pilihan_b_en='100 cm3', pilihan_c_en='19 cm3', pilihan_d_en='400 cm3' WHERE nomor_soal=179;
+UPDATE public.questions SET pertanyaan_en='A rectangular cuboid has dimensions of length 10 cm, width 4 cm, and height 5 cm. The volume is...', pilihan_a_en='200 cm³', pilihan_b_en='100 cm³', pilihan_c_en='19 cm³', pilihan_d_en='400 cm³' WHERE nomor_soal=179;
 
 UPDATE public.questions SET pertanyaan_en='The 5th term of the arithmetic sequence 2, 5, 8, 11, ... is...', pilihan_a_en='13', pilihan_b_en='14', pilihan_c_en='15', pilihan_d_en='16' WHERE nomor_soal=180;
 
@@ -389,7 +389,7 @@ UPDATE public.questions SET pertanyaan_en='The result of (-4) to the power of 2 
 
 UPDATE public.questions SET pertanyaan_en='The ratio of Ani''s and Budi''s ages is 2 : 3. If the sum of their ages is 20 years, Budi''s age is...', pilihan_a_en='8 years', pilihan_b_en='12 years', pilihan_c_en='10 years', pilihan_d_en='15 years' WHERE nomor_soal=182;
 
-UPDATE public.questions SET pertanyaan_en='The area of a parallelogram with a base of 8 cm and a height of 5 cm is...', pilihan_a_en='20 cm2', pilihan_b_en='40 cm2', pilihan_c_en='13 cm2', pilihan_d_en='80 cm2' WHERE nomor_soal=183;
+UPDATE public.questions SET pertanyaan_en='The area of a parallelogram with a base of 8 cm and a height of 5 cm is...', pilihan_a_en='20 cm²', pilihan_b_en='40 cm²', pilihan_c_en='13 cm²', pilihan_d_en='80 cm²' WHERE nomor_soal=183;
 
 UPDATE public.questions SET pertanyaan_en='The magnitude of a right angle is...', pilihan_a_en='45 degrees', pilihan_b_en='90 degrees', pilihan_c_en='180 degrees', pilihan_d_en='360 degrees' WHERE nomor_soal=184;
 
@@ -397,7 +397,7 @@ UPDATE public.questions SET pertanyaan_en='If x + 5 = 12, then the value of 2x i
 
 UPDATE public.questions SET pertanyaan_en='A coin is tossed once. The probability of showing Heads is...', pilihan_a_en='1/4', pilihan_b_en='1/2', pilihan_c_en='1', pilihan_d_en='0' WHERE nomor_soal=186;
 
-UPDATE public.questions SET pertanyaan_en='The perimeter of a square with an area of 81 cm2 is...', pilihan_a_en='9 cm', pilihan_b_en='36 cm', pilihan_c_en='18 cm', pilihan_d_en='81 cm' WHERE nomor_soal=187;
+UPDATE public.questions SET pertanyaan_en='The perimeter of a square with an area of 81 cm² is...', pilihan_a_en='9 cm', pilihan_b_en='36 cm', pilihan_c_en='18 cm', pilihan_d_en='81 cm' WHERE nomor_soal=187;
 
 UPDATE public.questions SET pertanyaan_en='The result of 10 to the power of 0 is...', pilihan_a_en='0', pilihan_b_en='1', pilihan_c_en='10', pilihan_d_en='Undefined' WHERE nomor_soal=188;
 
@@ -413,9 +413,9 @@ UPDATE public.questions SET pertanyaan_en='The coordinate point A(3, -5) is loca
 
 UPDATE public.questions SET pertanyaan_en='The result of 2/5 x 15/4 is...', pilihan_a_en='3/2', pilihan_b_en='8/75', pilihan_c_en='3/4', pilihan_d_en='1' WHERE nomor_soal=194;
 
-UPDATE public.questions SET pertanyaan_en='The form 2^3 x 2^2 if simplified becomes...', pilihan_a_en='2^5', pilihan_b_en='2^6', pilihan_c_en='4^5', pilihan_d_en='4^6' WHERE nomor_soal=195;
+UPDATE public.questions SET pertanyaan_en='The form 2³ × 2² if simplified becomes...', pilihan_a_en='2⁵', pilihan_b_en='2⁶', pilihan_c_en='4⁵', pilihan_d_en='4⁶' WHERE nomor_soal=195;
 
-UPDATE public.questions SET pertanyaan_en='A cylinder has a radius of 7 cm and a height of 10 cm. The base area of the cylinder is...', pilihan_a_en='154 cm2', pilihan_b_en='440 cm2', pilihan_c_en='70 cm2', pilihan_d_en='308 cm2' WHERE nomor_soal=196;
+UPDATE public.questions SET pertanyaan_en='A cylinder has a radius of 7 cm and a height of 10 cm. The base area of the cylinder is...', pilihan_a_en='154 cm²', pilihan_b_en='440 cm²', pilihan_c_en='70 cm²', pilihan_d_en='308 cm²' WHERE nomor_soal=196;
 
 UPDATE public.questions SET pertanyaan_en='Two parallel lines have gradients that are...', pilihan_a_en='Opposite', pilihan_b_en='Same', pilihan_c_en='Vastly different', pilihan_d_en='Zero' WHERE nomor_soal=197;
 
