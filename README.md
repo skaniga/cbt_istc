@@ -61,6 +61,7 @@ Platform ISTC CBT dirancang khusus untuk mendukung proses seleksi peserta **Inte
 |-------|-----------|
 | **Login Aman** | Autentikasi berbasis Supabase Auth (email + password) |
 | **Toggle Akses Ujian** | Buka/tutup akses ujian peserta dengan satu klik |
+| **Exam Settings** | Atur jumlah soal & aktifkan/nonaktifkan randomisasi soal |
 | **Manajemen Peserta** | Lihat peserta dengan kolom **Bidang**, Skor, Status; edit nama/passport/bidang |
 | **Bank Soal** | Kelola soal per bidang kompetisi — 50 soal per bidang (200 total) |
 | **Keep Alive Log** | Monitor keaktifan database Supabase |
@@ -240,7 +241,26 @@ Membagi 200 soal menjadi 4 bidang kompetisi (50 soal per bidang).
 supabase/qa_fixes.sql
 ```
 
-### Step 9 — Buat Akun Admin
+### Step 9 — Seed Config Exam Settings & Tambah INSERT Policy
+
+Jalankan SQL berikut di SQL Editor untuk mengaktifkan fitur Exam Settings di admin:
+
+```sql
+-- Seed acak_soal jika belum ada
+INSERT INTO public.system_config (kunci, nilai, keterangan)
+VALUES 
+  ('acak_soal',    'false', 'Acak urutan soal: true/false'),
+  ('durasi_menit', '90',    'Durasi ujian dalam menit')
+ON CONFLICT (kunci) DO NOTHING;
+
+-- Tambah INSERT policy agar admin bisa simpan config baru
+CREATE POLICY "system_config_insert_auth"
+  ON public.system_config FOR INSERT
+  TO authenticated
+  WITH CHECK (true);
+```
+
+### Step 10 — Buat Akun Admin
 
 1. Buka **Supabase Dashboard** → **Authentication** → **Users**
 2. Klik **Add User** → **Create New User**
@@ -334,7 +354,10 @@ Buka `/admin/login` → masukkan Email + Password Supabase Auth.
 ### Dashboard Utama (`/admin`)
 
 - **Buka/Tutup Akses Ujian** — satu klik mengontrol semua peserta
+- **Exam Settings** — atur jumlah soal (1–50) dan aktifkan **Randomize Questions**
 - **Keep Alive** — ping database agar tidak pause (Supabase free tier)
+
+> ⚠️ Setelah mengubah Exam Settings, klik **Save Settings** dan tunggu konfirmasi *"Settings saved successfully!"*. Setting hanya berlaku untuk peserta yang **belum** memulai ujian.
 
 ---
 
@@ -362,6 +385,8 @@ computer-service-shop/
 ├── src/
 │   ├── app/
 │   │   ├── layout.tsx                    # Root layout + JSON-LD + Fonts
+│   │   ├── icon.png                      # Favicon (logo ISTC) — Next.js App Router
+│   │   ├── apple-icon.png                # Apple touch icon
 │   │   ├── globals.css                   # Design system & CSS variables
 │   │   ├── not-found.tsx                 # Halaman 404 custom
 │   │   ├── robots.ts                     # robots.txt dinamis
@@ -400,8 +425,9 @@ computer-service-shop/
 │       ├── layout.tsx                    # Layout admin (Supabase Auth check)
 │       ├── login/                        # Form Login Admin
 │       └── (dashboard)/
-│           ├── page.tsx                  # Dashboard + toggle ujian
-│           ├── components.tsx            # ToggleAksesForm, KeepAlive
+│           ├── page.tsx                  # Dashboard + toggle ujian + exam settings
+│           ├── components.tsx            # ToggleAksesForm, KeepAlive, SettingsForm
+│           ├── actions.ts                # toggleAksesUjian, keepAlive, saveSettings
 │           ├── peserta/
 │           │   ├── page.tsx              # Tabel peserta + kolom bidang
 │           │   ├── PesertaClient.tsx     # UI tabel + edit modal bidang
@@ -487,6 +513,13 @@ computer-service-shop/
 **Solusi**:
 1. Pastikan `seed.sql` sudah dijalankan lengkap
 2. Jalankan `fix_nomor_peserta_sequence.sql` untuk fix race condition pada nomor peserta
+3. Pastikan kolom `kategori` sudah ada: jalankan `add_kategori_to_participants.sql`
+
+---
+
+### ❌ Exam Settings tidak tersimpan / balik ke "No" setelah refresh
+**Penyebab**: Baris `acak_soal` belum ada di `system_config`, dan RLS tidak punya INSERT policy.  
+**Solusi**: Jalankan SQL dari Step 9 di atas (seed `acak_soal` + INSERT policy).
 
 ---
 
@@ -538,10 +571,10 @@ A: Tidak bisa sendiri. Admin dapat mengubahnya melalui `/admin/peserta` → Edit
 A: Ya. Setiap jawaban langsung tersimpan ke database. Halaman ujian akan memuat ulang jawaban sebelumnya.
 
 **Q: Berapa lama durasi ujian?**  
-A: Default **90 menit**. Dapat diubah via `system_config` di Supabase (`kunci = 'durasi_menit'`).
+A: Default **90 menit**. Dapat diubah via `system_config` di Supabase (`kunci = 'durasi_menit'` atau `'durasi_ujian_menit'`).
 
 **Q: Berapa soal per sesi ujian?**  
-A: **50 soal** sesuai bidang peserta. Dapat diubah via `system_config` (`kunci = 'jumlah_soal'`).
+A: **50 soal** sesuai bidang peserta. Dapat diubah via Admin Dashboard → **Exam Settings** → *Number of Questions to Display*.
 
 **Q: Berapa passing grade?**  
 A: Default **70** dari 100. Dapat diubah di `src/app/[lang]/peserta/ujian/actions.ts`.
@@ -557,6 +590,12 @@ A: Middleware membaca header `Accept-Language` dari browser. Jika cocok dengan E
 
 **Q: Mengapa ada gap pada nomor peserta (misal loncat dari 0057 ke 0061)?**  
 A: Normal. Nomor peserta menggunakan PostgreSQL SEQUENCE yang mengonsumsi nilai meskipun saat testing. Gap kecil tidak mempengaruhi fungsi sistem.
+
+**Q: Apakah soal bisa diacak agar tiap peserta dapat urutan berbeda?**  
+A: Ya. Buka `/admin` → **Exam Settings** → set *Randomize Questions = Yes* → **Save Settings**. Urutan soal tiap peserta unik berdasarkan session ID mereka, dan konsisten jika di-refresh.
+
+**Q: Logo ISTC tidak muncul di tab browser?**  
+A: Lakukan hard refresh (`Ctrl+Shift+R`). Browser kadang cache favicon lama.
 
 ---
 
