@@ -101,10 +101,10 @@ export default function DaftarPage() {
 
                 <h2 style={{ marginBottom: '1rem' }}>{t('reg_success_title')}</h2>
                 <p style={{ color: 'var(--muted-fg)', marginBottom: '0.75rem' }}>
-                  {locale === 'en' ? 'Welcome,' : locale === 'ms' ? 'Selamat datang,' : 'Selamat bergabung,'} <strong>{successData.nama}</strong>.
+                  {t('reg_welcome')} <strong>{successData.nama}</strong>.
                 </p>
                 <p style={{ color: 'var(--muted-fg)', marginBottom: '1.5rem', fontSize: '0.9rem' }}>
-                  {locale === 'en' ? 'Competition Field: ' : locale === 'ms' ? 'Bidang Pertandingan: ' : 'Bidang Kompetisi: '}
+                  {t('reg_field_label')}
                   <strong style={{ color: 'var(--brass)' }}>{successData.kategori}</strong>
                 </p>
                 <p style={{ color: 'var(--muted-fg)', marginBottom: '1.5rem' }}>
@@ -120,7 +120,7 @@ export default function DaftarPage() {
                     fontFamily: 'var(--font-display)', fontSize: '0.65rem',
                     textTransform: 'uppercase', letterSpacing: '0.2em',
                     color: 'var(--muted-fg)', marginBottom: '0.5rem',
-                  }}>Nomor Peserta Anda</p>
+                  }}>{t('reg_your_number')}</p>
                   <p style={{
                     fontFamily: 'var(--font-display)', fontSize: '1.75rem',
                     letterSpacing: '0.1em', color: 'var(--fg)', marginBottom: '1rem',
@@ -130,7 +130,7 @@ export default function DaftarPage() {
                     className="btn btn--secondary"
                     style={{ width: '100%', justifyContent: 'center', fontSize: '0.85rem' }}
                   >
-                    {copied ? '✓ Tersalin!' : '⎘ Salin Nomor Peserta'}
+                    {copied ? t('reg_copied') : t('reg_copy')}
                   </button>
                 </div>
 
@@ -141,7 +141,7 @@ export default function DaftarPage() {
                   marginBottom: '1.5rem', textAlign: 'left',
                 }}>
                   <p style={{ fontSize: '0.85rem', color: '#7A5A00', lineHeight: 1.6 }}>
-                    ⚠️ <strong>Simpan nomor ini!</strong> Anda akan membutuhkannya setiap kali login.
+                    ⚠️ <strong>{t('reg_save_warning').split('!')[0]}!</strong>{t('reg_save_warning').split('!')[1]}
                   </p>
                 </div>
 
@@ -204,7 +204,7 @@ export default function DaftarPage() {
                       </p>
                     ) : (
                       <p style={{ marginTop: '0.4rem', fontSize: '0.78rem', color: 'var(--muted-fg)' }}>
-                        Contoh: A1234567 · Huruf kapital &amp; angka, 6–12 karakter
+                        {t('reg_passport_hint')}
                       </p>
                     )}
                   </div>
@@ -238,7 +238,7 @@ export default function DaftarPage() {
                               fontFamily: 'var(--font-heading)', lineHeight: 1.3,
                             }}>{catLabel(cat)}</div>
                             {isSelected && (
-                              <div style={{ fontSize: '0.75rem', color: 'var(--brass)', marginTop: '0.3rem' }}>✓ Selected</div>
+                              <div style={{ fontSize: '0.75rem', color: 'var(--brass)', marginTop: '0.3rem' }}>✓ {t('reg_selected')}</div>
                             )}
                           </button>
                         )

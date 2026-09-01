@@ -84,9 +84,9 @@ export default function PesertaClient({
             marginBottom: '2rem',
           }}>
             {[
-              { label: 'Jumlah Soal', value: batasSoal, icon: '📋' },
-              { label: 'Durasi Ujian', value: `${durasiMenit} menit`, icon: '⏱' },
-              { label: 'Nilai Lulus', value: `≥ ${nilaiLulus}`, icon: '🎯' },
+              { label: t('dashboard_total_questions'), value: batasSoal, icon: '📋' },
+              { label: t('dashboard_duration'), value: `${durasiMenit} ${t('dashboard_minutes')}`, icon: '⏱' },
+              { label: t('dashboard_passing_grade'), value: `≥ ${nilaiLulus}`, icon: '🎯' },
             ].map(info => (
               <div key={info.label} style={{
                 background: 'var(--bg-alt)',
@@ -124,7 +124,7 @@ export default function PesertaClient({
                 <>
                   <h2 style={{ fontSize: '1.75rem', marginBottom: '1rem' }}>{t('dashboard_not_started')}</h2>
                   <p style={{ color: 'var(--muted-fg)', marginBottom: '1.5rem', lineHeight: 1.6 }}>
-                    {t('dashboard_exam_desc').replace('50', batasSoal)}
+                    {t('dashboard_exam_desc').replace('{n}', batasSoal)}
                   </p>
 
                   {/* #2 — Status akses ditutup yang lebih informatif */}
@@ -140,8 +140,8 @@ export default function PesertaClient({
                         marginBottom: '1.25rem',
                       }}>
                         <p style={{ fontSize: '0.875rem', color: '#7A5A00', lineHeight: 1.6 }}>
-                          ⚠️ <strong>Perhatian:</strong> Ujian hanya dapat dikerjakan <strong>satu kali</strong>.
-                          Pastikan Anda berada di tempat yang tenang dengan koneksi internet yang stabil sebelum memulai.
+                          ⚠️ <strong>{t('dashboard_warning_title')}</strong>{' '}
+                          <span dangerouslySetInnerHTML={{ __html: t('dashboard_warning_once') }} />
                         </p>
                       </div>
                       <StartExamForm buttonLabel={t('dashboard_exam_start')} />
@@ -158,12 +158,12 @@ export default function PesertaClient({
                         fontFamily: 'var(--font-display)', fontSize: '0.6rem',
                         textTransform: 'uppercase', letterSpacing: '0.15em',
                         color: 'var(--brass)', marginBottom: '0.5rem',
-                      }}>⏸ Akses Belum Dibuka</p>
-                      <p style={{ color: 'var(--muted-fg)', fontSize: '1rem', lineHeight: 1.6 }}>
-                        Ujian akan segera dibuka oleh panitia. Pastikan Anda sudah siap sebelum memulai — ujian hanya dapat dikerjakan <strong>satu kali</strong>.
-                      </p>
+                      }}>{t('dashboard_access_not_open')}</p>
+                      <p style={{ color: 'var(--muted-fg)', fontSize: '1rem', lineHeight: 1.6 }}
+                        dangerouslySetInnerHTML={{ __html: t('dashboard_access_soon') }}
+                      />
                       <p style={{ marginTop: '0.75rem', fontSize: '0.875rem', color: 'var(--muted-fg)' }}>
-                        Silakan refresh halaman ini secara berkala untuk mengecek status akses.
+                        {t('dashboard_access_refresh')}
                       </p>
                     </div>
                   )}
@@ -213,7 +213,7 @@ export default function PesertaClient({
 
                   {/* Nilai lulus info */}
                   <p style={{ marginTop: '1rem', fontSize: '0.85rem', color: 'var(--muted-fg)' }}>
-                    Nilai lulus minimum: <strong>{nilaiLulus}</strong>
+                    {t('dashboard_passing_min')} <strong>{nilaiLulus}</strong>
                   </p>
 
                   <div style={{ marginTop: '2.5rem' }}>
