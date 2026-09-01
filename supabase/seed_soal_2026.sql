@@ -1,10 +1,9 @@
--- ============================================================
+﻿-- ============================================================
 -- SEED DATA: Bank Soal ISTC 2026
 -- ============================================================
 DELETE FROM public.questions;
 INSERT INTO public.questions (nomor_soal, pertanyaan, pilihan_a, pilihan_b, pilihan_c, pilihan_d, kunci_jawaban, kategori) VALUES
-(1, 'I. ENVIRONMENTAL TECHNOLOGY (50 SOAL)
-Tindakan berikut yang merupakan contoh penerapan prinsip Reduce (mengurangi sampah) adalah...', 'Mengolah botol plastik menjadi pot bunga', 'Membawa botol minum sendiri dari rumah', 'Menjual kertas bekas ke tempat daur ulang', 'Menggunakan kembali kardus bekas untuk wadah buku', 'B', 'environmental_technology'),
+(1, 'Tindakan berikut yang merupakan contoh penerapan prinsip Reduce (mengurangi sampah) adalah...', 'Mengolah botol plastik menjadi pot bunga', 'Membawa botol minum sendiri dari rumah', 'Menjual kertas bekas ke tempat daur ulang', 'Menggunakan kembali kardus bekas untuk wadah buku', 'B', 'environmental_technology'),
 (2, 'Gas rumah kaca yang paling banyak dihasilkan dari sisa pembakaran bahan bakar fosil kendaraan adalah...', 'Oksigen', 'Karbon dioksida', 'Nitrogen', 'Uap air', 'B', 'environmental_technology'),
 (3, 'Alat penangkap energi matahari yang mengonversi sinar matahari secara langsung menjadi listrik adalah...', 'Kincir angin', 'Panel surya (Solar cell)', 'Generator diesel', 'Turbin air', 'B', 'environmental_technology'),
 (4, 'Pengolahan sampah daun dan sisa makanan menjadi pupuk organik dinamakan...', 'Komposting', 'Daur ulang', 'Insinerasi', 'Reboisasi', 'A', 'environmental_technology'),
@@ -44,7 +43,7 @@ Tindakan berikut yang merupakan contoh penerapan prinsip Reduce (mengurangi samp
 (38, 'Usaha mengurangi penggunaan sterofom wadah makanan diganti dengan wadah kotak makan adalah tindakan...', 'Recycle', 'Replace / Replace', 'Refuse', 'Rot', 'B', 'environmental_technology'),
 (39, 'Sumber energi air (PLTA) memanfaatkan...', 'Bau air', 'Energi potensial dan kinetik dari aliran air terjun/bendungan', 'Kejernihan air', 'Suhu dingin air', 'B', 'environmental_technology'),
 (40, 'Konsep kota cerdas yang terintegrasi dengan teknologi ramah lingkungan dinamakan...', 'Industrial City', 'Smart & Green City', 'Megacity', 'Metropolis', 'B', 'environmental_technology'),
-(41, 'Gas beracun tak berwarna dan tak berbau dari asap pembakaran tidak sempurna kendaraan adalah...', 'CO_2', 'CO  (Karbon Monoksida)', 'O_3', 'N_2', 'B', 'environmental_technology'),
+(41, 'Gas beracun tak berwarna dan tak berbau dari asap pembakaran tidak sempurna kendaraan adalah...', 'CO₂', 'CO  (Karbon Monoksida)', 'O₃', 'N₂', 'B', 'environmental_technology'),
 (42, 'Penggunaan deterjen ramah lingkungan bertujuan agar...', 'Busa melimpah memenuhi sungai', 'Mudah terurai dan tidak merusak ekosistem sungai', 'Baju cepat lapuk', 'Air menjadi berwarna keruh', 'B', 'environmental_technology'),
 (43, 'Kompos cair yang dibuat dari ekstrak sampah organik dinamakan...', 'Pupuk kimia Urea', 'Pupuk Organik Cair (POC)', 'Pestisida sintetis', 'NPK', 'B', 'environmental_technology'),
 (44, 'Manfaat membuat lubang biopori di pekarangan rumah adalah...', 'Tempat pembuangan plastik', 'Meningkatkan resapan air hujan ke tanah dan mengolah sampah organik', 'Tempat memasang tiang listrik', 'Mengeringkan tanah di sekitarnya', 'B', 'environmental_technology'),
@@ -54,8 +53,7 @@ Tindakan berikut yang merupakan contoh penerapan prinsip Reduce (mengurangi samp
 (48, 'Komposisi utama sampah rumah tangga di Indonesia sebagian besar berup', '..A. Plastik tebal', 'Sampah organik/sisa makanan', 'Kaca dan logam', 'Baterai bekas', 'B', 'environmental_technology'),
 (49, 'Fungsi utama Atap Hijau (Green Roof) pada gedung modern adalah...', 'Menambah berat beban gedung', 'Menyerap panas, mengurangi efek rumah kaca, dan menampung air hujan', 'Tempat memarkir kendaraan', 'Menyimpan barang bekas', 'B', 'environmental_technology'),
 (50, 'Gerakan menghemat energi dengan mematikan lampu selama 1 jam secara global dikenal dengan...', 'Earth Hour', 'Earth Day', 'Green Day', 'Clean Up Day', 'A', 'environmental_technology'),
-(51, 'II. SMART ROBOTICS (50 SOAL)
-Bagian pada robot yang berfungsi menerima informasi dari lingkungan sekitar disebut...', 'Aktuator', 'Sensor', 'Mikrokontroler', 'Baterai', 'B', 'smart_robotics'),
+(51, 'Bagian pada robot yang berfungsi menerima informasi dari lingkungan sekitar disebut...', 'Aktuator', 'Sensor', 'Mikrokontroler', 'Baterai', 'B', 'smart_robotics'),
 (52, 'Sensor yang digunakan robot untuk mengukur jarak halangan menggunakan pantulan gelombang suara adalah...', 'Sensor LDR', 'Sensor Ultrasonik', 'Sensor Suhu', 'Sensor Sentuh', 'B', 'smart_robotics'),
 (53, 'Komponen robot yang bertugas mengubah energi listrik menjadi gerakan roda adalah...', 'Sensor', 'Motor DC / Aktuator', 'Resistor', 'LED', 'B', 'smart_robotics'),
 (54, 'Papan sirkuit kecil yang bertugas sebagai "otak" pengolah perintah pada robot dinamakan...', 'Transistor', 'Mikrokontroler (misal: Arduino)', 'Breadboard', 'Kapasitor', 'B', 'smart_robotics'),
@@ -105,8 +103,7 @@ Bagian pada robot yang berfungsi menerima informasi dari lingkungan sekitar dise
 (98, 'Komponen elektronik yang berfungsi menyimpan muatan listrik sementara adalah...', 'Resistor', 'Kapasitor', 'Transistor', 'Sakelar', 'B', 'smart_robotics'),
 (99, 'Fungsi sensor warna (seperti TCS3200) pada robot pemilah barang adalah...', 'Mengukur berat barang', 'Mendeteksi warna RGB dari objek', 'Menghitung jumlah barang', 'Memindahkan barang', 'B', 'smart_robotics'),
 (100, 'Singkatan dari teknologi IoT yang menyambungkan perangkat robotik ke jaringan internet adalah...', 'Input of Things', 'Internet of Things', 'Integration of Technology', 'Internal of Telecom', 'B', 'smart_robotics'),
-(101, 'III. SCIENCE IN ACTION (50 SOAL)
-Dalam percobaan ilmiah, faktor yang sengaja diubah-ubah oleh peneliti dinamakan variabel...', 'Terikat', 'Bebas', 'Kontrol', 'Pengganggu', 'B', 'science_in_action'),
+(101, 'Dalam percobaan ilmiah, faktor yang sengaja diubah-ubah oleh peneliti dinamakan variabel...', 'Terikat', 'Bebas', 'Kontrol', 'Pengganggu', 'B', 'science_in_action'),
 (102, 'Alat ukur panjang yang memiliki ketelitian hingga 0,1 mm dan dapat mengukur diameter dalam botol adalah...', 'Mistar', 'Jangka sorong', 'Mikrometer sekrup', 'Meteran gulung', 'B', 'science_in_action'),
 (103, 'Ketika larutan asam dicampur dengan kertas lakmus biru, warna kertas lakmus akan berubah menjadi...', 'Merah', 'Hijau', 'Kuning', 'Tetap biru', 'A', 'science_in_action'),
 (104, 'Peristiwa sifat kelembaman benda (kemampuan mempertahankan keadaan diam/gerak) dijelaskan dalam...', 'Hukum I Newton', 'Hukum II Newton', 'Hukum III Newton', 'Hukum Pascal', 'A', 'science_in_action'),
@@ -127,14 +124,14 @@ Dalam percobaan ilmiah, faktor yang sengaja diubah-ubah oleh peneliti dinamakan 
 (119, 'Kelompok hewan yang menyusui anaknya tergolong dalam kelas...', 'Reptil', 'Mamalia', 'Aves', 'Ampibi', 'B', 'science_in_action'),
 (120, 'Bunyi dapat merambat paling cepat melalui medium...', 'Udara kosong / hampa', 'Benda padat (seperti besi)', 'Air jernih', 'Gas oksigen', 'B', 'science_in_action'),
 (121, 'Pesawat sederhana jenis tuas/pengungkit golongan pertama memiliki posisi titik tumpu berada di...', 'Antara beban dan kuasa', 'Di ujung paling kanan', 'Di atas beban', 'Bebas di mana saja', 'A', 'science_in_action'),
-(122, 'Gas yang dibutuhkan oleh tumbuhan dalam proses fotosintesis adalah...', 'Oksigen', 'Karbon dioksida ( CO_2 )', 'Nitrogen', 'Helium', 'B', 'science_in_action'),
+(122, 'Gas yang dibutuhkan oleh tumbuhan dalam proses fotosintesis adalah...', 'Oksigen', 'Karbon dioksida ( CO₂ )', 'Nitrogen', 'Helium', 'B', 'science_in_action'),
 (123, 'Pembuluh darah yang mengalirkan darah kembali menuju ke jantung adalah pembuluh...', 'Arteri (nadi)', 'Vena (balik)', 'Kapiler', 'Aorta', 'B', 'science_in_action'),
 (124, 'Reaksi antara asam dan basa yang menghasilkan garam dan air dinamakan reaksi...', 'Oksidasi', 'Netralisasi', 'Pembakaran', 'Fermentasi', 'B', 'science_in_action'),
 (125, 'Cermin yang digunakan pada tikungan jalan untuk melihat kendaraan dari arah berlawanan adalah cermin...', 'Datar', 'Cembung', 'Cekung', 'Cekung-cembung', 'B', 'science_in_action'),
 (126, 'Enzim amilase (ptialin) di dalam mulut berfungsi mengubah...', 'Protein menjadi asam amino', 'Amilum (karbohidrat) menjadi gula sederhana', 'Lemak menjadi asam lemak', 'Vitamin menjadi mineral', 'B', 'science_in_action'),
 (127, 'Simbol bahaya api pada botol zat kimia laboratorium menandakan bahan tersebut mudah...', 'Meledak', 'Terbakar', 'Beracun', 'Menguap', 'B', 'science_in_action'),
 (128, 'Perkembangbiakan vegetatif buatan dengan cara mengupas kulit batang lalu dibungkus tanah humus dinamakan...', 'Stek', 'Mencangkok', 'Merunduk', 'Mengenten', 'B', 'science_in_action'),
-(129, 'Pasangan zat yang tergolong unsur kimia adalah...', 'Air dan Garam', 'Oksigen ( O_2 ) dan Besi ( Fe )', 'Udara dan Cuka', 'Gula dan Sirup', 'B', 'science_in_action'),
+(129, 'Pasangan zat yang tergolong unsur kimia adalah...', 'Air dan Garam', 'Oksigen ( O₂ ) dan Besi ( Fe )', 'Udara dan Cuka', 'Gula dan Sirup', 'B', 'science_in_action'),
 (130, 'Satuan Internasional (SI) untuk mengukur Gaya adalah...', 'Joule', 'Newton', 'Watt', 'Pascal', 'B', 'science_in_action'),
 (131, 'Benda tegar akan berada dalam posisi seimbang jika jumlah gaya yang bekerja padanya bernilai...', 'Maksimal', 'Nol', 'Tak hingga', 'Negatif', 'B', 'science_in_action'),
 (132, 'Warna merah pada darah manusia disebabkan oleh adanya protein pengikat oksigen yang dinamakan...', 'Leukosit', 'Hemoglobin', 'Trombosit', 'Plasma', 'B', 'science_in_action'),
@@ -153,85 +150,56 @@ Dalam percobaan ilmiah, faktor yang sengaja diubah-ubah oleh peneliti dinamakan 
 (145, 'Gaya gesek yang merugikan dalam kehidupan sehari-hari contohnya adalah...', 'Gesekan rem sepeda dengan pelek roda', 'Gesekan antara ban mobil dan jalan raya', 'Gesekan komponen mesin mobil yang menyebabkan aus', 'Gesekan sepatu dengan lantai agar tidak tergelincir', 'C', 'science_in_action'),
 (146, 'Perpindahan panas secara radiasi contohnya adalah...', 'Air mendidih saat dimasak', 'Hangatnya sinar matahari yang sampai ke bumi', 'Cangkir terasa hangat saat diisi air panas', 'Terjadinya angin darat dan angin laut', 'B', 'science_in_action'),
 (147, 'Usaha ( W ) dalam fisika didefinisikan sebagai hasil kali antara gaya ( F ) dengan...', 'Massa ( m )', 'Perpindahan ( s )', 'Waktu ( t )', 'Kecepatan ( v )', 'B', 'science_in_action'),
-(148, 'Satuan hambatan listrik dalam SI adalah...', 'Volt', 'Ampere', 'Ohm ( \Omega )', 'Watt', 'C', 'science_in_action'),
-(149, 'Urutan tingkatan organisasi kehidupan dari yang terkecil sampai terbesar yang benar adalah...', 'Sel  \rightarrow  Jaringan  \rightarrow  Organ  \rightarrow  Sistem Organ  \rightarrow  Organisme', 'Organ  \rightarrow  Sel  \rightarrow  Jaringan  \rightarrow  Organisme', 'Jaringan  \rightarrow  Sel  \rightarrow  Organ  \rightarrow  Sistem Organ', 'Organisme  \rightarrow  Sel  \rightarrow  Jaringan  \rightarrow  Organ', 'A', 'science_in_action'),
+(148, 'Satuan hambatan listrik dalam SI adalah...', 'Volt', 'Ampere', 'Ohm ( Ω )', 'Watt', 'C', 'science_in_action'),
+(149, 'Urutan tingkatan organisasi kehidupan dari yang terkecil sampai terbesar yang benar adalah...', 'Sel → Jaringan → Organ → Sistem Organ → Organisme', 'Organ → Sel → Jaringan → Organisme', 'Jaringan → Sel → Organ → Sistem Organ', 'Organisme → Sel → Jaringan → Organ', 'A', 'science_in_action'),
 (150, 'Pernyataan dugaan awal yang harus diuji kebenarannya melalui eksperimen dinamakan...', 'Kesimpulan', 'Hipotesis', 'Teori', 'Data', 'B', 'science_in_action'),
-(151, 'IV. MATHEMATIC (50 SOAL)
-Hasil dari (-15) + 8 x (-3) adalah...', '21', '-39', '-69', '39', 'B', 'mathematic'),
-(152, '(Perhitungan: -15 + (-24) = -39)
-Jika 3x + 7 = 22, maka nilai x adalah...', '3', '5', '7', '15', 'B', 'mathematic'),
-(153, '( x = 5 )
-Bentuk sederhana dari  5a - 3b + 2a + 8b  adalah...', '7a + 5b', '3a + 11b', '10ab', '7a - 5b', 'A', 'mathematic'),
+(151, 'Hasil dari (-15) + 8 x (-3) adalah...', '21', '-39', '-69', '39', 'B', 'mathematic'),
+(152, 'Jika 3x + 7 = 22, maka nilai x adalah...', '3', '5', '7', '15', 'B', 'mathematic'),
+(153, 'Bentuk sederhana dari  5a - 3b + 2a + 8b  adalah...', '7a + 5b', '3a + 11b', '10ab', '7a - 5b', 'A', 'mathematic'),
 (154, 'Sebuah baju seharga Rp 150.000,00 mendapat diskon 20%. Harga yang harus dibayar adalah...', 'Rp 120.000,00', 'Rp 130.000,00', 'Rp 135.000,00', 'Rp 140.000,00', 'A', 'mathematic'),
-(155, '(Bayar = 120.000)
-Nilai dari  adalah...', '19', '21', '23', '25', 'B', 'mathematic'),
-(156, '( 13 + 8 = 21 )
-Sebuah persegi memiliki panjang sisi  12 cm. Luas persegi tersebut adalah...', '48 cm2', '144 cm2', '120 cm2', '240 cm2', 'B', 'mathematic'),
-(157, '( 12 x 12 = 144 )
-FPB dari  24  dan  36  adalah...', '6', '12', '18', '72', 'B', 'mathematic'),
+(155, 'Nilai dari  adalah...', '19', '21', '23', '25', 'B', 'mathematic'),
+(156, 'Sebuah persegi memiliki panjang sisi  12 cm. Luas persegi tersebut adalah...', '48 cm²', '144 cm²', '120 cm²', '240 cm²', 'B', 'mathematic'),
+(157, 'FPB dari  24  dan  36  adalah...', '6', '12', '18', '72', 'B', 'mathematic'),
 (158, 'KPK dari  6  dan  8  adalah...', '12', '24', '48', '16', 'B', 'mathematic'),
 (159, 'Panjang sisi miring segitiga siku-siku dengan alas  9 cm   dan tinggi  12 cm   adalah...', '13    cm', '15    cm', '17    cm', '20    cm', 'B', 'mathematic'),
-(160, '(15 )
-Nilai rata-rata dari nilai matematika: 6, 7, 8, 8, 9 adalah...', '7,4', '7,6', '7,8', '8,0', 'B', 'mathematic'),
-(161, '(Total =  38 / 5 = 7,6 )
-Hasil dari ¾ + ½ adalah...', '4/6', '5/4', '1', '3/8', 'B', 'mathematic'),
-(162, '( 3/4 + 2/4 = 5/4 )
-Jika  A = {1, 2, 3, 4}   dan  B = {3, 4, 5, 6}  , maka  A irisan B adalah...', '{1, 2}', '{3, 4}', '{5, 6}', '{1, 2, 3, 4, 5, 6}', 'B', 'mathematic'),
+(160, 'Nilai rata-rata dari nilai matematika: 6, 7, 8, 8, 9 adalah...', '7,4', '7,6', '7,8', '8,0', 'B', 'mathematic'),
+(161, 'Hasil dari ¾ + ½ adalah...', '4/6', '5/4', '1', '3/8', 'B', 'mathematic'),
+(162, 'Jika  A = {1, 2, 3, 4}   dan  B = {3, 4, 5, 6}  , maka  A irisan B adalah...', '{1, 2}', '{3, 4}', '{5, 6}', '{1, 2, 3, 4, 5, 6}', 'B', 'mathematic'),
 (163, 'Sebuah dadu bermata 6 dilempar sekali. Peluang muncul angka ganjil adalah...', '1/6', '1/3', '1/2', '2/3', 'C', 'mathematic'),
-(164, '(3/6 = 1/2 )
-Keliling lingkaran yang memiliki jari-jari  7 cm   adalah ( π  = 22/7 )...', '22    cm', '44    cm', '154    cm', '88    cm', 'B', 'mathematic'),
-(165, '(44 )
-Luas lingkaran berjari-jari  7    cm   adalah ( π = 22/7 )...', '44    cm  2', '154    cm  2', '308    cm  2', '616    cm  2', 'B', 'mathematic'),
-(166, '( 154 )
-Nilai dari  2^4  adalah...', '8', '12', '16', '32', 'C', 'mathematic'),
-(167, 'Hasil penjabaran dari  (x + 4)(x + 2)  adalah...', 'x^2 + 6x + 8', 'x^2 + 8x + 6', 'x^2 + 2x + 8', 'x^2 + 4x + 2', 'A', 'mathematic'),
+(164, 'Keliling lingkaran yang memiliki jari-jari  7 cm   adalah ( π  = 22/7 )...', '22    cm', '44    cm', '154    cm', '88    cm', 'B', 'mathematic'),
+(165, 'Luas lingkaran berjari-jari  7    cm   adalah ( π = 22/7 )...', '44    cm²', '154    cm²', '308    cm²', '616    cm²', 'B', 'mathematic'),
+(166, 'Nilai dari  2⁴  adalah...', '8', '12', '16', '32', 'C', 'mathematic'),
+(167, 'Hasil penjabaran dari  (x + 4)(x + 2)  adalah...', 'x² + 6x + 8', 'x² + 8x + 6', 'x² + 2x + 8', 'x² + 4x + 2', 'A', 'mathematic'),
 (168, 'Sebuah mobil memerlukan 3 liter bensin untuk menempuh  45 km  . Jarak yang ditempuh jika mobil diisi 5 liter bensin adalah...', '60    km', '75    km', '90    km', '100    km', 'B', 'mathematic'),
-(169, '( 75 )
-Volume kubus yang memiliki panjang rusuk  5 cm   adalah...', '25  cm3', '100 cm3', '125 cm3', '150 cm3', 'C', 'mathematic'),
-(170, '( 5^3 = 125 )
-Jika  f(x) = 2x + 5 , nilai dari  f(3)  adalah...', '8', '11', '13', '16', 'B', 'mathematic'),
-(171, '( 2(3) + 5 = 11 )
-Penyelesaian dari  2x - 4 > 6  adalah...', 'x > 5', 'x < 5', 'x > 1', 'x < 1', 'A', 'mathematic'),
-(172, '( 2x > 10 \rightarrow x > 5 )
-Gradien garis dari persamaan  y = 3x - 2  adalah...', '-2', '2', '3', '-3', 'C', 'mathematic'),
-(173, 'Luas segitiga dengan alas  10    cm   dan tinggi  6    cm   adalah...', '60    cm  2', '30    cm  2', '20    cm  2', '15    cm  2', 'B', 'mathematic'),
-(174, '( 30 )
-Median dari data terurut: 3, 5, 7, 8, 9 adalah...', '5', '7', '8', '6', 'B', 'mathematic'),
+(169, 'Volume kubus yang memiliki panjang rusuk  5 cm   adalah...', '25  cm³', '100 cm³', '125 cm³', '150 cm³', 'C', 'mathematic'),
+(170, 'Jika  f(x) = 2x + 5 , nilai dari  f(3)  adalah...', '8', '11', '13', '16', 'B', 'mathematic'),
+(171, 'Penyelesaian dari  2x - 4 > 6  adalah...', 'x > 5', 'x < 5', 'x > 1', 'x < 1', 'A', 'mathematic'),
+(172, 'Gradien garis dari persamaan  y = 3x - 2  adalah...', '-2', '2', '3', '-3', 'C', 'mathematic'),
+(173, 'Luas segitiga dengan alas  10    cm   dan tinggi  6    cm   adalah...', '60    cm²', '30    cm²', '20    cm²', '15    cm²', 'B', 'mathematic'),
+(174, 'Median dari data terurut: 3, 5, 7, 8, 9 adalah...', '5', '7', '8', '6', 'B', 'mathematic'),
 (175, 'Modus dari kumpulan data: 5, 6, 6, 7, 8, 6, 9 adalah...', '5', '6', '7', '8', 'B', 'mathematic'),
-(176, '(Angka 6 muncul paling banyak yaitu 3 kali)
-Skala peta  1 : 100.000 . Jika jarak pada peta  5 cm  , jarak sebenarnya adalah...', '5    km', '50    km', '500    m', '50    m', 'A', 'mathematic'),
-(177, '(5    km  )
-Jumlah sudut-sudut dalam sebuah segitiga adalah...', '90^\circ', '180^\circ', '270^\circ', '360^\circ', 'B', 'mathematic'),
-(178, 'Hasil dari  4^3  adalah...', '12', '16', '64', '256', 'C', 'mathematic'),
-(179, 'Sebuah balok memiliki ukuran panjang  10    cm  , lebar  4    cm  , dan tinggi  5    cm  . Volume balok tersebut adalah...', '200    cm3', '100    cm3', '19    cm3', '400    cm3', 'A', 'mathematic'),
-(180, '(200 )
-Suku ke-5 dari barisan aritmatika 2, 5, 8, 11, ... adalah...', '13', '14', '15', '16', 'B', 'mathematic'),
-(181, '(Beda = +3  \rightarrow U_5 = 11 + 3 = 14 )
-Hasil dari  (-4)^2  adalah...', '-16', '-8', '16', '8', 'C', 'mathematic'),
+(176, 'Skala peta  1 : 100.000 . Jika jarak pada peta  5 cm  , jarak sebenarnya adalah...', '5    km', '50    km', '500    m', '50    m', 'A', 'mathematic'),
+(177, 'Jumlah sudut-sudut dalam sebuah segitiga adalah...', '90°', '180°', '270°', '360°', 'B', 'mathematic'),
+(178, 'Hasil dari  4³  adalah...', '12', '16', '64', '256', 'C', 'mathematic'),
+(179, 'Sebuah balok memiliki ukuran panjang  10    cm  , lebar  4    cm  , dan tinggi  5    cm  . Volume balok tersebut adalah...', '200    cm³', '100    cm³', '19    cm³', '400    cm³', 'A', 'mathematic'),
+(180, 'Suku ke-5 dari barisan aritmatika 2, 5, 8, 11, ... adalah...', '13', '14', '15', '16', 'B', 'mathematic'),
+(181, 'Hasil dari  (-4)²  adalah...', '-16', '-8', '16', '8', 'C', 'mathematic'),
 (182, 'Perbandingan umur Ani dan Budi adalah  2 : 3 . Jika jumlah umur mereka 20 tahun, umur Budi adalah...', '8    tahun', '12    tahun', '10    tahun', '15    tahun', 'B', 'mathematic'),
-(183, '(12 )
-Luas jajaran genjang dengan alas  8    cm   dan tinggi  5    cm   adalah...', '20    cm  2', '40    cm  2', '13    cm  2', '80    cm  2', 'B', 'mathematic'),
-(184, '(40 )
-Besar sudut siku-siku adalah...', '45ᄋ', '90ᄋ', '180ᄋ', '360ᄋ', 'B', 'mathematic'),
+(183, 'Luas jajaran genjang dengan alas  8    cm   dan tinggi  5    cm   adalah...', '20    cm²', '40    cm²', '13    cm²', '80    cm²', 'B', 'mathematic'),
+(184, 'Besar sudut siku-siku adalah...', '45ᄋ', '90ᄋ', '180ᄋ', '360ᄋ', 'B', 'mathematic'),
 (185, 'Jika  x + 5 = 12 , maka nilai  2x  adalah...', '7', '14', '10', '24', 'B', 'mathematic'),
-(186, '( x = 7 \rightarrow 2x = 14 )
-Sebuah koin dilempar satu kali. Peluang muncul sisi Angka adalah...', '1/4', '1/2', '1', '0', 'B', 'mathematic'),
-(187, 'Keliling persegi yang luasnya  81cm2  adalah...', '9    cm', '36    cm', '18    cm', '81    cm', 'B', 'mathematic'),
-(188, '(36  cm  )
-Hasil dari  10^0  adalah...', '0', '1', '10', 'Tidak terdefinisi', 'B', 'mathematic'),
+(186, 'Sebuah koin dilempar satu kali. Peluang muncul sisi Angka adalah...', '1/4', '1/2', '1', '0', 'B', 'mathematic'),
+(187, 'Keliling persegi yang luasnya  81cm²  adalah...', '9    cm', '36    cm', '18    cm', '81    cm', 'B', 'mathematic'),
+(188, 'Hasil dari  10⁰  adalah...', '0', '1', '10', 'Tidak terdefinisi', 'B', 'mathematic'),
 (189, 'Suatu pedagang membeli barang seharga Rp 50.000,00 dan menjualnya kembali Rp 60.000,00. Persentase keuntungannya adalah...', '10%', '15%', '20%', '25%', 'C', 'mathematic'),
-(190, '(0)
-Sumbu simetri bangun layang-layang ada sebanyak...', '1', '2', '3', '4', 'A', 'mathematic'),
+(190, 'Sumbu simetri bangun layang-layang ada sebanyak...', '1', '2', '3', '4', 'A', 'mathematic'),
 (191, 'Hasil dari  3  x (4 + 6) - 5  adalah...', '20', '25', '30', '15', 'B', 'mathematic'),
-(192, 'Panjang diagonal bidang kubus yang memiliki rusuk  6cm   adalah...', '6\sqrt{2     cm', '6\sqrt{3     cm', '12    cm', '36    cm', 'A', 'mathematic'),
+(192, 'Panjang diagonal bidang kubus yang memiliki rusuk  6 cm   adalah...', '6√2 cm', '6√3 cm', '12    cm', '36    cm', 'A', 'mathematic'),
 (193, 'Titik koordinat  A(3, -5)  terletak pada kuadran...', 'I', 'II', 'III', 'IV', 'D', 'mathematic'),
-(194, '( X  positif,  Y  negatif)
-Hasil dari ⅖ x 15/4 adalah...', '3/2', '8/75', '3/4', '1', 'A', 'mathematic'),
-(195, '( 30 / 20 = 3/2 )
-Bentuk  2^3  x 2^2  jika disederhanakan menjadi...', '2^5', '2^6', '4^5', '4^6', 'A', 'mathematic'),
-(196, 'Sebuah tabung memiliki jari-jari  7    cm   dan tinggi  10    cm  . Luas alas tabung adalah', '154    cm  2', '440    cm  2', '70    cm  2', '308    cm  2', 'A', 'mathematic'),
-(197, '( 22/7  x 49 = 154 )
-Dua garis yang saling sejajar memiliki nilai gradien yang...', 'Berlawanan', 'Sama', 'Berbeda jauh', 'Bernilai nol', 'B', 'mathematic'),
+(194, 'Hasil dari ⅖ x 15/4 adalah...', '3/2', '8/75', '3/4', '1', 'A', 'mathematic'),
+(195, 'Bentuk  2³ × 2²  jika disederhanakan menjadi...', '2⁵', '2⁶', '4⁵', '4⁶', 'A', 'mathematic'),
+(196, 'Sebuah tabung memiliki jari-jari  7    cm   dan tinggi  10    cm  . Luas alas tabung adalah', '154    cm²', '440    cm²', '70    cm²', '308    cm²', 'A', 'mathematic'),
+(197, 'Dua garis yang saling sejajar memiliki nilai gradien yang...', 'Berlawanan', 'Sama', 'Berbeda jauh', 'Bernilai nol', 'B', 'mathematic'),
 (198, 'Besar sudut lurus adalah...', '90 derajat', '180 derajat', '270 derajat', '360 derajat', 'B', 'mathematic'),
 (199, 'Nilai dari  5!  ( 5  faktorial =  5  x 4  x 3  x 2  x 1 ) adalah...', '120', '60', '20', '100', 'A', 'mathematic'),
 (200, 'Banyaknya titik sudut pada bangun ruang kubus adalah...', '6', '8', '12', '16', 'B', 'mathematic');
