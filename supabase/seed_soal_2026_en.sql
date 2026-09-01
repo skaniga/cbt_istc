@@ -355,7 +355,7 @@ UPDATE public.questions SET pertanyaan_en='The circumference of a circle with a 
 
 UPDATE public.questions SET pertanyaan_en='The area of a circle with a radius of 7 cm is (pi = 22/7)...', pilihan_a_en='44 cm²', pilihan_b_en='154 cm²', pilihan_c_en='308 cm²', pilihan_d_en='616 cm²' WHERE nomor_soal=165;
 
-UPDATE public.questions SET pertanyaan_en='The value of 2 to the power of 4 is...', pilihan_a_en='8', pilihan_b_en='12', pilihan_c_en='16', pilihan_d_en='32' WHERE nomor_soal=166;
+UPDATE public.questions SET pertanyaan_en='The value of 2⁴ is...', pilihan_a_en='8', pilihan_b_en='12', pilihan_c_en='16', pilihan_d_en='32' WHERE nomor_soal=166;
 
 UPDATE public.questions SET pertanyaan_en='The expansion result of (x + 4)(x + 2) is...', pilihan_a_en='x² + 6x + 8', pilihan_b_en='x² + 8x + 6', pilihan_c_en='x² + 2x + 8', pilihan_d_en='x² + 4x + 2' WHERE nomor_soal=167;
 
@@ -379,13 +379,13 @@ UPDATE public.questions SET pertanyaan_en='Map scale 1 : 100,000. If the distanc
 
 UPDATE public.questions SET pertanyaan_en='The sum of the interior angles of a triangle is...', pilihan_a_en='90 degrees', pilihan_b_en='180 degrees', pilihan_c_en='270 degrees', pilihan_d_en='360 degrees' WHERE nomor_soal=177;
 
-UPDATE public.questions SET pertanyaan_en='The result of 4 to the power of 3 is...', pilihan_a_en='12', pilihan_b_en='16', pilihan_c_en='64', pilihan_d_en='256' WHERE nomor_soal=178;
+UPDATE public.questions SET pertanyaan_en='The result of 4³ is...', pilihan_a_en='12', pilihan_b_en='16', pilihan_c_en='64', pilihan_d_en='256' WHERE nomor_soal=178;
 
 UPDATE public.questions SET pertanyaan_en='A rectangular cuboid has dimensions of length 10 cm, width 4 cm, and height 5 cm. The volume is...', pilihan_a_en='200 cm³', pilihan_b_en='100 cm³', pilihan_c_en='19 cm³', pilihan_d_en='400 cm³' WHERE nomor_soal=179;
 
 UPDATE public.questions SET pertanyaan_en='The 5th term of the arithmetic sequence 2, 5, 8, 11, ... is...', pilihan_a_en='13', pilihan_b_en='14', pilihan_c_en='15', pilihan_d_en='16' WHERE nomor_soal=180;
 
-UPDATE public.questions SET pertanyaan_en='The result of (-4) to the power of 2 is...', pilihan_a_en='-16', pilihan_b_en='-8', pilihan_c_en='16', pilihan_d_en='8' WHERE nomor_soal=181;
+UPDATE public.questions SET pertanyaan_en='The result of (-4)² is...', pilihan_a_en='-16', pilihan_b_en='-8', pilihan_c_en='16', pilihan_d_en='8' WHERE nomor_soal=181;
 
 UPDATE public.questions SET pertanyaan_en='The ratio of Ani''s and Budi''s ages is 2 : 3. If the sum of their ages is 20 years, Budi''s age is...', pilihan_a_en='8 years', pilihan_b_en='12 years', pilihan_c_en='10 years', pilihan_d_en='15 years' WHERE nomor_soal=182;
 
@@ -399,7 +399,7 @@ UPDATE public.questions SET pertanyaan_en='A coin is tossed once. The probabilit
 
 UPDATE public.questions SET pertanyaan_en='The perimeter of a square with an area of 81 cm² is...', pilihan_a_en='9 cm', pilihan_b_en='36 cm', pilihan_c_en='18 cm', pilihan_d_en='81 cm' WHERE nomor_soal=187;
 
-UPDATE public.questions SET pertanyaan_en='The result of 10 to the power of 0 is...', pilihan_a_en='0', pilihan_b_en='1', pilihan_c_en='10', pilihan_d_en='Undefined' WHERE nomor_soal=188;
+UPDATE public.questions SET pertanyaan_en='The result of 10⁰ is...', pilihan_a_en='0', pilihan_b_en='1', pilihan_c_en='10', pilihan_d_en='Undefined' WHERE nomor_soal=188;
 
 UPDATE public.questions SET pertanyaan_en='A merchant buys goods for 50,000 and resells them for 60,000. The profit percentage is...', pilihan_a_en='10%', pilihan_b_en='15%', pilihan_c_en='20%', pilihan_d_en='25%' WHERE nomor_soal=189;
 
@@ -407,7 +407,7 @@ UPDATE public.questions SET pertanyaan_en='The number of axes of symmetry in a k
 
 UPDATE public.questions SET pertanyaan_en='The result of 3 x (4 + 6) - 5 is...', pilihan_a_en='20', pilihan_b_en='25', pilihan_c_en='30', pilihan_d_en='15' WHERE nomor_soal=191;
 
-UPDATE public.questions SET pertanyaan_en='The length of the face diagonal of a cube with an edge of 6 cm is...', pilihan_a_en='6 root 2 cm', pilihan_b_en='6 root 3 cm', pilihan_c_en='12 cm', pilihan_d_en='36 cm' WHERE nomor_soal=192;
+UPDATE public.questions SET pertanyaan_en='The length of the face diagonal of a cube with an edge of 6 cm is...', pilihan_a_en='6√2 cm', pilihan_b_en='6√3 cm', pilihan_c_en='12 cm', pilihan_d_en='36 cm' WHERE nomor_soal=192;
 
 UPDATE public.questions SET pertanyaan_en='The coordinate point A(3, -5) is located in quadrant...', pilihan_a_en='I', pilihan_b_en='II', pilihan_c_en='III', pilihan_d_en='IV' WHERE nomor_soal=193;
 

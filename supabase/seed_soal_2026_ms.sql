@@ -357,9 +357,9 @@ UPDATE public.questions SET pertanyaan_ms='Lilitan bulatan yang mempunyai jejari
 
 UPDATE public.questions SET pertanyaan_ms='Luas bulatan berjejari 7 cm ialah (pi = 22/7)...', pilihan_a_ms='44 cm²', pilihan_b_ms='154 cm²', pilihan_c_ms='308 cm²', pilihan_d_ms='616 cm²' WHERE nomor_soal=165;
 
-UPDATE public.questions SET pertanyaan_ms='Nilai bagi 2 pangkat 4 ialah...', pilihan_a_ms='8', pilihan_b_ms='12', pilihan_c_ms='16', pilihan_d_ms='32' WHERE nomor_soal=166;
+UPDATE public.questions SET pertanyaan_ms='Nilai bagi 2⁴ ialah...', pilihan_a_ms='8', pilihan_b_ms='12', pilihan_c_ms='16', pilihan_d_ms='32' WHERE nomor_soal=166;
 
-UPDATE public.questions SET pertanyaan_ms='Hasil kembangan daripada (x + 4)(x + 2) ialah...', pilihan_a_ms='x kuasa 2 + 6x + 8', pilihan_b_ms='x kuasa 2 + 8x + 6', pilihan_c_ms='x kuasa 2 + 2x + 8', pilihan_d_ms='x kuasa 2 + 4x + 2' WHERE nomor_soal=167;
+UPDATE public.questions SET pertanyaan_ms='Hasil kembangan daripada (x + 4)(x + 2) ialah...', pilihan_a_ms='x² + 6x + 8', pilihan_b_ms='x² + 8x + 6', pilihan_c_ms='x² + 2x + 8', pilihan_d_ms='x² + 4x + 2' WHERE nomor_soal=167;
 
 UPDATE public.questions SET pertanyaan_ms='Sebuah kereta memerlukan 3 liter petrol untuk perjalanan 45 km. Jarak yang boleh dilalui jika diisi dengan 5 liter petrol ialah...', pilihan_a_ms='60 km', pilihan_b_ms='75 km', pilihan_c_ms='90 km', pilihan_d_ms='100 km' WHERE nomor_soal=168;
 
@@ -381,13 +381,13 @@ UPDATE public.questions SET pertanyaan_ms='Skala peta ialah 1 : 100,000. Jika ja
 
 UPDATE public.questions SET pertanyaan_ms='Hasil tambah sudut-sudut pedalaman dalam sebuah segi tiga ialah...', pilihan_a_ms='90 darjah', pilihan_b_ms='180 darjah', pilihan_c_ms='270 darjah', pilihan_d_ms='360 darjah' WHERE nomor_soal=177;
 
-UPDATE public.questions SET pertanyaan_ms='Hasil bagi 4 pangkat 3 ialah...', pilihan_a_ms='12', pilihan_b_ms='16', pilihan_c_ms='64', pilihan_d_ms='256' WHERE nomor_soal=178;
+UPDATE public.questions SET pertanyaan_ms='Hasil bagi 4³ ialah...', pilihan_a_ms='12', pilihan_b_ms='16', pilihan_c_ms='64', pilihan_d_ms='256' WHERE nomor_soal=178;
 
 UPDATE public.questions SET pertanyaan_ms='Sebuah kuboid mempunyai ukuran panjang 10 cm, lebar 4 cm, dan tinggi 5 cm. Isi padu kuboid tersebut ialah...', pilihan_a_ms='200 cm³', pilihan_b_ms='100 cm³', pilihan_c_ms='19 cm³', pilihan_d_ms='400 cm³' WHERE nomor_soal=179;
 
 UPDATE public.questions SET pertanyaan_ms='Sebutan ke-5 bagi janjang aritmetik 2, 5, 8, 11, ... ialah...', pilihan_a_ms='13', pilihan_b_ms='14', pilihan_c_ms='15', pilihan_d_ms='16' WHERE nomor_soal=180;
 
-UPDATE public.questions SET pertanyaan_ms='Hasil bagi (-4) pangkat 2 ialah...', pilihan_a_ms='-16', pilihan_b_ms='-8', pilihan_c_ms='16', pilihan_d_ms='8' WHERE nomor_soal=181;
+UPDATE public.questions SET pertanyaan_ms='Hasil bagi (-4)² ialah...', pilihan_a_ms='-16', pilihan_b_ms='-8', pilihan_c_ms='16', pilihan_d_ms='8' WHERE nomor_soal=181;
 
 UPDATE public.questions SET pertanyaan_ms='Nisbah umur Ani kepada Budi ialah 2 : 3. Jika jumlah umur mereka ialah 20 tahun, umur Budi ialah...', pilihan_a_ms='8 tahun', pilihan_b_ms='12 tahun', pilihan_c_ms='10 tahun', pilihan_d_ms='15 tahun' WHERE nomor_soal=182;
 
@@ -401,7 +401,7 @@ UPDATE public.questions SET pertanyaan_ms='Sekeping syiling dilambung sekali. Ke
 
 UPDATE public.questions SET pertanyaan_ms='Perimeter segi empat sama yang mempunyai luas 81 cm² ialah...', pilihan_a_ms='9 cm', pilihan_b_ms='36 cm', pilihan_c_ms='18 cm', pilihan_d_ms='81 cm' WHERE nomor_soal=187;
 
-UPDATE public.questions SET pertanyaan_ms='Hasil bagi 10 pangkat 0 ialah...', pilihan_a_ms='0', pilihan_b_ms='1', pilihan_c_ms='10', pilihan_d_ms='Tidak tertakrif' WHERE nomor_soal=188;
+UPDATE public.questions SET pertanyaan_ms='Hasil bagi 10⁰ ialah...', pilihan_a_ms='0', pilihan_b_ms='1', pilihan_c_ms='10', pilihan_d_ms='Tidak tertakrif' WHERE nomor_soal=188;
 
 UPDATE public.questions SET pertanyaan_ms='Seorang peniaga membeli barangan berharga RM 50.00 dan menjualnya semula dengan harga RM 60.00. Peratusan keuntungannya ialah...', pilihan_a_ms='10%', pilihan_b_ms='15%', pilihan_c_ms='20%', pilihan_d_ms='25%' WHERE nomor_soal=189;
 
@@ -409,13 +409,13 @@ UPDATE public.questions SET pertanyaan_ms='Bilangan paksi simetri pada bentuk le
 
 UPDATE public.questions SET pertanyaan_ms='Hasil bagi 3 x (4 + 6) - 5 ialah...', pilihan_a_ms='20', pilihan_b_ms='25', pilihan_c_ms='30', pilihan_d_ms='15' WHERE nomor_soal=191;
 
-UPDATE public.questions SET pertanyaan_ms='Panjang pepenjuru satah pada kubus yang mempunyai panjang sisi 6 cm ialah...', pilihan_a_ms='6 akar 2 cm', pilihan_b_ms='6 akar 3 cm', pilihan_c_ms='12 cm', pilihan_d_ms='36 cm' WHERE nomor_soal=192;
+UPDATE public.questions SET pertanyaan_ms='Panjang pepenjuru satah pada kubus yang mempunyai panjang sisi 6 cm ialah...', pilihan_a_ms='6√2 cm', pilihan_b_ms='6√3 cm', pilihan_c_ms='12 cm', pilihan_d_ms='36 cm' WHERE nomor_soal=192;
 
 UPDATE public.questions SET pertanyaan_ms='Titik koordinat A(3, -5) terletak pada sukuan...', pilihan_a_ms='I', pilihan_b_ms='II', pilihan_c_ms='III', pilihan_d_ms='IV' WHERE nomor_soal=193;
 
 UPDATE public.questions SET pertanyaan_ms='Hasil bagi 2/5 darab 15/4 ialah...', pilihan_a_ms='3/2', pilihan_b_ms='8/75', pilihan_c_ms='3/4', pilihan_d_ms='1' WHERE nomor_soal=194;
 
-UPDATE public.questions SET pertanyaan_ms='Bentuk 2 pangkat 3 darab 2 pangkat 2 jika dipermudahkan akan menjadi...', pilihan_a_ms='2 pangkat 5', pilihan_b_ms='2 pangkat 6', pilihan_c_ms='4 pangkat 5', pilihan_d_ms='4 pangkat 6' WHERE nomor_soal=195;
+UPDATE public.questions SET pertanyaan_ms='Bentuk 2³ × 2² jika dipermudahkan akan menjadi...', pilihan_a_ms='2⁵', pilihan_b_ms='2⁶', pilihan_c_ms='4⁵', pilihan_d_ms='4⁶' WHERE nomor_soal=195;
 
 UPDATE public.questions SET pertanyaan_ms='Sebuah silinder mempunyai jejari 7 cm dan tinggi 10 cm. Luas tapak silinder tersebut ialah...', pilihan_a_ms='154 cm²', pilihan_b_ms='440 cm²', pilihan_c_ms='70 cm²', pilihan_d_ms='308 cm²' WHERE nomor_soal=196;
 
