@@ -134,9 +134,8 @@ export default function SertifikatClient({
             </div>
 
             {/* ── Participant Name (Dancing Script, gold) ───────────── */}
-            {/* Blank area is between "This Certificate is awarded to" and the flourish */}
             <div style={{
-              position:'absolute', top:'36.5%', left:'8%', right:'8%',
+              position:'absolute', top:'36%', left:'8%', right:'8%',
               textAlign:'center',
               fontFamily:"'Dancing Script', cursive",
               fontSize: participant.nama_lengkap.length > 28 ? '2rem'
@@ -145,7 +144,8 @@ export default function SertifikatClient({
                       : '3.5rem',
               fontWeight:700,
               color: GOLD,
-              lineHeight: 1.15,
+              lineHeight: 1.5,
+              paddingBottom: '0.3em',
               wordBreak: 'break-word',
             }}>
               {participant.nama_lengkap}
