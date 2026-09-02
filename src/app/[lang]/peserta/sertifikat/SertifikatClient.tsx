@@ -45,49 +45,64 @@ export default function SertifikatClient({
   const downloadPdf = async () => {
     if (!certRef.current) return
     setIsGenerating(true)
+
+    const certParent = document.getElementById('cert-parent')
+    const savedTransform  = certParent?.style.transform  ?? ''
+    const savedMargin     = certParent?.style.marginBottom ?? ''
+    const savedScrollY    = window.scrollY
+
+    const restore = () => {
+      if (certParent) {
+        certParent.style.transform    = savedTransform
+        certParent.style.marginBottom = savedMargin
+      }
+      window.scrollTo(0, savedScrollY)
+    }
+
     try {
       await document.fonts.ready
+
+      // 1. Remove scale transform so element renders at true 1122×793
+      if (certParent) {
+        certParent.style.transform    = 'none'
+        certParent.style.marginBottom = '0'
+      }
+
+      // 2. Wait two animation frames for layout to settle
+      await new Promise(r => requestAnimationFrame(() => requestAnimationFrame(r)))
+
+      // 3. Scroll so certRef is flush with the top of the viewport
+      const elementTop = certRef.current.getBoundingClientRect().top + window.scrollY
+      window.scrollTo(0, elementTop)
+      await new Promise(r => setTimeout(r, 200))
+
       const [{ default: html2canvas }, { jsPDF }] = await Promise.all([
         import('html2canvas'),
         import('jspdf'),
       ])
 
-      // Clone the cert element and pin it at top-left, full size — ignores scroll & transform
-      const clone = certRef.current.cloneNode(true) as HTMLElement
-      Object.assign(clone.style, {
-        position: 'fixed',
-        top: '0',
-        left: '0',
-        width: '1122px',
-        height: '793px',
-        zIndex: '-9999',
-        pointerEvents: 'none',
-        margin: '0',
-        padding: '0',
-      })
-      document.body.appendChild(clone)
-
-      // Let the clone render (background image + fonts)
-      await new Promise(r => setTimeout(r, 300))
-
-      const canvas = await html2canvas(clone, {
+      // 4. Capture — no custom scrollX/scrollY; let html2canvas read the live DOM
+      const canvas = await html2canvas(certRef.current, {
         scale: 2,
         useCORS: true,
         allowTaint: true,
         logging: false,
         width: 1122,
         height: 793,
-        scrollX: 0,
-        scrollY: 0,
       })
 
-      document.body.removeChild(clone)
+      restore()
 
       const pdf = new jsPDF({ orientation: 'landscape', unit: 'mm', format: 'a4' })
-      pdf.addImage(canvas.toDataURL('image/jpeg', 0.95), 'JPEG', 0, 0,
-        pdf.internal.pageSize.getWidth(), pdf.internal.pageSize.getHeight())
+      pdf.addImage(
+        canvas.toDataURL('image/jpeg', 0.95), 'JPEG',
+        0, 0,
+        pdf.internal.pageSize.getWidth(),
+        pdf.internal.pageSize.getHeight(),
+      )
       pdf.save(`Certificate_ISTC_${participant.nomor_peserta}.pdf`)
     } catch (e) {
+      restore()
       console.error(e)
       alert('Error generating PDF. Please try again.')
     } finally {
