@@ -47,11 +47,12 @@ function detectLocale(request: NextRequest): string {
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl
 
-  // Skip api, _next, admin, static files
+  // Skip api, _next, admin, certificate verifier, static files
   if (
     pathname.startsWith('/api') ||
     pathname.startsWith('/_next') ||
     pathname.startsWith('/admin') ||
+    pathname.startsWith('/certificate') ||
     pathname.includes('.')
   ) {
     return NextResponse.next()

@@ -52,10 +52,20 @@ export default function SertifikatClient({
         import('jspdf'),
       ])
       const canvas = await html2canvas(certRef.current, {
-        scale: 2, useCORS: true,
+        scale: 2,
+        useCORS: true,
+        logging: false,
+        width: 1122,
+        height: 793,
+        windowWidth: 1122,
+        windowHeight: 793,
         onclone: (clonedDoc) => {
           const p = clonedDoc.getElementById('cert-parent')
-          if (p) p.style.transform = 'none'
+          if (p) {
+            p.style.transform = 'none'
+            p.style.transformOrigin = 'unset'
+            p.style.marginBottom = '0'
+          }
         }
       })
       const pdf = new jsPDF({ orientation: 'landscape', unit: 'mm', format: 'a4' })
