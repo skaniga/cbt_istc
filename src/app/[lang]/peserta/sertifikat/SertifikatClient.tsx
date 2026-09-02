@@ -190,8 +190,8 @@ export default function SertifikatClient({
               <QRCodeSVG
                 value={verifyUrl}
                 size={80}
-                fgColor="#000000"
-                bgColor="#ffffff"
+                fgColor="#3D2B00"
+                bgColor="#FAF7F0"
                 level="H"
               />
             </div>
