@@ -183,7 +183,7 @@ export default function SertifikatClient({
 
             {/* ── QR Code — di atas tanda tangan Muhammad Amarjid ── */}
             <div style={{
-              position:'absolute', bottom:'20%', left:'50%',
+              position:'absolute', bottom:'10%', left:'50%',
               transform:'translateX(-50%)',
               display:'flex', flexDirection:'column', alignItems:'center',
             }}>
