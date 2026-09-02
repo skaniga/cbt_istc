@@ -136,24 +136,25 @@ export default function SertifikatClient({
             {/* ── Participant Name (Dancing Script, gold) ───────────── */}
             {/* Blank area is between "This Certificate is awarded to" and the flourish */}
             <div style={{
-              position:'absolute', top:'36.5%', left:'10%', right:'10%',
+              position:'absolute', top:'36.5%', left:'8%', right:'8%',
               textAlign:'center',
               fontFamily:"'Dancing Script', cursive",
-              fontSize: participant.nama_lengkap.length > 20 ? '2.6rem' : '3.4rem',
+              fontSize: participant.nama_lengkap.length > 28 ? '2rem'
+                      : participant.nama_lengkap.length > 20 ? '2.6rem'
+                      : participant.nama_lengkap.length > 14 ? '3rem'
+                      : '3.5rem',
               fontWeight:700,
               color: GOLD,
-              lineHeight: 1,
-              whiteSpace: 'nowrap',
-              overflow: 'hidden',
-              textOverflow: 'ellipsis',
+              lineHeight: 1.15,
+              wordBreak: 'break-word',
             }}>
               {participant.nama_lengkap}
             </div>
 
-            {/* ── Category value (Poppins bold) ─────────────────────── */}
-            {/* Below "Category" label in template */}
+            {/* ── Category value (Poppins bold) ───────────────────── */}
+            {/* Below "Category" label, above "as" label in template */}
             <div style={{
-              position:'absolute', top:'53%', left:0, right:0,
+              position:'absolute', top:'50.5%', left:0, right:0,
               textAlign:'center',
               fontFamily:"'Poppins', sans-serif",
               fontSize:'1.05rem', fontWeight:700,
@@ -179,10 +180,9 @@ export default function SertifikatClient({
               {achievement}
             </div>
 
-            {/* ── QR Code — LEFT of signature (signature is in template at center-bottom) */}
+            {/* ── QR Code — top-right, above name area ─────────────── */}
             <div style={{
-              position:'absolute', bottom:'5%', left:'27%',
-              transform:'translateX(-50%)',
+              position:'absolute', top:'27%', right:'6%',
               display:'flex', flexDirection:'column', alignItems:'center',
             }}>
               <QRCodeSVG
@@ -192,13 +192,6 @@ export default function SertifikatClient({
                 bgColor="#ffffff"
                 level="H"
               />
-              <div style={{
-                fontFamily:"'Glacial Indifference', sans-serif",
-                fontSize:'0.45rem', color: MUTED,
-                letterSpacing:'0.06em', marginTop: 3, textAlign:'center',
-              }}>
-                SCAN TO VERIFY
-              </div>
             </div>
 
           </div>
