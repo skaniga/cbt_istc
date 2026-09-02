@@ -52,8 +52,9 @@ Platform ISTC CBT dirancang khusus untuk mendukung proses seleksi peserta **Inte
 | **Login Sederhana** | Masuk dengan Nomor Peserta + kata sandi universal `ISTC2026` |
 | **Dashboard Peserta** | Pantau status ujian & lihat badge bidang kompetisi |
 | **CBT Ujian Digital** | Soal difilter otomatis sesuai bidang, timer, auto-save, navigasi grid |
-| **Sertifikat PDF Otomatis** | Sertifikat digital premium dengan nama, skor, bidang, dan logo ISTC |
-| **Multilingual** | UI tersedia dalam EN / ID / MS, ganti kapan saja via navbar |
+| **Sertifikat PDF Digital** | Sertifikat A4 landscape premium dengan QR code verifikasi, nama, bidang, dan logo ISTC |
+| **QR Verifikasi** | Scan QR di sertifikat → halaman publik `/certificate/{id}` menampilkan status valid |
+| **Multilingual** | UI tersedia dalam EN / ID / MS, ganti kapan saja via navbar (terkunci saat ujian) |
 | **Mobile Responsive** | Dapat diakses dari HP, tablet, dan laptop |
 
 ### 🛡️ Untuk Admin / Panitia
@@ -61,6 +62,7 @@ Platform ISTC CBT dirancang khusus untuk mendukung proses seleksi peserta **Inte
 |-------|-----------|
 | **Login Aman** | Autentikasi berbasis Supabase Auth (email + password) |
 | **Toggle Akses Ujian** | Buka/tutup akses ujian peserta dengan satu klik |
+| **Rilis Hasil** | Toggle rilis hasil ujian — sertifikat hanya bisa diunduh setelah hasil dirilis |
 | **Exam Settings** | Atur jumlah soal & aktifkan/nonaktifkan randomisasi soal |
 | **Manajemen Peserta** | Lihat peserta dengan kolom **Bidang**, Skor, Status; edit nama/passport/bidang |
 | **Bank Soal** | Kelola soal per bidang kompetisi — 50 soal per bidang (200 total) |
@@ -95,10 +97,10 @@ Mendaftar di /{lang}/daftar            Login di /admin/login
     ▼                                            ▼
 Dapat Nomor Peserta              Dashboard Admin terbuka
 (format: IPE-2026-XXXX)          ─ Buka/Tutup Akses Ujian
-    │                            ─ Lihat Daftar Peserta + Bidang
-    ▼                            ─ Edit Data Peserta
-Login di /{lang}/login           ─ Kelola Soal per Bidang
-(Nomor Peserta + ISTC2026)
+    │                            ─ Rilis Hasil Ujian
+    ▼                            ─ Lihat Daftar Peserta + Bidang
+Login di /{lang}/login           ─ Edit Data Peserta
+(Nomor Peserta + ISTC2026)       ─ Kelola Soal per Bidang
     │
     ▼
 Dashboard Peserta (/{lang}/peserta)
@@ -118,6 +120,11 @@ Selesai → Skor & Status dihitung
     ▼
 Unduh Sertifikat PDF (/{lang}/peserta/sertifikat)
 ─ Nama, bidang, skor, tanggal, logo ISTC
+─ QR Code → https://istcompetition.my/certificate/{id}
+    │
+    ▼
+Verifikasi publik (/certificate/{id})
+─ Halaman status sertifikat yang bisa diakses siapapun
 ```
 
 ---
@@ -130,10 +137,12 @@ Unduh Sertifikat PDF (/{lang}/peserta/sertifikat)
 | **TypeScript** | 5.x | Type safety di seluruh kodebase |
 | **Supabase** | Latest | Database PostgreSQL + Auth + RLS |
 | **jose** | Latest | JWT untuk session peserta (HTTP-only cookie) |
-| **html2canvas** | Latest | Render HTML sertifikat menjadi gambar |
-| **jsPDF** | Latest | Konversi gambar ke file PDF |
+| **Canvas API** | Native | Generate PDF sertifikat pixel-perfect (menggantikan html2canvas) |
+| **qrcode** | Latest | Generate QR code untuk sertifikat via Canvas |
+| **jsPDF** | Latest | Konversi canvas ke file PDF A4 landscape |
+| **qrcode.react** | Latest | Render QR code di web view sertifikat |
 | **Vanilla CSS** | — | Design system tanpa framework CSS eksternal |
-| **Google Fonts** | — | Cormorant Garamond, Crimson Pro, Cinzel |
+| **Google Fonts** | — | Dancing Script, Poppins, Cormorant SC |
 | **Vercel** | — | Deployment & CDN global |
 
 ---
@@ -260,7 +269,19 @@ CREATE POLICY "system_config_insert_auth"
   WITH CHECK (true);
 ```
 
-### Step 10 — Buat Akun Admin
+### Step 10 — Tambah Kolom Rilis Hasil
+
+```sql
+ALTER TABLE public.system_config
+  ADD COLUMN IF NOT EXISTS rilis_hasil BOOLEAN DEFAULT FALSE;
+
+-- Seed default
+INSERT INTO public.system_config (kunci, nilai, keterangan)
+VALUES ('rilis_hasil', 'false', 'Rilis hasil ujian kepada peserta: true/false')
+ON CONFLICT (kunci) DO NOTHING;
+```
+
+### Step 11 — Buat Akun Admin
 
 1. Buka **Supabase Dashboard** → **Authentication** → **Users**
 2. Klik **Add User** → **Create New User**
@@ -320,7 +341,7 @@ Menampilkan:
 | **Belum Dimulai** | Klik "Mulai Ujian" (jika akses dibuka panitia) |
 | **Akses Ditutup** | Tunggu pengumuman panitia |
 | **Sedang Berlangsung** | Klik "Lanjutkan Ujian" |
-| **Selesai** | Lihat skor & unduh sertifikat |
+| **Selesai** | Lihat skor & unduh sertifikat (jika hasil sudah dirilis) |
 
 ---
 
@@ -331,15 +352,26 @@ Menampilkan:
 - **Timer 90 menit** (merah saat < 5 menit)
 - Grid navigasi soal (emas = aktif, gelap = dijawab, terang = belum)
 - Ujian **otomatis dikumpulkan** saat waktu habis
+- UI sepenuhnya **multilingual** (EN/ID/MS) — ganti bahasa **sebelum** ujian dimulai
 
 ---
 
 ### 5️⃣ Sertifikat (`/{lang}/peserta/sertifikat`)
 
 Sertifikat A4 Landscape berisi:
-- Nama peserta, bidang kompetisi, skor, tanggal
-- Logo ISTC resmi
-- Nomor peserta unik
+- Nama peserta, bidang kompetisi, nomor sertifikat
+- Logo ISTC resmi & tanda tangan President Director
+- **QR Code** → scan untuk verifikasi di `https://istcompetition.my/certificate/{id}`
+
+**Cara unduh**: Klik **"Download Certificate (PDF)"** → file PDF siap dalam beberapa detik.
+
+---
+
+### 6️⃣ Verifikasi Sertifikat (`/certificate/{id}`)
+
+Halaman publik yang dapat diakses siapapun tanpa login:
+- Scan QR code di sertifikat → terbuka otomatis
+- Menampilkan: nama peserta, nomor sertifikat, kategori, status valid/tidak valid
 
 ---
 
@@ -354,6 +386,7 @@ Buka `/admin/login` → masukkan Email + Password Supabase Auth.
 ### Dashboard Utama (`/admin`)
 
 - **Buka/Tutup Akses Ujian** — satu klik mengontrol semua peserta
+- **Rilis Hasil** — toggle untuk membuka akses sertifikat kepada peserta
 - **Exam Settings** — atur jumlah soal (1–50) dan aktifkan **Randomize Questions**
 - **Keep Alive** — ping database agar tidak pause (Supabase free tier)
 
@@ -392,6 +425,9 @@ computer-service-shop/
 │   │   ├── robots.ts                     # robots.txt dinamis
 │   │   ├── sitemap.ts                    # Sitemap XML dinamis
 │   │   ├── opengraph-image.tsx           # OG Image generator
+│   │   ├── certificate/
+│   │   │   └── [id]/
+│   │   │       └── page.tsx              # ✅ Verifikasi sertifikat publik (QR scan)
 │   │   └── [lang]/                       # Routing multilingual (en/id/ms)
 │   │       ├── page.tsx                  # Landing Page per bahasa
 │   │       ├── daftar/
@@ -406,28 +442,28 @@ computer-service-shop/
 │   │           ├── layout.tsx            # Layout peserta (auth guard)
 │   │           ├── page.tsx              # Dashboard Peserta
 │   │           ├── PesertaClient.tsx     # UI dashboard + badge bidang
-│   │           ├── PesertaNavbar.tsx     # Navbar area peserta
+│   │           ├── PesertaNavbar.tsx     # Navbar area peserta (i18n lengkap)
 │   │           ├── components.tsx        # StartExamForm
 │   │           ├── actions.ts            # startExam (validasi kategori)
 │   │           ├── loading.tsx           # Loading skeleton
 │   │           ├── ujian/
 │   │           │   ├── page.tsx          # CBT Server Component
-│   │           │   ├── CbtClient.tsx     # UI ujian interaktif
+│   │           │   ├── CbtClient.tsx     # UI ujian interaktif (i18n penuh)
 │   │           │   ├── actions.ts        # saveAnswer, finishExam (atomic)
 │   │           │   ├── useExamGuard.ts   # Hook proteksi sesi ujian
 │   │           │   ├── ExamErrorBoundary.tsx # Error boundary CBT
 │   │           │   └── loading.tsx       # Loading skeleton ujian
 │   │           └── sertifikat/
 │   │               ├── page.tsx          # Sertifikat Server Component
-│   │               └── SertifikatClient.tsx # Render & download PDF
+│   │               └── SertifikatClient.tsx # ✅ Canvas API PDF generator
 │   │
 │   └── admin/
 │       ├── layout.tsx                    # Layout admin (Supabase Auth check)
 │       ├── login/                        # Form Login Admin
 │       └── (dashboard)/
-│           ├── page.tsx                  # Dashboard + toggle ujian + exam settings
+│           ├── page.tsx                  # Dashboard + toggle ujian + rilis hasil
 │           ├── components.tsx            # ToggleAksesForm, KeepAlive, SettingsForm
-│           ├── actions.ts                # toggleAksesUjian, keepAlive, saveSettings
+│           ├── actions.ts                # toggleAksesUjian, toggleRilisHasil, keepAlive
 │           ├── peserta/
 │           │   ├── page.tsx              # Tabel peserta + kolom bidang
 │           │   ├── PesertaClient.tsx     # UI tabel + edit modal bidang
@@ -448,19 +484,23 @@ computer-service-shop/
 │   │   └── server.ts                     # Supabase Server Client
 │   └── i18n/
 │       ├── LanguageContext.tsx           # Context + cookie locale detection
-│       └── translations.ts              # Terjemahan EN/ID/MS
+│       └── translations.ts              # Terjemahan EN/ID/MS (lengkap semua key)
 │
-├── middleware.ts                         # Auto-detect bahasa browser (Accept-Language)
+├── middleware.ts                         # Auto-detect bahasa + bypass /certificate/*
 │
 ├── public/
 │   ├── logo.png                          # Logo ISTC resmi
+│   ├── cert_template.png                 # Template sertifikat (2000×1414px Canva)
 │   ├── hero.jpg / hero.webp              # Hero image landing
+│   ├── fonts/
+│   │   ├── GlacialIndifference-Regular.woff
+│   │   └── GlacialIndifference-Bold.woff
 │   ├── Guidelines_ISTC_2026_EN.pdf       # Panduan EN
 │   ├── Syllabi_ISTC_2026_EN.pdf          # Silabus EN
 │   ├── Panduan_ISTC_2026_MS.pdf          # Panduan MS
 │   ├── Silibus_ISTC_2026_MS.pdf          # Silabus MS
 │   ├── Juknis_ISTC_2026.pdf              # Juknis ID
-│   └── Kisi_Kisi_ISTC_2026.pdf           # Kisi-kisi ID
+│   └── Kisi_Kisi_ISTC_2026.pdf          # Kisi-kisi ID
 │
 ├── supabase/
 │   ├── seed.sql                          # Skema DB utama (jalankan pertama)
@@ -497,6 +537,7 @@ computer-service-shop/
 | `/{lang}/peserta` | 🔐 Peserta | Dashboard peserta + badge bidang |
 | `/{lang}/peserta/ujian` | 🔐 Peserta | Halaman CBT (soal sesuai bidang) |
 | `/{lang}/peserta/sertifikat` | 🔐 Peserta | Pratinjau & unduh sertifikat PDF |
+| `/certificate/{id}` | 🌐 Publik | Verifikasi sertifikat via QR scan |
 | `/admin/login` | Publik | Login admin |
 | `/admin` | 🔐 Admin | Dashboard kontrol utama |
 | `/admin/peserta` | 🔐 Admin | Manajemen peserta + bidang |
@@ -543,6 +584,18 @@ Kata sandi universal untuk peserta ISTC 2026 adalah `ISTC2026`.
 
 ---
 
+### ❌ QR Code sertifikat mengarah ke 404
+**Penyebab**: Middleware i18n me-redirect `/certificate/{id}` ke `/en/certificate/{id}`.  
+**Status**: ✅ Sudah diperbaiki — `/certificate/*` di-bypass dari middleware locale redirect.
+
+---
+
+### ❌ PDF sertifikat berbeda dari tampilan web
+**Penyebab**: html2canvas sensitif terhadap scroll position & CSS transform.  
+**Status**: ✅ Sudah diperbaiki — PDF sekarang di-generate via **Canvas API** langsung (bukan DOM capture), sehingga posisi selalu konsisten.
+
+---
+
 ### ❌ Halaman blank / Application error di browser
 **Penyebab**: Cache `.next` rusak atau merge conflict residue.  
 **Solusi**:
@@ -571,7 +624,7 @@ A: Tidak bisa sendiri. Admin dapat mengubahnya melalui `/admin/peserta` → Edit
 A: Ya. Setiap jawaban langsung tersimpan ke database. Halaman ujian akan memuat ulang jawaban sebelumnya.
 
 **Q: Berapa lama durasi ujian?**  
-A: Default **90 menit**. Dapat diubah via `system_config` di Supabase (`kunci = 'durasi_menit'` atau `'durasi_ujian_menit'`).
+A: Default **90 menit**. Dapat diubah via `system_config` di Supabase (`kunci = 'durasi_menit'`).
 
 **Q: Berapa soal per sesi ujian?**  
 A: **50 soal** sesuai bidang peserta. Dapat diubah via Admin Dashboard → **Exam Settings** → *Number of Questions to Display*.
@@ -596,6 +649,12 @@ A: Ya. Buka `/admin` → **Exam Settings** → set *Randomize Questions = Yes* �
 
 **Q: Logo ISTC tidak muncul di tab browser?**  
 A: Lakukan hard refresh (`Ctrl+Shift+R`). Browser kadang cache favicon lama.
+
+**Q: Apakah UI ujian bisa dalam bahasa Melayu?**  
+A: Ya. Semua teks di halaman ujian (dialog submit, tombol, label, peringatan) sudah tersedia dalam EN/ID/MS. Bahasa dikunci saat ujian berlangsung untuk mencegah state reset.
+
+**Q: Bagaimana cara memverifikasi sertifikat peserta?**  
+A: Scan QR code di pojok sertifikat PDF → otomatis terbuka halaman `https://istcompetition.my/certificate/{id}` yang menampilkan nama, nomor, dan status sertifikat.
 
 ---
 
