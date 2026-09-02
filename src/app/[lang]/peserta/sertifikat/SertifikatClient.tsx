@@ -41,63 +41,79 @@ export default function SertifikatClient({
     window.addEventListener('resize', updateScale)
     return () => window.removeEventListener('resize', updateScale)
   }, [])
+  const isWinner  = !!winnerData
+  const certNo    = participant.nomor_peserta ?? '—'
+  const verifyUrl = `https://istcompetition.my/certificate/${certNo.replace(/\//g, '-')}`
+  const achievement = isWinner
+    ? (winnerData!.apresiasi ?? '').toUpperCase()
+    : t('cert_achievement').toUpperCase()
+  const category  = participant.kategori ?? ''
 
   const downloadPdf = async () => {
-    if (!certRef.current) return
     setIsGenerating(true)
-
-    const certParent = document.getElementById('cert-parent')
-    const savedTransform  = certParent?.style.transform  ?? ''
-    const savedMargin     = certParent?.style.marginBottom ?? ''
-    const savedScrollY    = window.scrollY
-
-    const restore = () => {
-      if (certParent) {
-        certParent.style.transform    = savedTransform
-        certParent.style.marginBottom = savedMargin
-      }
-      document.body.style.overflow = ''
-      document.documentElement.style.overflow = ''
-      window.scrollTo(0, savedScrollY)
-    }
-
     try {
       await document.fonts.ready
 
-      // 1. Remove scale transform so element renders at true 1122×793
-      if (certParent) {
-        certParent.style.transform    = 'none'
-        certParent.style.marginBottom = '0'
-      }
+      const W = 1122, H = 793, SCALE = 2
+      const canvas = document.createElement('canvas')
+      canvas.width  = W * SCALE
+      canvas.height = H * SCALE
+      const ctx = canvas.getContext('2d')!
+      ctx.scale(SCALE, SCALE)
 
-      // 2. Lock scroll at absolute top — prevents any scroll offset in capture
-      document.body.style.overflow = 'hidden'
-      document.documentElement.style.overflow = 'hidden'
-      window.scrollTo(0, 0)
+      // ── 1. Background template ──────────────────────────────
+      const bg = new Image()
+      bg.crossOrigin = 'anonymous'
+      await new Promise<void>(res => { bg.onload = () => res(); bg.src = '/cert_template.png' })
+      ctx.drawImage(bg, 0, 0, W, H)
 
-      // 3. Wait for layout + scroll lock to settle
-      await new Promise(r => requestAnimationFrame(() => requestAnimationFrame(r)))
-      await new Promise(r => setTimeout(r, 200))
+      ctx.textAlign    = 'center'
+      ctx.textBaseline = 'top'
 
-      const [{ default: html2canvas }, { jsPDF }] = await Promise.all([
-        import('html2canvas'),
-        import('jspdf'),
-      ])
+      // ── 2. Certificate Number ───────────────────────────────
+      // y=214 = 27% of 793 (sits below NO. in template)
+      ctx.font      = '400 10px "Glacial Indifference", sans-serif'
+      ctx.fillStyle = MUTED
+      ctx.fillText(`NO.  ${certNo}`, W / 2, 214)
 
-      // 4. Capture with explicit scrollX/scrollY = 0 (page is locked at top)
-      const canvas = await html2canvas(certRef.current, {
-        scale: 2,
-        useCORS: true,
-        allowTaint: true,
-        logging: false,
-        width: 1122,
-        height: 793,
-        scrollX: 0,
-        scrollY: 0,
-      })
+      // ── 3. Participant Name ─────────────────────────────────
+      // y=286 = 36% of 793 (name blank area in template)
+      const nameLen = participant.nama_lengkap.length
+      const namePx  = nameLen > 28 ? 32 : nameLen > 20 ? 41 : nameLen > 14 ? 48 : 56
+      ctx.font      = `700 ${namePx}px "Dancing Script", cursive`
+      ctx.fillStyle = GOLD
+      ctx.fillText(participant.nama_lengkap, W / 2, 286)
 
-      restore()
+      // ── 4. Category ─────────────────────────────────────────
+      // y=389 = 49% of 793 (between Category label & "as" label)
+      ctx.font      = '700 17px "Poppins", sans-serif'
+      ctx.fillStyle = TEXT
+      ctx.fillText(category, W / 2, 389)
 
+      // ── 5. Achievement ──────────────────────────────────────
+      // y=484 = 61% of 793 (below "as" label)
+      const achLen = achievement.length
+      const achPx  = achLen <= 12 ? 48 : achLen <= 18 ? 32 : 18
+      ctx.font      = `700 ${achPx}px "Cormorant SC", serif`
+      ctx.fillStyle = GOLD
+      ctx.fillText(achievement, W / 2, 484)
+
+      // ── 6. QR Code ──────────────────────────────────────────
+      // Centered, 80×80px, bottom 16% area (above Muhammad Amarjid signature)
+      try {
+        const QRLib    = (await import('qrcode')).default
+        const qrDataUrl = await QRLib.toDataURL(verifyUrl, {
+          width: 80, margin: 1,
+          color: { dark: '#3D2B00', light: '#FAF7F0' },
+          errorCorrectionLevel: 'H',
+        })
+        const qrImg = new Image()
+        await new Promise<void>(res => { qrImg.onload = () => res(); qrImg.src = qrDataUrl })
+        ctx.drawImage(qrImg, W / 2 - 40, H * 0.74, 80, 80)
+      } catch { /* skip QR if unavailable */ }
+
+      // ── 7. Export as PDF ────────────────────────────────────
+      const { jsPDF } = await import('jspdf')
       const pdf = new jsPDF({ orientation: 'landscape', unit: 'mm', format: 'a4' })
       pdf.addImage(
         canvas.toDataURL('image/jpeg', 0.95), 'JPEG',
@@ -107,25 +123,12 @@ export default function SertifikatClient({
       )
       pdf.save(`Certificate_ISTC_${participant.nomor_peserta}.pdf`)
     } catch (e) {
-      restore()
       console.error(e)
-      alert('Error generating PDF. Please try again.')
+      alert('Gagal generate PDF. Coba lagi.')
     } finally {
       setIsGenerating(false)
     }
   }
-
-  const isWinner  = !!winnerData
-  const certNo    = participant.nomor_peserta ?? '—'
-  const verifyUrl = `https://istcompetition.my/certificate/${certNo.replace(/\//g, '-')}`
-
-  // Achievement text
-  const achievement = isWinner
-    ? (winnerData!.apresiasi ?? '').toUpperCase()
-    : t('cert_achievement').toUpperCase()
-
-  // Category label
-  const category = participant.kategori ?? ''
 
   // Localised "awarded to"
   const awardedLabel = locale === 'id' ? 'Sertifikat ini diberikan kepada'
@@ -198,7 +201,7 @@ export default function SertifikatClient({
 
             {/* ── Category value ── */}
             <div style={{
-              position:'absolute', top:'47%', left:0, right:0,
+              position:'absolute', top:'49%', left:0, right:0,
               textAlign:'center',
               fontFamily:"'Poppins', sans-serif",
               fontSize:'1.05rem', fontWeight:700,
