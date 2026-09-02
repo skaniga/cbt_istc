@@ -167,18 +167,19 @@ export default function SertifikatClient({
             position:'relative',
           }}>
 
-            {/* ── Cert Number — just below CERTIFICATE heading ─────── */}
+            {/* ── Cert Number ── */}
             <div style={{
               position:'absolute', top:'24.5%', left:0, right:0,
               textAlign:'center',
               fontFamily:"'Glacial Indifference', sans-serif",
               fontSize:'0.62rem', fontWeight:400,
               color: MUTED, letterSpacing:'0.28em',
+              outline: '2px dashed red',         // DEBUG ← cert no
             }}>
               NO. &nbsp;{certNo}
             </div>
 
-            {/* ── Participant Name (Dancing Script, gold) ───────────── */}
+            {/* ── Participant Name ── */}
             <div style={{
               position:'absolute', top:'37%', left:'8%', right:'8%',
               textAlign:'center',
@@ -192,24 +193,24 @@ export default function SertifikatClient({
               lineHeight: 1.1,
               wordBreak: 'break-word',
               zIndex: 10,
+              outline: '2px dashed orange',      // DEBUG ← name (top:37%)
             }}>
               {participant.nama_lengkap}
             </div>
 
-            {/* ── Category value (Poppins bold) ───────────────────── */}
-            {/* Below "Category" label, above "as" label in template */}
+            {/* ── Category value ── */}
             <div style={{
               position:'absolute', top:'50.5%', left:0, right:0,
               textAlign:'center',
               fontFamily:"'Poppins', sans-serif",
               fontSize:'1.05rem', fontWeight:700,
               color: TEXT,
+              outline: '2px dashed blue',        // DEBUG ← category (top:50.5%)
             }}>
               {category}
             </div>
 
-            {/* ── Achievement text (Cormorant SC, gold) ─────────────── */}
-            {/* Below "as" label — short text (winner) gets big, long text gets small */}
+            {/* ── Achievement text ── */}
             <div style={{
               position:'absolute', top:'61%', left:'5%', right:'5%',
               textAlign:'center',
@@ -221,6 +222,7 @@ export default function SertifikatClient({
               color: GOLD,
               letterSpacing: achievement.length <= 12 ? '0.08em' : '0.04em',
               lineHeight: 1.1,
+              outline: '2px dashed green',       // DEBUG ← achievement (top:61%)
             }}>
               {achievement}
             </div>
