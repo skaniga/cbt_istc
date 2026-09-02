@@ -58,7 +58,7 @@ export default function PesertaNavbar() {
                   whiteSpace: 'nowrap', pointerEvents: 'none',
                   // Hanya muncul saat hover via sibling selector di CSS, pakai JS sebagai fallback
                 }}>
-                  🔒 Terkunci selama ujian
+                  {t('exam_locked')}
                 </span>
               )}
             </div>
@@ -69,7 +69,7 @@ export default function PesertaNavbar() {
                 className="btn btn--secondary"
                 style={{ padding: '0.6rem 1.5rem' }}
                 onClick={isExamPage ? (e) => {
-                  if (!confirm('Ujian sedang berlangsung. Yakin ingin logout? Jawaban Anda yang sudah tersimpan tidak akan hilang.')) {
+                  if (!confirm(t('exam_logout_confirm'))) {
                     e.preventDefault()
                   }
                 } : undefined}

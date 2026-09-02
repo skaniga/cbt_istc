@@ -130,6 +130,14 @@ export const translations = {
     exam_next: 'Next',
     exam_nav: 'Question Navigation',
     exam_data_unavailable: 'Question data is unavailable.',
+    exam_answered_label: 'Answered',
+    exam_unanswered_label: 'Unanswered',
+    exam_unanswered_warning: 'There are still {n} unanswered questions. Are you sure you want to end the exam?',
+    exam_back: 'Back',
+    exam_attention: '⚠ Attention',
+    exam_ready: '✓ Ready to Submit',
+    exam_locked: '🔒 Locked during exam',
+    exam_logout_confirm: 'Exam is in progress. Are you sure you want to logout? Your saved answers will not be lost.',
 
     // Sertifikat
     cert_title: 'Participant Certificate',
@@ -285,6 +293,14 @@ export const translations = {
     exam_next: 'Selanjutnya',
     exam_nav: 'Navigasi Soal',
     exam_data_unavailable: 'Data soal tidak tersedia.',
+    exam_answered_label: 'Terjawab',
+    exam_unanswered_label: 'Belum Dijawab',
+    exam_unanswered_warning: 'Masih ada {n} soal yang belum dijawab. Apakah Anda yakin ingin mengakhiri ujian?',
+    exam_back: 'Kembali',
+    exam_attention: '⚠ Perhatian',
+    exam_ready: '✓ Siap Submit',
+    exam_locked: '🔒 Terkunci selama ujian',
+    exam_logout_confirm: 'Ujian sedang berlangsung. Yakin ingin logout? Jawaban Anda yang sudah tersimpan tidak akan hilang.',
 
     // Sertifikat
     cert_title: 'Sertifikat Peserta',
@@ -440,6 +456,14 @@ export const translations = {
     exam_next: 'Seterusnya',
     exam_nav: 'Navigasi Soalan',
     exam_data_unavailable: 'Data soalan tidak tersedia.',
+    exam_answered_label: 'Dijawab',
+    exam_unanswered_label: 'Belum Dijawab',
+    exam_unanswered_warning: 'Masih ada {n} soalan yang belum dijawab. Adakah anda pasti ingin mengakhiri peperiksaan?',
+    exam_back: 'Kembali',
+    exam_attention: '⚠ Perhatian',
+    exam_ready: '✓ Sedia Hantar',
+    exam_locked: '🔒 Dikunci semasa peperiksaan',
+    exam_logout_confirm: 'Peperiksaan sedang berlangsung. Yakin ingin log keluar? Jawapan yang telah disimpan tidak akan hilang.',
 
     // Sertifikat
     cert_title: 'Sijil Peserta',

@@ -53,7 +53,7 @@ function SubmitConfirmModal({
     }}>
       <div className="card ornate-frame" style={{ maxWidth: '26rem', width: '100%' }}>
         <p className="label" style={{ marginBottom: '0.75rem', color: unansweredCount > 0 ? 'var(--crimson)' : 'var(--brass)' }}>
-          {unansweredCount > 0 ? '⚠ Perhatian' : '✓ Siap Submit'}
+          {unansweredCount > 0 ? t('exam_attention') : t('exam_ready')}
         </p>
         <h3 style={{ fontSize: '1.5rem', marginBottom: '1rem' }}>
           {t('exam_confirm_submit')}
@@ -68,7 +68,7 @@ function SubmitConfirmModal({
               {totalCount - unansweredCount}
             </p>
             <p style={{ fontFamily: 'var(--font-display)', fontSize: '0.55rem', letterSpacing: '0.15em', textTransform: 'uppercase', color: 'var(--muted-fg)', marginTop: '0.25rem' }}>
-              Terjawab
+              {t('exam_answered_label')}
             </p>
           </div>
           <div style={{ background: 'var(--bg-alt)', padding: '0.875rem', borderRadius: '4px', textAlign: 'center' }}>
@@ -76,20 +76,20 @@ function SubmitConfirmModal({
               {unansweredCount}
             </p>
             <p style={{ fontFamily: 'var(--font-display)', fontSize: '0.55rem', letterSpacing: '0.15em', textTransform: 'uppercase', color: 'var(--muted-fg)', marginTop: '0.25rem' }}>
-              Belum Dijawab
+              {t('exam_unanswered_label')}
             </p>
           </div>
         </div>
 
         {unansweredCount > 0 && (
           <p style={{ fontSize: '0.9rem', color: 'var(--muted-fg)', marginBottom: '1.5rem', lineHeight: 1.6 }}>
-            Masih ada <strong>{unansweredCount} soal</strong> yang belum dijawab. Apakah Anda yakin ingin mengakhiri ujian?
+            {t('exam_unanswered_warning').replace('{n}', String(unansweredCount))}
           </p>
         )}
 
         <div style={{ display: 'flex', gap: '0.75rem' }}>
           <button className="btn btn--secondary" onClick={onCancel} style={{ flex: 1, justifyContent: 'center' }} disabled={isFinishing}>
-            Kembali
+            {t('exam_back')}
           </button>
           <button
             className="btn btn--primary"
