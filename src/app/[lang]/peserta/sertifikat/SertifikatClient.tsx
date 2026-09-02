@@ -51,23 +51,38 @@ export default function SertifikatClient({
         import('html2canvas'),
         import('jspdf'),
       ])
-      const canvas = await html2canvas(certRef.current, {
+
+      // Clone the cert element and pin it at top-left, full size — ignores scroll & transform
+      const clone = certRef.current.cloneNode(true) as HTMLElement
+      Object.assign(clone.style, {
+        position: 'fixed',
+        top: '0',
+        left: '0',
+        width: '1122px',
+        height: '793px',
+        zIndex: '-9999',
+        pointerEvents: 'none',
+        margin: '0',
+        padding: '0',
+      })
+      document.body.appendChild(clone)
+
+      // Let the clone render (background image + fonts)
+      await new Promise(r => setTimeout(r, 300))
+
+      const canvas = await html2canvas(clone, {
         scale: 2,
         useCORS: true,
+        allowTaint: true,
         logging: false,
         width: 1122,
         height: 793,
-        windowWidth: 1122,
-        windowHeight: 793,
-        onclone: (clonedDoc) => {
-          const p = clonedDoc.getElementById('cert-parent')
-          if (p) {
-            p.style.transform = 'none'
-            p.style.transformOrigin = 'unset'
-            p.style.marginBottom = '0'
-          }
-        }
+        scrollX: 0,
+        scrollY: 0,
       })
+
+      document.body.removeChild(clone)
+
       const pdf = new jsPDF({ orientation: 'landscape', unit: 'mm', format: 'a4' })
       pdf.addImage(canvas.toDataURL('image/jpeg', 0.95), 'JPEG', 0, 0,
         pdf.internal.pageSize.getWidth(), pdf.internal.pageSize.getHeight())
