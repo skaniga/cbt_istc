@@ -135,7 +135,7 @@ export default function SertifikatClient({
 
             {/* ── Participant Name (Dancing Script, gold) ───────────── */}
             <div style={{
-              position:'absolute', top:'33%', left:'8%', right:'8%',
+              position:'absolute', top:'37%', left:'8%', right:'8%',
               textAlign:'center',
               fontFamily:"'Dancing Script', cursive",
               fontSize: participant.nama_lengkap.length > 28 ? '2rem'
@@ -181,9 +181,10 @@ export default function SertifikatClient({
               {achievement}
             </div>
 
-            {/* ── QR Code — top-right, above name area ─────────────── */}
+            {/* ── QR Code — di atas tanda tangan Muhammad Amarjid ── */}
             <div style={{
-              position:'absolute', top:'27%', right:'6%',
+              position:'absolute', bottom:'20%', left:'50%',
+              transform:'translateX(-50%)',
               display:'flex', flexDirection:'column', alignItems:'center',
             }}>
               <QRCodeSVG
