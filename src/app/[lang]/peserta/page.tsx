@@ -24,7 +24,7 @@ export default async function PesertaDashboard() {
   const { data: configs } = await supabase
     .from('system_config')
     .select('kunci, nilai')
-    .in('kunci', ['akses_ujian_terbuka', 'batas_soal', 'durasi_ujian_menit', 'nilai_lulus'])
+    .in('kunci', ['akses_ujian_terbuka', 'batas_soal', 'durasi_ujian_menit', 'nilai_lulus', 'rilis_hasil'])
 
   const configMap: Record<string, string> = {}
   configs?.forEach(c => { configMap[c.kunci] = c.nilai })
@@ -33,6 +33,7 @@ export default async function PesertaDashboard() {
   const batasSoal = configMap['batas_soal'] || '50'
   const durasiMenit = configMap['durasi_ujian_menit'] || '90'
   const nilaiLulus = configMap['nilai_lulus'] || '70'
+  const rilisHasil = configMap['rilis_hasil'] === 'true'
 
   // Cek status ujian (exam_sessions)
   const { data: examSession } = await supabase
@@ -49,6 +50,7 @@ export default async function PesertaDashboard() {
       batasSoal={batasSoal}
       durasiMenit={durasiMenit}
       nilaiLulus={nilaiLulus}
+      rilisHasil={rilisHasil}
     />
   )
 }

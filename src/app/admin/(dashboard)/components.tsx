@@ -2,7 +2,7 @@
 
 import { useFormStatus } from 'react-dom'
 import { useState } from 'react'
-import { toggleAksesUjian, manualKeepAlive, saveSettings } from './actions'
+import { toggleAksesUjian, toggleRilisHasil, manualKeepAlive, saveSettings } from './actions'
 
 export function ToggleAksesForm({ currentStatus }: { currentStatus: string }) {
   const { pending } = useFormStatus()
@@ -25,6 +25,33 @@ export function ToggleAksesForm({ currentStatus }: { currentStatus: string }) {
         {pending 
           ? 'Processing...' 
           : isAksesTerbuka ? 'Close Exam Access' : 'Open Exam Access'
+        }
+      </button>
+    </form>
+  )
+}
+
+export function ToggleRilisHasilForm({ currentStatus }: { currentStatus: string }) {
+  const { pending } = useFormStatus()
+  const isRilis = currentStatus === 'true'
+
+  return (
+    <form action={() => { void toggleRilisHasil(currentStatus) }}>
+      <button
+        type="submit"
+        className="btn"
+        disabled={pending}
+        style={{
+          background: isRilis ? 'var(--crimson)' : '#C8941A',
+          color: '#fff',
+          textShadow: 'none',
+          minWidth: '12rem',
+          justifyContent: 'center'
+        }}
+      >
+        {pending
+          ? 'Processing...'
+          : isRilis ? 'Hide Score & Certificate' : 'Release Score & Certificate'
         }
       </button>
     </form>

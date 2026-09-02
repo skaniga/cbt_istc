@@ -32,6 +32,36 @@ export async function toggleAksesUjian(currentStatus: string) {
   return { success: true }
 }
 
+export async function toggleRilisHasil(currentStatus: string) {
+  const supabase = await createClient()
+
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) return { error: 'Unauthorized' }
+
+  const newStatus = currentStatus === 'true' ? 'false' : 'true'
+
+  // Coba UPDATE dulu, kalau belum ada row-nya INSERT baru
+  const { data: updated, error: updErr } = await supabase
+    .from('system_config')
+    .update({ nilai: newStatus, updated_at: new Date().toISOString() })
+    .eq('kunci', 'rilis_hasil')
+    .select('id')
+
+  if (updErr) return { error: 'Gagal mengubah status rilis hasil.' }
+
+  if (!updated || updated.length === 0) {
+    await supabase.from('system_config').insert({
+      kunci: 'rilis_hasil',
+      nilai: newStatus,
+      keterangan: 'Tampilkan nilai dan sertifikat peserta setelah ujian'
+    })
+  }
+
+  revalidatePath('/admin')
+  revalidatePath('/', 'layout')
+  return { success: true }
+}
+
 export async function manualKeepAlive() {
   const supabase = await createClient()
 

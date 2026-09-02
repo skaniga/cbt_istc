@@ -41,3 +41,7 @@ next-env.d.ts
 *.jpeg
 *.jpg
 supabase/translation_cache.json
+
+# ── Local working folders ──
+/update/
+.agents/

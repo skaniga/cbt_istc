@@ -1,5 +1,5 @@
 import { createClient } from '@/lib/supabase/server'
-import { ToggleAksesForm, KeepAliveForm, SettingsForm } from './components'
+import { ToggleAksesForm, ToggleRilisHasilForm, KeepAliveForm, SettingsForm } from './components'
 
 export const revalidate = 0
 
@@ -20,6 +20,16 @@ export default async function AdminDashboardPage() {
   
   const aksesTerbuka = configAkses?.nilai || 'false'
   const isAksesTerbuka = aksesTerbuka === 'true'
+
+  // Ambil rilis_hasil
+  const { data: configRilis } = await supabase
+    .from('system_config')
+    .select('nilai')
+    .eq('kunci', 'rilis_hasil')
+    .maybeSingle()
+
+  const rilisHasil = configRilis?.nilai || 'false'
+  const isRilisHasil = rilisHasil === 'true'
 
   // Ambil exam settings (acak_soal, batas_soal)
   const { data: examSettings } = await supabase
@@ -63,6 +73,23 @@ export default async function AdminDashboardPage() {
             </div>
           </div>
           <ToggleAksesForm currentStatus={aksesTerbuka} />
+        </div>
+
+        {/* Panel Kontrol Rilis Hasil */}
+        <div className="card" style={{ background: '#fff' }}>
+          <h2 style={{ fontSize: '1.25rem', marginBottom: '1.5rem', fontFamily: 'var(--font-heading)' }}>Result Release Control</h2>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1.5rem' }}>
+            <div>
+              <p style={{ fontWeight: 600, color: 'var(--fg)', marginBottom: '0.25rem' }}>Score & Certificate Status:</p>
+              <p style={{
+                fontFamily: 'var(--font-display)', fontSize: '0.9rem', letterSpacing: '0.1em',
+                color: isRilisHasil ? '#27AE60' : '#C8941A'
+              }}>
+                {isRilisHasil ? 'VISIBLE (Scores & certs shown)' : 'HIDDEN (Thank you message only)'}
+              </p>
+            </div>
+          </div>
+          <ToggleRilisHasilForm currentStatus={rilisHasil} />
         </div>
 
         {/* Panel Ringkasan Data */}
