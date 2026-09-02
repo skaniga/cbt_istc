@@ -40,24 +40,36 @@ export async function toggleRilisHasil(currentStatus: string) {
 
   const newStatus = currentStatus === 'true' ? 'false' : 'true'
 
-  // Coba UPDATE dulu, kalau belum ada row-nya INSERT baru
+  // Coba UPDATE dulu
   const { data: updated, error: updErr } = await supabase
     .from('system_config')
-    .update({ nilai: newStatus, updated_at: new Date().toISOString() })
+    .update({ nilai: newStatus })
     .eq('kunci', 'rilis_hasil')
     .select('id')
 
-  if (updErr) return { error: 'Gagal mengubah status rilis hasil.' }
+  if (updErr) {
+    console.error('toggleRilisHasil update error:', updErr)
+    return { error: 'Gagal mengubah status rilis hasil.' }
+  }
 
+  // Kalau belum ada row, INSERT baru
   if (!updated || updated.length === 0) {
-    await supabase.from('system_config').insert({
+    const { error: insErr } = await supabase.from('system_config').insert({
       kunci: 'rilis_hasil',
       nilai: newStatus,
       keterangan: 'Tampilkan nilai dan sertifikat peserta setelah ujian'
     })
+    if (insErr) {
+      console.error('toggleRilisHasil insert error:', insErr)
+      return { error: 'Gagal membuat config rilis hasil.' }
+    }
   }
 
+  // Revalidate semua halaman peserta di semua locale
   revalidatePath('/admin')
+  revalidatePath('/en/peserta')
+  revalidatePath('/id/peserta')
+  revalidatePath('/ms/peserta')
   revalidatePath('/', 'layout')
   return { success: true }
 }

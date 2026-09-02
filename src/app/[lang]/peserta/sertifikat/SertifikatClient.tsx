@@ -122,69 +122,83 @@ export default function SertifikatClient({
             position:'relative',
           }}>
 
-            {/* ── Cert Number (below CERTIFICATE heading) ──────────── */}
-            {/* In Canva: ~24.7% from top */}
+            {/* ── Cert Number — just below CERTIFICATE heading ─────── */}
             <div style={{
-              position:'absolute', top:'21%', left:0, right:0,
+              position:'absolute', top:'24.5%', left:0, right:0,
               textAlign:'center',
               fontFamily:"'Glacial Indifference', sans-serif",
-              fontSize:'0.72rem', fontWeight:400,
-              color: MUTED, letterSpacing:'0.22em',
+              fontSize:'0.62rem', fontWeight:400,
+              color: MUTED, letterSpacing:'0.28em',
             }}>
               NO. &nbsp;{certNo}
             </div>
 
             {/* ── Participant Name (Dancing Script, gold) ───────────── */}
-            {/* In Canva: ~39.6% from top */}
+            {/* Blank area is between "This Certificate is awarded to" and the flourish */}
             <div style={{
-              position:'absolute', top:'33%', left:0, right:0,
+              position:'absolute', top:'36.5%', left:'10%', right:'10%',
               textAlign:'center',
               fontFamily:"'Dancing Script', cursive",
-              fontSize:'4rem', fontWeight:700,
+              fontSize: participant.nama_lengkap.length > 20 ? '2.6rem' : '3.4rem',
+              fontWeight:700,
               color: GOLD,
               lineHeight: 1,
+              whiteSpace: 'nowrap',
+              overflow: 'hidden',
+              textOverflow: 'ellipsis',
             }}>
               {participant.nama_lengkap}
             </div>
 
             {/* ── Category value (Poppins bold) ─────────────────────── */}
-            {/* In Canva: ~53.7% from top */}
+            {/* Below "Category" label in template */}
             <div style={{
-              position:'absolute', top:'51%', left:0, right:0,
+              position:'absolute', top:'53%', left:0, right:0,
               textAlign:'center',
               fontFamily:"'Poppins', sans-serif",
-              fontSize:'1.15rem', fontWeight:700,
+              fontSize:'1.05rem', fontWeight:700,
               color: TEXT,
             }}>
               {category}
             </div>
 
-            {/* ── Achievement (Cormorant SC ≈ ITC Benguiat, gold) ──── */}
-            {/* In Canva: ~63% from top */}
+            {/* ── Achievement text (Cormorant SC, gold) ─────────────── */}
+            {/* Below "as" label — short text (winner) gets big, long text gets small */}
             <div style={{
-              position:'absolute', top:'59%', left:0, right:0,
+              position:'absolute', top:'61%', left:'5%', right:'5%',
               textAlign:'center',
               fontFamily:"'Cormorant SC', serif",
-              fontSize:'3.8rem', fontWeight:700,
+              fontSize: achievement.length <= 12 ? '3rem'
+                      : achievement.length <= 18 ? '2rem'
+                      : '1.15rem',
+              fontWeight:700,
               color: GOLD,
-              letterSpacing:'0.05em',
+              letterSpacing: achievement.length <= 12 ? '0.08em' : '0.04em',
+              lineHeight: 1.1,
             }}>
               {achievement}
             </div>
 
-            {/* ── QR Code (bottom center, near signature) ───────────── */}
+            {/* ── QR Code — LEFT of signature (signature is in template at center-bottom) */}
             <div style={{
-              position:'absolute', bottom:'6%', left:'50%',
+              position:'absolute', bottom:'5%', left:'27%',
               transform:'translateX(-50%)',
               display:'flex', flexDirection:'column', alignItems:'center',
             }}>
               <QRCodeSVG
                 value={verifyUrl}
-                size={60}
+                size={80}
                 fgColor="#000000"
-                bgColor="transparent"
+                bgColor="#ffffff"
                 level="H"
               />
+              <div style={{
+                fontFamily:"'Glacial Indifference', sans-serif",
+                fontSize:'0.45rem', color: MUTED,
+                letterSpacing:'0.06em', marginTop: 3, textAlign:'center',
+              }}>
+                SCAN TO VERIFY
+              </div>
             </div>
 
           </div>

@@ -112,6 +112,9 @@ export const translations = {
     dashboard_access_soon: 'The exam will be opened by the committee soon. Make sure you are ready before starting — the exam can only be taken <strong>once</strong>.',
     dashboard_access_refresh: 'Please refresh this page periodically to check access status.',
     dashboard_passing_min: 'Minimum passing grade:',
+    dashboard_thank_you_title: 'Thank You for Participating!',
+    dashboard_thank_you_desc: 'Thank you for joining the International Science and Technology Competition 2026.',
+    dashboard_thank_you_note: 'Your score and certificate will be available once the results are officially released. Please check back later.',
 
     // Exam Page
     exam_title: 'CBT Exam',
@@ -264,6 +267,9 @@ export const translations = {
     dashboard_access_soon: 'Ujian akan segera dibuka oleh panitia. Pastikan Anda sudah siap sebelum memulai — ujian hanya dapat dikerjakan <strong>satu kali</strong>.',
     dashboard_access_refresh: 'Silakan refresh halaman ini secara berkala untuk mengecek status akses.',
     dashboard_passing_min: 'Nilai lulus minimum:',
+    dashboard_thank_you_title: 'Terima Kasih Telah Berpartisipasi!',
+    dashboard_thank_you_desc: 'Terima kasih telah mengikuti International Science and Technology Competition 2026.',
+    dashboard_thank_you_note: 'Nilai dan sertifikat Anda akan tersedia setelah hasil resmi diumumkan. Silakan cek kembali nanti.',
 
     // Exam Page
     exam_title: 'Ujian CBT',
@@ -416,6 +422,9 @@ export const translations = {
     dashboard_access_soon: 'Peperiksaan akan dibuka oleh jawatankuasa tidak lama lagi. Pastikan anda bersedia sebelum bermula — peperiksaan hanya boleh diambil <strong>sekali</strong>.',
     dashboard_access_refresh: 'Sila muat semula halaman ini secara berkala untuk memeriksa status akses.',
     dashboard_passing_min: 'Gred lulus minimum:',
+    dashboard_thank_you_title: 'Terima Kasih Kerana Menyertai!',
+    dashboard_thank_you_desc: 'Terima kasih kerana menyertai International Science and Technology Competition 2026.',
+    dashboard_thank_you_note: 'Markah dan sijil anda akan tersedia setelah keputusan rasmi diumumkan. Sila semak semula kemudian.',
 
     // Exam Page
     exam_title: 'Peperiksaan CBT',

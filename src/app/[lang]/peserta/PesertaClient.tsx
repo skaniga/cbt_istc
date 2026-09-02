@@ -207,18 +207,16 @@ export default function PesertaClient({
                         fontFamily: 'var(--font-heading)', fontSize: '1.4rem',
                         color: 'var(--fg)', marginBottom: '0.75rem'
                       }}>
-                        Thank You for Participating!
+                        {t('dashboard_thank_you_title')}
                       </h3>
                       <p style={{
                         fontFamily: 'var(--font-body)', fontSize: '1rem',
                         color: 'var(--muted-fg)', lineHeight: 1.7, marginBottom: '0.5rem'
                       }}>
-                        Thank you for joining the{' '}
-                        <strong style={{ color: 'var(--brass)' }}>International Science and Technology Competition 2026</strong>.
+                        {t('dashboard_thank_you_desc')}
                       </p>
                       <p style={{ fontSize: '0.875rem', color: 'var(--muted-fg)', lineHeight: 1.6 }}>
-                        Your score and certificate will be available once the results are officially released.
-                        Please check back later.
+                        {t('dashboard_thank_you_note')}
                       </p>
                     </div>
                   ) : (
