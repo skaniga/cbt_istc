@@ -135,7 +135,7 @@ export default function SertifikatClient({
 
             {/* ── Participant Name (Dancing Script, gold) ───────────── */}
             <div style={{
-              position:'absolute', top:'36%', left:'8%', right:'8%',
+              position:'absolute', top:'33%', left:'8%', right:'8%',
               textAlign:'center',
               fontFamily:"'Dancing Script', cursive",
               fontSize: participant.nama_lengkap.length > 28 ? '2rem'
@@ -147,6 +147,7 @@ export default function SertifikatClient({
               lineHeight: 1.5,
               paddingBottom: '0.3em',
               wordBreak: 'break-word',
+              zIndex: 10,
             }}>
               {participant.nama_lengkap}
             </div>
