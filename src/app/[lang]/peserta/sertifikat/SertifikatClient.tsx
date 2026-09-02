@@ -56,6 +56,8 @@ export default function SertifikatClient({
         certParent.style.transform    = savedTransform
         certParent.style.marginBottom = savedMargin
       }
+      document.body.style.overflow = ''
+      document.documentElement.style.overflow = ''
       window.scrollTo(0, savedScrollY)
     }
 
@@ -68,12 +70,13 @@ export default function SertifikatClient({
         certParent.style.marginBottom = '0'
       }
 
-      // 2. Wait two animation frames for layout to settle
-      await new Promise(r => requestAnimationFrame(() => requestAnimationFrame(r)))
+      // 2. Lock scroll at absolute top — prevents any scroll offset in capture
+      document.body.style.overflow = 'hidden'
+      document.documentElement.style.overflow = 'hidden'
+      window.scrollTo(0, 0)
 
-      // 3. Scroll so certRef is flush with the top of the viewport
-      const elementTop = certRef.current.getBoundingClientRect().top + window.scrollY
-      window.scrollTo(0, elementTop)
+      // 3. Wait for layout + scroll lock to settle
+      await new Promise(r => requestAnimationFrame(() => requestAnimationFrame(r)))
       await new Promise(r => setTimeout(r, 200))
 
       const [{ default: html2canvas }, { jsPDF }] = await Promise.all([
@@ -81,7 +84,7 @@ export default function SertifikatClient({
         import('jspdf'),
       ])
 
-      // 4. Capture — no custom scrollX/scrollY; let html2canvas read the live DOM
+      // 4. Capture with explicit scrollX/scrollY = 0 (page is locked at top)
       const canvas = await html2canvas(certRef.current, {
         scale: 2,
         useCORS: true,
@@ -89,6 +92,8 @@ export default function SertifikatClient({
         logging: false,
         width: 1122,
         height: 793,
+        scrollX: 0,
+        scrollY: 0,
       })
 
       restore()
@@ -184,8 +189,7 @@ export default function SertifikatClient({
                       : '3.5rem',
               fontWeight:700,
               color: GOLD,
-              lineHeight: 1.5,
-              paddingBottom: '0.3em',
+              lineHeight: 1.1,
               wordBreak: 'break-word',
               zIndex: 10,
             }}>
