@@ -71,24 +71,24 @@ export default function SertifikatClient({
       ctx.textBaseline = 'top'
 
       // ── 2. Certificate Number ───────────────────────────────
-      // y=214 = 27% of 793 (sits below NO. in template)
-      ctx.font      = '400 10px "Glacial Indifference", sans-serif'
+      // Naik dari 214→200, font 10→13px (lebih dekat ke CERTIFICATE, lebih besar)
+      ctx.font      = '400 13px "Glacial Indifference", sans-serif'
       ctx.fillStyle = MUTED
-      ctx.fillText(`NO.  ${certNo}`, W / 2, 214)
+      ctx.fillText(`NO.  ${certNo}`, W / 2, 200)
 
       // ── 3. Participant Name ─────────────────────────────────
-      // y=286 = 36% of 793 (name blank area in template)
+      // Turun dari 286→305
       const nameLen = participant.nama_lengkap.length
       const namePx  = nameLen > 28 ? 32 : nameLen > 20 ? 41 : nameLen > 14 ? 48 : 56
       ctx.font      = `700 ${namePx}px "Dancing Script", cursive`
       ctx.fillStyle = GOLD
-      ctx.fillText(participant.nama_lengkap, W / 2, 286)
+      ctx.fillText(participant.nama_lengkap, W / 2, 305)
 
       // ── 4. Category ─────────────────────────────────────────
-      // y=389 = 49% of 793 (between Category label & "as" label)
+      // Turun dari 389→405
       ctx.font      = '700 17px "Poppins", sans-serif'
       ctx.fillStyle = TEXT
-      ctx.fillText(category, W / 2, 389)
+      ctx.fillText(category, W / 2, 405)
 
       // ── 5. Achievement ──────────────────────────────────────
       // y=484 = 61% of 793 (below "as" label)
