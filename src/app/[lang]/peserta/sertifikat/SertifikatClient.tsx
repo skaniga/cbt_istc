@@ -169,19 +169,18 @@ export default function SertifikatClient({
 
             {/* ── Cert Number ── */}
             <div style={{
-              position:'absolute', top:'24.5%', left:0, right:0,
+              position:'absolute', top:'27%', left:0, right:0,
               textAlign:'center',
               fontFamily:"'Glacial Indifference', sans-serif",
               fontSize:'0.62rem', fontWeight:400,
               color: MUTED, letterSpacing:'0.28em',
-              outline: '2px dashed red',         // DEBUG ← cert no
             }}>
               NO. &nbsp;{certNo}
             </div>
 
             {/* ── Participant Name ── */}
             <div style={{
-              position:'absolute', top:'37%', left:'8%', right:'8%',
+              position:'absolute', top:'34%', left:'8%', right:'8%',
               textAlign:'center',
               fontFamily:"'Dancing Script', cursive",
               fontSize: participant.nama_lengkap.length > 28 ? '2rem'
@@ -193,7 +192,6 @@ export default function SertifikatClient({
               lineHeight: 1.1,
               wordBreak: 'break-word',
               zIndex: 10,
-              outline: '2px dashed orange',      // DEBUG ← name (top:37%)
             }}>
               {participant.nama_lengkap}
             </div>
@@ -205,7 +203,6 @@ export default function SertifikatClient({
               fontFamily:"'Poppins', sans-serif",
               fontSize:'1.05rem', fontWeight:700,
               color: TEXT,
-              outline: '2px dashed blue',        // DEBUG ← category (top:50.5%)
             }}>
               {category}
             </div>
@@ -222,7 +219,6 @@ export default function SertifikatClient({
               color: GOLD,
               letterSpacing: achievement.length <= 12 ? '0.08em' : '0.04em',
               lineHeight: 1.1,
-              outline: '2px dashed green',       // DEBUG ← achievement (top:61%)
             }}>
               {achievement}
             </div>
