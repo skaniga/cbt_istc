@@ -180,7 +180,7 @@ export default function SertifikatClient({
 
             {/* ── Participant Name ── */}
             <div style={{
-              position:'absolute', top:'34%', left:'8%', right:'8%',
+              position:'absolute', top:'36%', left:'8%', right:'8%',
               textAlign:'center',
               fontFamily:"'Dancing Script', cursive",
               fontSize: participant.nama_lengkap.length > 28 ? '2rem'
@@ -198,7 +198,7 @@ export default function SertifikatClient({
 
             {/* ── Category value ── */}
             <div style={{
-              position:'absolute', top:'50.5%', left:0, right:0,
+              position:'absolute', top:'47%', left:0, right:0,
               textAlign:'center',
               fontFamily:"'Poppins', sans-serif",
               fontSize:'1.05rem', fontWeight:700,
