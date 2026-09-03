@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import Link from 'next/link'
 import { logoutParticipant } from './actions'
@@ -19,7 +19,7 @@ export default function PesertaNavbar() {
         <nav className="navbar__inner" aria-label="Participant Navigation">
           <Link href={`/${locale}/peserta`} className="navbar__logo">
             ISTC
-            <span>Participant Dashboard</span>
+            <span>{t('stat_participant_dashboard')}</span>
           </Link>
 
           <div className="navbar__actions" style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>

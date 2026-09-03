@@ -1,14 +1,16 @@
-'use client'
+﻿'use client'
 
 import { useFormStatus } from 'react-dom'
 import { startExam } from './actions'
+import { useLanguage } from '@/lib/i18n/LanguageContext'
 
 function SubmitButton({ label }: { label: string }) {
   const { pending } = useFormStatus()
+  const { t } = useLanguage()
   
   return (
     <button type="submit" className="btn btn--primary" disabled={pending} style={{ minWidth: '12rem', justifyContent: 'center' }}>
-      {pending ? 'Memproses...' : label}
+      {pending ? t('btn_processing') : label}
     </button>
   )
 }

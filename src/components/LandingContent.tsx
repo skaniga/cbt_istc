@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import { useState } from 'react'
 import Image from 'next/image'
@@ -175,19 +175,19 @@ export default function LandingContent({
             <div className="stats-bar" style={{ border: 'none', borderRadius: 0 }}>
               <div className="stat-item">
                 <p className="stat-item__num">{batasSoal}</p>
-                <p className="stat-item__label">Soal Pilihan Ganda</p>
+                <p className="stat-item__label">{t('stat_multiple_choice')}</p>
               </div>
               <div className="stat-item">
                 <p className="stat-item__num">90'</p>
-                <p className="stat-item__label">Durasi Ujian</p>
+                <p className="stat-item__label">{t('stat_exam_duration')}</p>
               </div>
               <div className="stat-item">
                 <p className="stat-item__num">4</p>
-                <p className="stat-item__label">Kategori Soal</p>
+                <p className="stat-item__label">{t('stat_question_categories')}</p>
               </div>
               <div className="stat-item">
                 <p className="stat-item__num">100%</p>
-                <p className="stat-item__label">Sertifikat Digital</p>
+                <p className="stat-item__label">{t('stat_digital_cert')}</p>
               </div>
             </div>
           </div>

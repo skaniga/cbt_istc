@@ -1,4 +1,4 @@
-export type Locale = 'en' | 'id' | 'ms'
+﻿export type Locale = 'en' | 'id' | 'ms'
 
 export const translations = {
   en: {
@@ -159,6 +159,13 @@ export const translations = {
 
     // General
     loading: 'Loading...',
+    // Stats Bar (Landing Page)
+    stat_multiple_choice: 'Multiple Choice Questions',
+    stat_exam_duration: 'Exam Duration',
+    stat_question_categories: 'Question Categories',
+    stat_digital_cert: 'Digital Certificate',
+    stat_participant_dashboard: 'Participant Dashboard',
+    btn_processing: 'Processing...',
     close: 'Close',
     download: 'Download',
     view: 'View',
@@ -322,6 +329,13 @@ export const translations = {
 
     // General
     loading: 'Memuat...',
+    // Stats Bar (Landing Page)
+    stat_multiple_choice: 'Soal Pilihan Ganda',
+    stat_exam_duration: 'Durasi Ujian',
+    stat_question_categories: 'Kategori Soal',
+    stat_digital_cert: 'Sertifikat Digital',
+    stat_participant_dashboard: 'Participant Dashboard',
+    btn_processing: 'Memproses...',
     close: 'Tutup',
     download: 'Unduh',
     view: 'Lihat',
@@ -483,7 +497,15 @@ export const translations = {
     archive_page_title: 'Hall of Fame',
     archive_page_subtitle: 'Menelusuri sejarah kecemerlangan sains dan teknologi melalui edisi International Science and Technology Competitions.',
 
-    // General
+    // Stats Bar (Landing Page)
+    stat_multiple_choice: 'Soalan Pelbagai Pilihan',
+    stat_exam_duration: 'Tempoh Peperiksaan',
+    stat_question_categories: 'Kategori Soalan',
+    stat_digital_cert: 'Sijil Digital',
+    stat_participant_dashboard: 'Papan Pemuka Peserta',
+    btn_processing: 'Memproses...',
+
+        // General
     loading: 'Memuatkan...',
     close: 'Tutup',
     download: 'Muat Turun',
