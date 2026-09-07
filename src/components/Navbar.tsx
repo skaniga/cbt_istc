@@ -33,6 +33,11 @@ export default function Navbar() {
           {/* Desktop Nav */}
           <ul className="navbar__nav" role="list">
             <li>
+              <Link href={`/${locale}#pengumuman-finalis`} className="navbar__link" style={{ color: 'var(--brass)', fontWeight: 600 }}>
+                {locale === 'en' ? 'Grand Finalists' : 'Grand Finalis'}
+              </Link>
+            </li>
+            <li>
               <Link href={`/${locale}#tentang`} className="navbar__link">{t('nav_about')}</Link>
             </li>
             <li>
@@ -143,6 +148,9 @@ export default function Navbar() {
               <option value="ms">Melayu</option>
             </select>
           </div>
+          <Link href={`/${locale}#pengumuman-finalis`} className="navbar__link" onClick={() => setMenuOpen(false)} style={{ color: 'var(--brass)', fontWeight: 600 }}>
+            {locale === 'en' ? 'Grand Finalists' : 'Grand Finalis'}
+          </Link>
           <Link href={`/${locale}#tentang`}  className="navbar__link" onClick={() => setMenuOpen(false)}>{t('nav_about')}</Link>
           <Link href={`/${locale}#alur`}     className="navbar__link" onClick={() => setMenuOpen(false)}>{t('nav_flow')}</Link>
           <Link href={`/${locale}#arsip`}    className="navbar__link" onClick={() => setMenuOpen(false)}>{t('nav_archive')}</Link>

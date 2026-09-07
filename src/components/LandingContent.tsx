@@ -1,4 +1,4 @@
-﻿'use client'
+'use client'
 
 import { useState } from 'react'
 import Image from 'next/image'
@@ -6,6 +6,7 @@ import Link from 'next/link'
 import Navbar from '@/components/Navbar'
 import { useLanguage } from '@/lib/i18n/LanguageContext'
 import { AnnualEvent } from '@/lib/types'
+import GrandFinalistAnnouncement from '@/components/GrandFinalistAnnouncement'
 
 const categoriesData = {
   en: [
@@ -167,6 +168,13 @@ export default function LandingContent({
                 </Link>
               </div>
             </div>
+          </div>
+        </section>
+
+        {/* Pengumuman Grand Finalis ISTC 2026 */}
+        <section style={{ paddingTop: '2.5rem', paddingBottom: '0.5rem', background: 'var(--bg)' }}>
+          <div className="container">
+            <GrandFinalistAnnouncement defaultExpanded={true} />
           </div>
         </section>
 

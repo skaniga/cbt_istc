@@ -1,5 +1,6 @@
 import { createClient } from '@/lib/supabase/server'
 import { ToggleAksesForm, ToggleRilisHasilForm, KeepAliveForm, SettingsForm } from './components'
+import GrandFinalistAnnouncement from '@/components/GrandFinalistAnnouncement'
 
 export const revalidate = 0
 
@@ -55,6 +56,9 @@ export default async function AdminDashboardPage() {
         <h1 style={{ fontSize: '2.5rem', marginBottom: '0.5rem' }}>Dashboard Overview</h1>
         <p style={{ color: 'var(--muted-fg)' }}>Welcome to the main control panel of ISTC.</p>
       </div>
+
+      {/* Pengumuman Resmi Grand Finalis ISTC 2026 */}
+      <GrandFinalistAnnouncement defaultExpanded={true} />
 
       <div className="admin-overview-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '2rem' }}>
         
