@@ -23,10 +23,10 @@ export default function Navbar() {
 
           {/* Logo */}
           <Link href={`/${locale}`} className="navbar__logo" aria-label="International Science and Technology Competitions – Beranda" style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-            <img src="/logo.png" alt="ISTC Logo" style={{ width: '44px', height: '44px', borderRadius: '8px', objectFit: 'contain', background: '#0a0e1a' }} />
+            <img src="/logo-88.png" alt="ISTC Logo" width={44} height={44} style={{ width: '44px', height: '44px', borderRadius: '8px', objectFit: 'contain', background: '#0a0e1a' }} />
             <div style={{ display: 'flex', flexDirection: 'column' }}>
               <span style={{ fontWeight: 700, fontSize: '1.25rem', lineHeight: 1, color: scrolled ? 'var(--fg)' : '#FAFAF8' }}>ISTC</span>
-              <span style={{ fontSize: '0.65rem', textTransform: 'uppercase', letterSpacing: '0.05em', color: scrolled ? 'var(--muted-fg)' : 'rgba(250,250,248,0.65)' }}>International Science and Technology Competitions</span>
+              <span className="navbar__subtitle" style={{ fontSize: '0.65rem', textTransform: 'uppercase', letterSpacing: '0.05em', color: scrolled ? 'var(--muted-fg)' : 'rgba(250,250,248,0.65)' }}>International Science and Technology Competitions</span>
             </div>
           </Link>
 

@@ -47,7 +47,7 @@ export default function SertifikatClient({
   const achievement = isWinner
     ? (winnerData!.apresiasi ?? '').toUpperCase()
     : t('cert_achievement').toUpperCase()
-  const category  = participant.kategori ?? ''
+  const category  = participant.kategori || 'International Science & Technology'
 
   const downloadPdf = async () => {
     setIsGenerating(true)
@@ -121,7 +121,8 @@ export default function SertifikatClient({
         pdf.internal.pageSize.getWidth(),
         pdf.internal.pageSize.getHeight(),
       )
-      pdf.save(`Certificate_ISTC_${participant.nomor_peserta}.pdf`)
+      const safeCertNo = (participant.nomor_peserta || 'document').replace(/[/\\?%*:|"<>]/g, '-')
+      pdf.save(`Certificate_ISTC_${safeCertNo}.pdf`)
     } catch (e) {
       console.error(e)
       alert('Gagal generate PDF. Coba lagi.')

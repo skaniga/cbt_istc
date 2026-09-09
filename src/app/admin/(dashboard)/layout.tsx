@@ -15,16 +15,14 @@ export default async function AdminLayout({
   }
 
   return (
-    <div className="admin-layout" style={{ display: 'flex', minHeight: '100vh', background: 'var(--bg-alt)' }}>
-      
-      {/* Sidebar Admin */}
-      <AdminSidebar />
+    <div className="admin-layout">
+      {/* Sidebar Admin & Mobile Header */}
+      <AdminSidebar userEmail={user.email} />
 
       {/* Main Content */}
-      <main className="admin-main" style={{ flex: 1, padding: '3rem 4rem', overflowY: 'auto' }}>
+      <main className="admin-main">
         {children}
       </main>
-
     </div>
   )
 }

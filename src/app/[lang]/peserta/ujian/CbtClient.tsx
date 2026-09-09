@@ -111,7 +111,8 @@ export default function CbtClient({
   initialAnswers,
   endTimeStr,
   serverTimeStr,
-  kategori
+  kategori,
+  isAdminPreview = false,
 }: {
   examSessionId: string
   questions: Question[]
@@ -119,6 +120,7 @@ export default function CbtClient({
   endTimeStr: string
   serverTimeStr: string
   kategori?: string
+  isAdminPreview?: boolean
 }) {
   const [answers, setAnswers] = useState<AnswerMap>(initialAnswers)
   const [currentIndex, setCurrentIndex] = useState(0)
@@ -136,8 +138,8 @@ export default function CbtClient({
   const pendingSaves = useRef<Map<string, ReturnType<typeof setTimeout>>>(new Map())
   const { t, locale } = useLanguage()
 
-  // Integrasikan guard: beforeunload + multi-tab + offline queue
-  const { addToQueue, removeFromQueue, flushQueue } = useExamGuard(examSessionId, true)
+  // Integrasikan guard: beforeunload + multi-tab + offline queue (hanya aktif di ujian peserta asli)
+  const { addToQueue, removeFromQueue, flushQueue } = useExamGuard(examSessionId, !isAdminPreview)
 
   // Progress
   const answeredCount = Object.keys(answers).length
@@ -196,6 +198,14 @@ export default function CbtClient({
 
   // ── Debounced save + offline queue ────────────────────────────
   const debouncedSave = useCallback((questionId: string, option: string) => {
+    // Jika dalam Mode Preview Admin, simpan di state lokal tanpa kirim ke server
+    if (isAdminPreview) {
+      setSaveStatus('saved')
+      const tId = setTimeout(() => setSaveStatus('idle'), 1500)
+      pendingSaves.current.set(questionId, tId)
+      return
+    }
+
     const existing = pendingSaves.current.get(questionId)
     if (existing) clearTimeout(existing)
     setSaveStatus('saving')
@@ -225,7 +235,7 @@ export default function CbtClient({
     }, 400)
 
     pendingSaves.current.set(questionId, timeout)
-  }, [examSessionId, addToQueue, removeFromQueue])
+  }, [examSessionId, addToQueue, removeFromQueue, isAdminPreview])
 
   const handleOptionClick = (questionId: string, option: string) => {
     setAnswers(prev => ({ ...prev, [questionId]: option }))
@@ -234,6 +244,13 @@ export default function CbtClient({
 
   // ── Finish exam — useRef guard mencegah double-submit ─────────
   const handleFinish = useCallback(async () => {
+    // Mode Simulasi Admin: cukup tampilkan rekap simulasi tanpa ubah data peserta
+    if (isAdminPreview) {
+      alert(`🎯 Mode Simulasi CBT Selesai!\n\nAnda menjawab ${Object.keys(answers).length} dari ${questions.length} soal.\nSemua komponen antarmuka CBT (navigasi, timer, pilihan, layout) berjalan lancar tanpa error/crash.`)
+      window.location.href = '/admin'
+      return
+    }
+
     // Guard dengan useRef — aman dari race condition sebelum re-render
     if (isFinishingRef.current) return
     isFinishingRef.current = true
@@ -247,7 +264,7 @@ export default function CbtClient({
     if (navigator.onLine) await flushQueue()
 
     await finishExam(examSessionId)
-  }, [examSessionId, flushQueue])
+  }, [examSessionId, flushQueue, isAdminPreview, answers, questions.length])
 
   const currentQ = questions[currentIndex]
   if (!currentQ) return <div>{t('exam_data_unavailable')}</div>

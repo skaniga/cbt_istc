@@ -6,11 +6,112 @@ import ExamErrorBoundary from './ExamErrorBoundary'
 
 export const revalidate = 0
 
-export default async function UjianPage() {
+export default async function UjianPage({
+  searchParams,
+}: {
+  searchParams?: { kategori?: string }
+}) {
   const session = await getSession()
-  if (!session) redirect('/login')
-
   const supabase = await createClient()
+
+  // 0. Cek apakah Admin yang mengakses (untuk mode simulasi)
+  // getSession() membaca cookie langsung — tidak butuh network roundtrip ke Supabase
+  // sehingga reliable bahkan saat access token belum di-refresh.
+  const { data: { session: supabaseSession } } = await supabase.auth.getSession()
+  const adminUser = supabaseSession?.user ?? null
+
+  // Jika bukan peserta dan bukan admin, redirect ke participant login
+  if (!session && !adminUser) {
+    redirect('/login')
+  }
+
+  // ── MODE SIMULASI ADMIN ──────────────────────────────────────────
+  // Prioritaskan mode simulasi jika ada session admin Supabase (meski ada peserta session sekalipun)
+  if (adminUser && adminUser.email && !session) {
+    const requestedKategori = searchParams?.kategori || 'Environmental Technology'
+
+    // Ambil durasi dari config
+    const { data: configDurasi } = await supabase
+      .from('system_config')
+      .select('nilai')
+      .eq('kunci', 'durasi_menit')
+      .maybeSingle()
+
+    const durasiMenit = parseInt(configDurasi?.nilai || '90')
+    const endTime = new Date(Date.now() + durasiMenit * 60 * 1000)
+
+    // Ambil soal aktif untuk simulasi
+    let query = supabase
+      .from('questions')
+      .select('id, pertanyaan, pilihan_a, pilihan_b, pilihan_c, pilihan_d, pertanyaan_en, pilihan_a_en, pilihan_b_en, pilihan_c_en, pilihan_d_en, pertanyaan_ms, pilihan_a_ms, pilihan_b_ms, pilihan_c_ms, pilihan_d_ms, kategori, nomor_soal')
+      .eq('aktif', true)
+
+    if (requestedKategori !== 'ALL') {
+      query = query.eq('kategori', requestedKategori)
+    }
+
+    const { data: allQuestions } = await query.order('nomor_soal', { ascending: true })
+    const questions = allQuestions && allQuestions.length > 0 ? allQuestions : []
+
+    return (
+      <ExamErrorBoundary>
+        {/* Banner Penanda Mode Simulasi Admin */}
+        <div style={{
+          background: 'linear-gradient(90deg, #92400E 0%, #D97706 100%)',
+          color: '#fff',
+          padding: '0.65rem 1.25rem',
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          fontSize: '0.85rem',
+          position: 'sticky',
+          top: 0,
+          zIndex: 9999,
+          boxShadow: '0 2px 8px rgba(0,0,0,0.2)',
+          flexWrap: 'wrap',
+          gap: '0.5rem'
+        }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+            <span style={{ fontSize: '1.1rem' }}>🛡️</span>
+            <span>
+              <strong>MODE SIMULASI ADMIN:</strong> Akses peserta umum tetap <strong>TERTUTUP</strong>. Jawaban simulasi tidak akan disimpan ke database.
+            </span>
+          </div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+            <span style={{ fontSize: '0.75rem', background: 'rgba(0,0,0,0.25)', padding: '0.2rem 0.5rem', borderRadius: '4px' }}>
+              Bidang: {requestedKategori}
+            </span>
+            <a
+              href="/admin"
+              style={{
+                background: '#fff',
+                color: '#92400E',
+                padding: '0.25rem 0.75rem',
+                borderRadius: '4px',
+                textDecoration: 'none',
+                fontWeight: 700,
+                fontSize: '0.8rem',
+              }}
+            >
+              ← Keluar ke Admin
+            </a>
+          </div>
+        </div>
+
+        <div style={{ background: 'var(--bg)', minHeight: 'calc(100vh - 5rem)' }}>
+          <CbtClient
+            examSessionId="admin-preview-session-id"
+            questions={questions}
+            initialAnswers={{}}
+            endTimeStr={endTime.toISOString()}
+            serverTimeStr={new Date().toISOString()}
+            kategori={requestedKategori}
+            isAdminPreview={true}
+          />
+        </div>
+      </ExamErrorBoundary>
+    )
+  }
 
   // 1. Ambil data peserta (termasuk kategori)
   const { data: participant } = await supabase

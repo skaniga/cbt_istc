@@ -1,6 +1,30 @@
 import type { Metadata } from 'next'
+import { Cormorant_Garamond, Crimson_Pro, Cinzel } from 'next/font/google'
 import { LanguageProvider } from '@/lib/i18n/LanguageContext'
 import './globals.css'
+
+const cormorant = Cormorant_Garamond({
+  subsets: ['latin'],
+  weight: ['300', '400', '500', '600'],
+  style: ['normal', 'italic'],
+  variable: '--font-cormorant',
+  display: 'swap',
+})
+
+const crimson = Crimson_Pro({
+  subsets: ['latin'],
+  weight: ['400', '600'],
+  style: ['normal', 'italic'],
+  variable: '--font-crimson',
+  display: 'swap',
+})
+
+const cinzel = Cinzel({
+  subsets: ['latin'],
+  weight: ['400', '500', '600'],
+  variable: '--font-cinzel',
+  display: 'swap',
+})
 
 // ─── Konstanta Domain ───────────────────────────────────────────
 const SITE_URL = 'https://istcompetition.my'
@@ -85,12 +109,13 @@ export const metadata: Metadata = {
   // ─── Icons ─────────────────────────────────────────────────────
   icons: {
     icon: [
-      { url: '/logo.png', type: 'image/png' },
+      { url: '/icon-48.png', sizes: '48x48', type: 'image/png' },
+      { url: '/icon-192.png', sizes: '192x192', type: 'image/png' },
     ],
     apple: [
-      { url: '/logo.png', type: 'image/png' },
+      { url: '/icon-192.png', sizes: '192x192', type: 'image/png' },
     ],
-    shortcut: '/logo.png',
+    shortcut: '/icon-48.png',
   },
 
   // ─── Verification ─────────────────────────────────────────────
@@ -108,9 +133,9 @@ const jsonLdOrganization = {
   url: SITE_URL,
   logo: {
     '@type': 'ImageObject',
-    url: `${SITE_URL}/logo.png`,
-    width: 512,
-    height: 512,
+    url: `${SITE_URL}/icon-192.png`,
+    width: 192,
+    height: 192,
   },
   description:
     'Penyelenggara lomba sains dan teknologi internasional yang mengadakan ujian CBT daring di bidang Matematika, IPA, Robotic, dan Technology.',
@@ -160,7 +185,7 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="id">
+    <html lang="id" className={`${cormorant.variable} ${crimson.variable} ${cinzel.variable}`}>
       <head>
         {/* JSON-LD Structured Data */}
         <script
@@ -174,14 +199,6 @@ export default function RootLayout({
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLdEvent) }}
-        />
-
-        {/* Preconnect Google Fonts */}
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link
-          href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Crimson+Pro:ital,wght@0,400;0,600;1,400&family=Cinzel:wght@400;500;600&display=swap"
-          rel="stylesheet"
         />
       </head>
       <body>
