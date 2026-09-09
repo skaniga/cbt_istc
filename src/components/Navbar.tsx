@@ -71,10 +71,10 @@ export default function Navbar() {
               <option value="ms">MS</option>
             </select>
 
-            <a href={`${CBT_URL}/${locale}/login`} target="_blank" rel="noopener noreferrer" className="btn btn--secondary" id="nav-login-btn">
+            <a href={`${CBT_URL}/${locale}/login`} className="btn btn--secondary" id="nav-login-btn">
               {t('nav_login')}
             </a>
-            <a href={`${CBT_URL}/${locale}/daftar`} target="_blank" rel="noopener noreferrer" className="btn btn--primary" id="nav-daftar-btn">
+            <a href={`${CBT_URL}/${locale}/daftar`} className="btn btn--primary" id="nav-daftar-btn">
               {t('nav_register')}
             </a>
           </div>
@@ -156,8 +156,8 @@ export default function Navbar() {
           <Link href={`/${locale}#alur`}     className="navbar__link" onClick={() => setMenuOpen(false)}>{t('nav_flow')}</Link>
           <Link href={`/${locale}#arsip`}    className="navbar__link" onClick={() => setMenuOpen(false)}>{t('nav_archive')}</Link>
           <div style={{ display: 'flex', gap: '0.75rem', paddingTop: '0.5rem' }}>
-            <a href={`${CBT_URL}/${locale}/login`} target="_blank" rel="noopener noreferrer" className="btn btn--secondary" onClick={() => setMenuOpen(false)} style={{ flex: 1, justifyContent: 'center' }}>{t('nav_login')}</a>
-            <a href={`${CBT_URL}/${locale}/daftar`} target="_blank" rel="noopener noreferrer" className="btn btn--primary" onClick={() => setMenuOpen(false)} style={{ flex: 1, justifyContent: 'center' }}>{t('nav_register')}</a>
+            <a href={`${CBT_URL}/${locale}/login`} className="btn btn--secondary" onClick={() => setMenuOpen(false)} style={{ flex: 1, justifyContent: 'center' }}>{t('nav_login')}</a>
+            <a href={`${CBT_URL}/${locale}/daftar`} className="btn btn--primary" onClick={() => setMenuOpen(false)} style={{ flex: 1, justifyContent: 'center' }}>{t('nav_register')}</a>
           </div>
         </div>
       )}

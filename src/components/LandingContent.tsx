@@ -161,10 +161,10 @@ export default function LandingContent({
                 {heroSubtitle || t('hero_subtitle')}
               </p>
               <div className="hero__actions">
-                <a href={`${CBT_URL}/${locale}/daftar`} target="_blank" rel="noopener noreferrer" className="btn btn--primary" id="hero-daftar-btn">
+                <a href={`${CBT_URL}/${locale}/daftar`} className="btn btn--primary" id="hero-daftar-btn">
                   {t('hero_cta_register')}
                 </a>
-                <a href={`${CBT_URL}/${locale}/login`} target="_blank" rel="noopener noreferrer" className="btn btn--secondary" id="hero-login-btn">
+                <a href={`${CBT_URL}/${locale}/login`} className="btn btn--secondary" id="hero-login-btn">
                   {t('nav_login')}
                 </a>
               </div>
@@ -452,8 +452,8 @@ export default function LandingContent({
             <div>
               <p className="footer__col-title">{t('footer_participant')}</p>
               <ul className="footer__list" role="list">
-                <li><a href={`${CBT_URL}/${locale}/daftar`} target="_blank" rel="noopener noreferrer" className="footer__link">{t('nav_register')}</a></li>
-                <li><a href={`${CBT_URL}/${locale}/login`} target="_blank" rel="noopener noreferrer" className="footer__link">{t('nav_login')}</a></li>
+                <li><a href={`${CBT_URL}/${locale}/daftar`} className="footer__link">{t('nav_register')}</a></li>
+                <li><a href={`${CBT_URL}/${locale}/login`} className="footer__link">{t('nav_login')}</a></li>
                 <li><Link href="/admin/login" className="footer__link">Admin</Link></li>
               </ul>
             </div>
