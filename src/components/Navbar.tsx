@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { useLanguage } from '@/lib/i18n/LanguageContext'
 import { Locale } from '@/lib/i18n/translations'
+import { CBT_URL } from '@/lib/constants'
 
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false)
@@ -70,12 +71,12 @@ export default function Navbar() {
               <option value="ms">MS</option>
             </select>
 
-            <Link href={`/${locale}/login`} className="btn btn--secondary" id="nav-login-btn">
+            <a href={`${CBT_URL}/${locale}/login`} target="_blank" rel="noopener noreferrer" className="btn btn--secondary" id="nav-login-btn">
               {t('nav_login')}
-            </Link>
-            <Link href={`/${locale}/daftar`} className="btn btn--primary" id="nav-daftar-btn">
+            </a>
+            <a href={`${CBT_URL}/${locale}/daftar`} target="_blank" rel="noopener noreferrer" className="btn btn--primary" id="nav-daftar-btn">
               {t('nav_register')}
-            </Link>
+            </a>
           </div>
 
           {/* Mobile menu button */}
@@ -155,8 +156,8 @@ export default function Navbar() {
           <Link href={`/${locale}#alur`}     className="navbar__link" onClick={() => setMenuOpen(false)}>{t('nav_flow')}</Link>
           <Link href={`/${locale}#arsip`}    className="navbar__link" onClick={() => setMenuOpen(false)}>{t('nav_archive')}</Link>
           <div style={{ display: 'flex', gap: '0.75rem', paddingTop: '0.5rem' }}>
-            <Link href={`/${locale}/login`}  className="btn btn--secondary" onClick={() => setMenuOpen(false)} style={{ flex: 1, justifyContent: 'center' }}>{t('nav_login')}</Link>
-            <Link href={`/${locale}/daftar`} className="btn btn--primary"   onClick={() => setMenuOpen(false)} style={{ flex: 1, justifyContent: 'center' }}>{t('nav_register')}</Link>
+            <a href={`${CBT_URL}/${locale}/login`} target="_blank" rel="noopener noreferrer" className="btn btn--secondary" onClick={() => setMenuOpen(false)} style={{ flex: 1, justifyContent: 'center' }}>{t('nav_login')}</a>
+            <a href={`${CBT_URL}/${locale}/daftar`} target="_blank" rel="noopener noreferrer" className="btn btn--primary" onClick={() => setMenuOpen(false)} style={{ flex: 1, justifyContent: 'center' }}>{t('nav_register')}</a>
           </div>
         </div>
       )}
