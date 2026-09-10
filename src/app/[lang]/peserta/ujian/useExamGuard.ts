@@ -26,6 +26,8 @@ export function useExamGuard(examSessionId: string, isActive: boolean) {
   // ─────────────────────────────────────────────
   // 1. beforeunload — peringatan sebelum menutup/refresh tab
   // ─────────────────────────────────────────────
+  const handleBeforeUnloadRef = useRef<((e: BeforeUnloadEvent) => string) | null>(null)
+
   useEffect(() => {
     if (!isActive) return
 
@@ -36,9 +38,18 @@ export function useExamGuard(examSessionId: string, isActive: boolean) {
       return e.returnValue
     }
 
+    handleBeforeUnloadRef.current = handleBeforeUnload
     window.addEventListener('beforeunload', handleBeforeUnload)
     return () => window.removeEventListener('beforeunload', handleBeforeUnload)
   }, [isActive])
+
+  // Lepas listener beforeunload — dipanggil sesaat sebelum redirect post-submit
+  const disableGuard = useCallback(() => {
+    if (handleBeforeUnloadRef.current) {
+      window.removeEventListener('beforeunload', handleBeforeUnloadRef.current)
+      handleBeforeUnloadRef.current = null
+    }
+  }, [])
 
   // ─────────────────────────────────────────────
   // 2. Multi-tab detection via BroadcastChannel
@@ -166,5 +177,5 @@ export function useExamGuard(examSessionId: string, isActive: boolean) {
     return () => document.removeEventListener('visibilitychange', handleVisibilityChange)
   }, [isActive, flushQueue])
 
-  return { addToQueue, removeFromQueue, flushQueue, getQueue }
+  return { addToQueue, removeFromQueue, flushQueue, getQueue, disableGuard }
 }

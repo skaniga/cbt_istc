@@ -139,7 +139,7 @@ export default function CbtClient({
   const { t, locale } = useLanguage()
 
   // Integrasikan guard: beforeunload + multi-tab + offline queue (hanya aktif di ujian peserta asli)
-  const { addToQueue, removeFromQueue, flushQueue } = useExamGuard(examSessionId, !isAdminPreview)
+  const { addToQueue, removeFromQueue, flushQueue, disableGuard } = useExamGuard(examSessionId, !isAdminPreview)
 
   // Progress
   const answeredCount = Object.keys(answers).length
@@ -263,8 +263,12 @@ export default function CbtClient({
     // Flush offline queue sebelum submit
     if (navigator.onLine) await flushQueue()
 
+    // Lepas listener beforeunload agar redirect post-submit tidak memunculkan
+    // dialog browser "Tinggalkan situs?" yang menyebabkan peserta terjebak di halaman ujian
+    disableGuard()
+
     await finishExam(examSessionId)
-  }, [examSessionId, flushQueue, isAdminPreview, answers, questions.length])
+  }, [examSessionId, flushQueue, disableGuard, isAdminPreview, answers, questions.length])
 
   const currentQ = questions[currentIndex]
   if (!currentQ) return <div>{t('exam_data_unavailable')}</div>
