@@ -24,32 +24,10 @@ export function useExamGuard(examSessionId: string, isActive: boolean) {
   const isProcessingQueue = useRef(false)
 
   // ─────────────────────────────────────────────
-  // 1. beforeunload — peringatan sebelum menutup/refresh tab
+  // 1. beforeunload — dihapus agar tidak muncul dialog "Leave site?" dari browser
   // ─────────────────────────────────────────────
-  const handleBeforeUnloadRef = useRef<((e: BeforeUnloadEvent) => string) | null>(null)
-
-  useEffect(() => {
-    if (!isActive) return
-
-    const handleBeforeUnload = (e: BeforeUnloadEvent) => {
-      e.preventDefault()
-      // Browser modern mengabaikan custom message, tapi tetap menampilkan dialog standar
-      e.returnValue = 'Ujian sedang berlangsung. Jika Anda meninggalkan halaman ini, progress Anda mungkin tidak tersimpan.'
-      return e.returnValue
-    }
-
-    handleBeforeUnloadRef.current = handleBeforeUnload
-    window.addEventListener('beforeunload', handleBeforeUnload)
-    return () => window.removeEventListener('beforeunload', handleBeforeUnload)
-  }, [isActive])
-
-  // Lepas listener beforeunload — dipanggil sesaat sebelum redirect post-submit
-  const disableGuard = useCallback(() => {
-    if (handleBeforeUnloadRef.current) {
-      window.removeEventListener('beforeunload', handleBeforeUnloadRef.current)
-      handleBeforeUnloadRef.current = null
-    }
-  }, [])
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  const disableGuard = useCallback(() => {}, [])
 
   // ─────────────────────────────────────────────
   // 2. Multi-tab detection via BroadcastChannel
