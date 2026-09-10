@@ -129,6 +129,7 @@ export default function CbtClient({
   const [saveStatus, setSaveStatus] = useState<SaveStatus>('idle')
   const [showSubmitModal, setShowSubmitModal] = useState(false)
   const [isOnline, setIsOnline] = useState(true)
+  const [finishError, setFinishError] = useState<string | null>(null)
 
   // ── Guard Refs ──────────────────────────────────────────────────
   // useRef (bukan useState) agar cegah double-submit bahkan sebelum re-render
@@ -255,6 +256,12 @@ export default function CbtClient({
     if (isFinishingRef.current) return
     isFinishingRef.current = true
     setIsFinishingDisplay(true)
+    setFinishError(null)
+
+    // Tutup modal langsung (penting: mencegah kasus timer habis saat modal terbuka
+    // yang menyebabkan peserta stuck karena tombol "Batal" ter-disable tapi handleFinish
+    // sudah berjalan di background)
+    setShowSubmitModal(false)
 
     // Flush pending debounce
     pendingSaves.current.forEach(timeout => clearTimeout(timeout))
@@ -267,7 +274,16 @@ export default function CbtClient({
     // dialog browser "Tinggalkan situs?" yang menyebabkan peserta terjebak di halaman ujian
     disableGuard()
 
-    await finishExam(examSessionId)
+    const result = await finishExam(examSessionId)
+
+    // Jika server mengembalikan error (bukan redirect), reset state agar peserta
+    // bisa melihat pesan error dan mencoba kembali
+    if (result?.error) {
+      isFinishingRef.current = false
+      setIsFinishingDisplay(false)
+      setFinishError(result.error as string)
+    }
+    // Jika sukses, finishExam() melakukan redirect ke /peserta secara server-side
   }, [examSessionId, flushQueue, disableGuard, isAdminPreview, answers, questions.length])
 
   const currentQ = questions[currentIndex]
@@ -312,6 +328,26 @@ export default function CbtClient({
           letterSpacing: '0.15em', textTransform: 'uppercase',
         }}>
           ⚡ Anda Sedang Offline — Jawaban disimpan sementara dan akan dikirim saat koneksi pulih
+        </div>
+      )}
+
+      {/* Finish Error Banner — muncul jika pengumpulan gagal, user bisa retry */}
+      {finishError && (
+        <div style={{
+          background: 'rgba(180,30,30,0.12)', color: 'var(--crimson)',
+          border: '1px solid var(--crimson)',
+          display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+          padding: '0.75rem 1.5rem', gap: '1rem', flexWrap: 'wrap',
+          fontFamily: 'var(--font-body)', fontSize: '0.875rem',
+        }}>
+          <span>⚠ {finishError} — Silakan coba kumpulkan kembali.</span>
+          <button
+            className="btn btn--primary"
+            style={{ background: 'var(--crimson)', color: '#fff', textShadow: 'none', fontSize: '0.75rem', padding: '0.4rem 1rem' }}
+            onClick={() => { setFinishError(null); setShowSubmitModal(true) }}
+          >
+            Coba Lagi
+          </button>
         </div>
       )}
 
