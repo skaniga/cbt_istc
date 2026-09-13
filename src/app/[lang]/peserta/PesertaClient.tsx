@@ -222,32 +222,30 @@ export default function PesertaClient({
                   ) : (
                     /* ── Hasil Sudah Dirilis: tampilkan nilai & sertifikat ── */
                     <>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '2rem', marginTop: '2rem' }}>
-                        <div>
-                          <p className="label">{t('dashboard_score')}</p>
-                          <p style={{
-                            fontFamily: 'var(--font-heading)', fontSize: '3.5rem',
-                            lineHeight: 1, color: participant.lulus ? 'var(--fg)' : 'var(--crimson)'
-                          }}>
-                            {participant.skor ?? 0}
-                          </p>
-                        </div>
-                        <div>
-                          <p className="label">{t('dashboard_status')}</p>
-                          <p style={{
-                            fontFamily: 'var(--font-display)', fontSize: '1.25rem',
-                            color: participant.lulus ? 'var(--brass)' : 'var(--muted-fg)',
-                            letterSpacing: '0.1em', marginTop: '0.5rem'
-                          }}>
-                            {participant.lulus ? t('dashboard_passed') : t('dashboard_failed')}
-                          </p>
-                        </div>
+                      {/* ── Pesan Apresiasi ── */}
+                      <div style={{
+                        marginTop: '1.5rem',
+                        padding: '1.75rem 2rem',
+                        background: 'linear-gradient(135deg, #fffbf0 0%, #fff8e8 100%)',
+                        border: '1px solid var(--brass)',
+                        borderLeft: '4px solid var(--brass)',
+                        borderRadius: '8px',
+                        textAlign: 'center',
+                      }}>
+                        <div style={{ fontSize: '2.5rem', marginBottom: '0.75rem' }}>🏆</div>
+                        <h3 style={{
+                          fontFamily: 'var(--font-heading)', fontSize: '1.4rem',
+                          color: 'var(--fg)', marginBottom: '0.75rem'
+                        }}>
+                          {t('dashboard_congratulations_title')}
+                        </h3>
+                        <p style={{
+                          fontFamily: 'var(--font-body)', fontSize: '1rem',
+                          color: 'var(--muted-fg)', lineHeight: 1.7,
+                        }}>
+                          {t('dashboard_congratulations_desc')}
+                        </p>
                       </div>
-
-                      {/* Nilai lulus info */}
-                      <p style={{ marginTop: '1rem', fontSize: '0.85rem', color: 'var(--muted-fg)' }}>
-                        {t('dashboard_passing_min')} <strong>{nilaiLulus}</strong>
-                      </p>
 
                       <div style={{ marginTop: '2.5rem' }}>
                         <Link

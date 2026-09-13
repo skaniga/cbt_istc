@@ -1,4 +1,4 @@
-﻿export type Locale = 'en' | 'id' | 'ms'
+export type Locale = 'en' | 'id' | 'ms'
 
 export const translations = {
   en: {
@@ -115,6 +115,8 @@ export const translations = {
     dashboard_thank_you_title: 'Thank You for Participating!',
     dashboard_thank_you_desc: 'Thank you for joining the International Science and Technology Competition 2026.',
     dashboard_thank_you_note: 'Your score and certificate will be available once the results are officially released. Please check back later.',
+    dashboard_congratulations_title: 'Congratulations on Your Achievement!',
+    dashboard_congratulations_desc: 'Thank you for joining the ISTC 2026 series of events. Congratulations on the achievement you have accomplished!',
 
     // Exam Page
     exam_title: 'CBT Exam',
@@ -285,6 +287,8 @@ export const translations = {
     dashboard_thank_you_title: 'Terima Kasih Telah Berpartisipasi!',
     dashboard_thank_you_desc: 'Terima kasih telah mengikuti International Science and Technology Competition 2026.',
     dashboard_thank_you_note: 'Nilai dan sertifikat Anda akan tersedia setelah hasil resmi diumumkan. Silakan cek kembali nanti.',
+    dashboard_congratulations_title: 'Selamat Atas Prestasi yang Saudara Raih!',
+    dashboard_congratulations_desc: 'Terima kasih telah mengikuti rangkaian ISTC 2026. Selamat atas prestasi yang saudara raih!',
 
     // Exam Page
     exam_title: 'Ujian CBT',
@@ -455,6 +459,8 @@ export const translations = {
     dashboard_thank_you_title: 'Terima Kasih Kerana Menyertai!',
     dashboard_thank_you_desc: 'Terima kasih kerana menyertai International Science and Technology Competition 2026.',
     dashboard_thank_you_note: 'Markah dan sijil anda akan tersedia setelah keputusan rasmi diumumkan. Sila semak semula kemudian.',
+    dashboard_congratulations_title: 'Tahniah Atas Pencapaian Anda!',
+    dashboard_congratulations_desc: 'Terima kasih kerana menyertai rangkaian ISTC 2026. Tahniah atas pencapaian yang telah anda capai!',
 
     // Exam Page
     exam_title: 'Peperiksaan CBT',

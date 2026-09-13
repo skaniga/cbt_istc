@@ -82,7 +82,7 @@ export default function SertifikatClient({
       const namePx  = nameLen > 28 ? 32 : nameLen > 20 ? 41 : nameLen > 14 ? 48 : 56
       ctx.font      = `700 ${namePx}px "Dancing Script", cursive`
       ctx.fillStyle = GOLD
-      ctx.fillText(participant.nama_lengkap, W / 2, 325)
+      ctx.fillText(participant.nama_lengkap, W / 2, 310)
 
       // ── 4. Category ─────────────────────────────────────────
       // Turun dari 389→405
