@@ -82,13 +82,13 @@ export default function SertifikatClient({
       const namePx  = nameLen > 28 ? 32 : nameLen > 20 ? 41 : nameLen > 14 ? 48 : 56
       ctx.font      = `700 ${namePx}px "Dancing Script", cursive`
       ctx.fillStyle = GOLD
-      ctx.fillText(participant.nama_lengkap, W / 2, 305)
+      ctx.fillText(participant.nama_lengkap, W / 2, 325)
 
       // ── 4. Category ─────────────────────────────────────────
       // Turun dari 389→405
       ctx.font      = '700 17px "Poppins", sans-serif'
       ctx.fillStyle = TEXT
-      ctx.fillText(category, W / 2, 405)
+      ctx.fillText(category, W / 2, 420)
 
       // ── 5. Achievement ──────────────────────────────────────
       // y=484 = 61% of 793 (below "as" label)
@@ -184,7 +184,7 @@ export default function SertifikatClient({
 
             {/* ── Participant Name ── */}
             <div style={{
-              position:'absolute', top:'36%', left:'8%', right:'8%',
+              position:'absolute', top:'39%', left:'8%', right:'8%',
               textAlign:'center',
               fontFamily:"'Dancing Script', cursive",
               fontSize: participant.nama_lengkap.length > 28 ? '2rem'
@@ -202,7 +202,7 @@ export default function SertifikatClient({
 
             {/* ── Category value ── */}
             <div style={{
-              position:'absolute', top:'49%', left:0, right:0,
+              position:'absolute', top:'52%', left:0, right:0,
               textAlign:'center',
               fontFamily:"'Poppins', sans-serif",
               fontSize:'1.05rem', fontWeight:700,
