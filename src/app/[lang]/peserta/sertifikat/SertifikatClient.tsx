@@ -1,13 +1,46 @@
 'use client'
 
-import { useRef, useState, useEffect } from 'react'
-import { QRCodeSVG } from 'qrcode.react'
+import { useRef, useState, useEffect, useCallback } from 'react'
 import { Participant } from '@/lib/types'
 import { useLanguage } from '@/lib/i18n/LanguageContext'
 
-const GOLD  = '#C8941A'
-const TEXT  = '#2C2C2C'
-const MUTED = '#7A7A7A'
+// ────────────────────────────────────────────────────────────────────────────
+//  SINGLE SOURCE OF TRUTH — semua posisi dalam piksel pada canvas 1122 × 793
+//  Preview   = iframe yang menampilkan PDF blob yang sama
+//  Download  = save PDF blob yang sama — mustahil beda!
+// ────────────────────────────────────────────────────────────────────────────
+const W      = 1122
+const H      = 793
+const SCALE  = 2          // Resolusi 2× (Retina / Print-ready)
+const GOLD   = '#C8941A'
+const TEXT   = '#2C2C2C'
+const MUTED  = '#7A7A7A'
+
+// ── Posisi teks (dalam koordinat canvas 1122 × 793) ─────────────────────────
+const POS = {
+  certNo     : 200,   // y — Nomor sertifikat
+  name       : 309,   // y — Nama peserta
+  category   : 396,   // y — Kategori · Level
+  achievement: 460,   // y — Penghargaan (1st Place, dst.)
+  qr         : 0.865, // y sebagai fraksi H (H × 0.865)
+  qrSize     : 75,
+}
+
+// ── Font size adaptif berdasarkan panjang teks ───────────────────────────────
+function nameFontSize(len: number): number {
+  if (len > 32) return 28
+  if (len > 24) return 34
+  if (len > 16) return 42
+  return 50
+}
+
+function achFontSize(len: number): number {
+  if (len <= 12) return 48
+  if (len <= 18) return 32
+  return 18
+}
+
+// ────────────────────────────────────────────────────────────────────────────
 
 export default function SertifikatClient({
   participant,
@@ -15,136 +48,169 @@ export default function SertifikatClient({
   tahun,
   winnerData,
   namaKetua,
-  jabatanKetua
+  jabatanKetua,
 }: {
-  participant: Participant
-  namaLomba: string
-  tahun: string
-  winnerData?: { peringkat: number, apresiasi: string } | null
-  namaKetua?: string
+  participant  : Participant
+  namaLomba    : string
+  tahun        : string
+  winnerData  ?: { peringkat: number; apresiasi: string } | null
+  namaKetua   ?: string
   jabatanKetua?: string
 }) {
-  const certRef      = useRef<HTMLDivElement>(null)
-  const containerRef = useRef<HTMLDivElement>(null)
-  const [isGenerating, setIsGenerating] = useState(false)
-  const [scale, setScale] = useState(1)
   const { t, locale } = useLanguage()
 
-  useEffect(() => {
-    const updateScale = () => {
-      if (containerRef.current) {
-        const aw = containerRef.current.clientWidth
-        setScale(aw < 1122 ? aw / 1122 : 1)
-      }
-    }
-    updateScale()
-    window.addEventListener('resize', updateScale)
-    return () => window.removeEventListener('resize', updateScale)
-  }, [])
+  const [pdfUrl,       setPdfUrl]       = useState<string | null>(null)
+  const [isRendering,  setIsRendering]  = useState(true)
+  const [renderError,  setRenderError]  = useState<string | null>(null)
+  const pdfBlobRef                      = useRef<Blob | null>(null)
 
-  const isWinner   = !!winnerData
-  const certNo     = participant.nomor_peserta ?? '—'
-  const verifyUrl  = `https://istcompetition.my/certificate/${certNo.replace(/\//g, '-')}`
-  const namaUpper  = participant.nama_lengkap.toUpperCase()
+  // ── Data sertifikat ────────────────────────────────────────────────────────
+  const certNo      = participant.nomor_peserta ?? '—'
+  const verifyUrl   = `https://istcompetition.my/certificate/${certNo.replace(/\//g, '-')}`
+  const namaUpper   = participant.nama_lengkap.toUpperCase()
+  const isWinner    = !!winnerData
   const achievement = isWinner
     ? (winnerData!.apresiasi ?? '').toUpperCase()
     : t('cert_achievement').toUpperCase()
-  const category   = participant.kategori || 'International Science & Technology'
-
-  // Extract level dari apresiasi: "1st Place - Advance" → "ADVANCE"
-  const level = isWinner && winnerData?.apresiasi
+  const category    = participant.kategori || 'International Science & Technology'
+  const level       = isWinner && winnerData?.apresiasi
     ? winnerData.apresiasi.split(' - ')[1]?.toUpperCase() ?? ''
     : ''
-
-  // Teks kategori + level untuk sertifikat
   const categoryLine = level ? `${category}  ·  Level ${level}` : category
 
-  const downloadPdf = async () => {
-    setIsGenerating(true)
+  // ── Core: render canvas → jsPDF → blob URL ─────────────────────────────────
+  const generatePdf = useCallback(async () => {
+    setIsRendering(true)
+    setRenderError(null)
+
     try {
+      // 1. Tunggu semua font siap (Google Fonts + custom woff)
       await document.fonts.ready
 
-      const W = 1122, H = 793, SCALE = 2
-      const canvas = document.createElement('canvas')
-      canvas.width  = W * SCALE
-      canvas.height = H * SCALE
-      const ctx = canvas.getContext('2d')!
+      // 2. Buat canvas off-screen beresolusi tinggi
+      const canvas     = document.createElement('canvas')
+      canvas.width     = W * SCALE
+      canvas.height    = H * SCALE
+      const ctx        = canvas.getContext('2d')!
       ctx.scale(SCALE, SCALE)
 
-      // ── 1. Background template ──────────────────────────────
+      // 3. Gambar background template
       const bg = new Image()
       bg.crossOrigin = 'anonymous'
-      await new Promise<void>(res => { bg.onload = () => res(); bg.src = '/cert_template.png' })
+      await new Promise<void>((res, rej) => {
+        bg.onload  = () => res()
+        bg.onerror = () => rej(new Error('Gagal memuat cert_template.png'))
+        bg.src     = '/cert_template.png'
+      })
       ctx.drawImage(bg, 0, 0, W, H)
 
       ctx.textAlign    = 'center'
       ctx.textBaseline = 'top'
 
-      // ── 2. Certificate Number ───────────────────────────────
-      ctx.font      = '400 13px "Glacial Indifference", sans-serif'
+      // 4. Nomor sertifikat
+      ctx.font      = `400 13px "Glacial Indifference", sans-serif`
       ctx.fillStyle = MUTED
-      ctx.fillText(`NO.  ${certNo}`, W / 2, 200)
+      ctx.fillText(`NO.  ${certNo}`, W / 2, POS.certNo)
 
-      // ── 3. Participant Name — Poppins tegak, UPPERCASE ──────
-      const nameLen = namaUpper.length
-      const namePx  = nameLen > 32 ? 28 : nameLen > 24 ? 34 : nameLen > 16 ? 42 : 50
+      // 5. Nama peserta
+      const namePx  = nameFontSize(namaUpper.length)
       ctx.font      = `700 ${namePx}px "Poppins", sans-serif`
       ctx.fillStyle = GOLD
-      ctx.fillText(namaUpper, W / 2, 309)
+      ctx.fillText(namaUpper, W / 2, POS.name)
 
-      // ── 4. Category · Level ─────────────────────────────────
+      // 6. Kategori · Level
       ctx.font      = '700 15px "Poppins", sans-serif'
       ctx.fillStyle = TEXT
-      ctx.fillText(categoryLine, W / 2, 396)
+      ctx.fillText(categoryLine, W / 2, POS.category)
 
-      // ── 5. Achievement — langsung bawah "as" ───────────────
-      const achLen = achievement.length
-      const achPx  = achLen <= 12 ? 48 : achLen <= 18 ? 32 : 18
+      // 7. Penghargaan
+      const achPx   = achFontSize(achievement.length)
       ctx.font      = `700 ${achPx}px "Cormorant SC", serif`
       ctx.fillStyle = GOLD
-      ctx.fillText(achievement, W / 2, 460)
+      ctx.fillText(achievement, W / 2, POS.achievement)
 
-      // ── 6. QR Code — nempel di atas tanda tangan ───────────
+      // 8. QR Code
       try {
-        const QRLib    = (await import('qrcode')).default
+        const QRLib     = (await import('qrcode')).default
         const qrDataUrl = await QRLib.toDataURL(verifyUrl, {
-          width: 80, margin: 1,
-          color: { dark: '#3D2B00', light: '#FAF7F0' },
+          width : POS.qrSize * SCALE,
+          margin: 1,
+          color : { dark: '#3D2B00', light: '#FAF7F0' },
           errorCorrectionLevel: 'H',
         })
         const qrImg = new Image()
         await new Promise<void>(res => { qrImg.onload = () => res(); qrImg.src = qrDataUrl })
-        ctx.drawImage(qrImg, W / 2 - 38, H * 0.865, 75, 75)
-      } catch { /* skip QR if unavailable */ }
+        const qrY = H * POS.qr
+        ctx.drawImage(qrImg, W / 2 - POS.qrSize / 2, qrY, POS.qrSize, POS.qrSize)
+      } catch {
+        /* QR opsional — skip jika library tidak tersedia */
+      }
 
-      // ── 7. Export as PDF ────────────────────────────────────
+      // 9. Canvas → jsPDF Blob
       const { jsPDF } = await import('jspdf')
-      const pdf = new jsPDF({ orientation: 'landscape', unit: 'mm', format: 'a4' })
+      const pdf       = new jsPDF({ orientation: 'landscape', unit: 'mm', format: 'a4' })
+      const pageW     = pdf.internal.pageSize.getWidth()
+      const pageH     = pdf.internal.pageSize.getHeight()
       pdf.addImage(
-        canvas.toDataURL('image/jpeg', 0.95), 'JPEG',
-        0, 0,
-        pdf.internal.pageSize.getWidth(),
-        pdf.internal.pageSize.getHeight(),
+        canvas.toDataURL('image/jpeg', 0.97), 'JPEG',
+        0, 0, pageW, pageH,
       )
-      const safeCertNo = (participant.nomor_peserta || 'document').replace(/[/\\?%*:|"<>]/g, '-')
-      pdf.save(`Certificate_ISTC_${safeCertNo}.pdf`)
-    } catch (e) {
-      console.error(e)
-      alert('Gagal generate PDF. Coba lagi.')
+
+      // 10. Simpan sebagai Blob → Blob URL (bukan download langsung)
+      const pdfBlob  = pdf.output('blob')
+      pdfBlobRef.current = pdfBlob
+
+      // Revoke URL lama jika ada
+      if (pdfUrl) URL.revokeObjectURL(pdfUrl)
+
+      const newUrl   = URL.createObjectURL(pdfBlob)
+      setPdfUrl(newUrl)
+
+    } catch (err) {
+      console.error(err)
+      setRenderError(err instanceof Error ? err.message : 'Gagal membuat sertifikat')
     } finally {
-      setIsGenerating(false)
+      setIsRendering(false)
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [certNo, namaUpper, categoryLine, achievement, verifyUrl])
+
+  // Generate PDF saat komponen mount
+  useEffect(() => {
+    generatePdf()
+    return () => {
+      if (pdfUrl) URL.revokeObjectURL(pdfUrl)
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
+  // ── Download: langsung save blob yang sama (0 re-render) ──────────────────
+  const downloadPdf = () => {
+    if (!pdfBlobRef.current) return
+    const safeCertNo = (participant.nomor_peserta || 'document').replace(/[/\\?%*:|"<>]/g, '-')
+    const a          = document.createElement('a')
+    a.href           = URL.createObjectURL(pdfBlobRef.current)
+    a.download       = `Certificate_ISTC_${safeCertNo}.pdf`
+    a.click()
+    setTimeout(() => URL.revokeObjectURL(a.href), 10_000)
   }
 
-  // Localised "awarded to"
-  const awardedLabel = locale === 'id' ? 'Sertifikat ini diberikan kepada'
-    : locale === 'ms' ? 'Sijil ini dianugerahkan kepada'
-    : 'This Certificate is awarded to'
+  // ── Label bahasa ────────────────────────────────────────────────────────────
+  const labelLoading  = locale === 'id' ? 'Membuat sertifikat…'
+    : locale === 'ms' ? 'Menjana sijil…'
+    : 'Generating certificate…'
+  const labelRetry    = locale === 'id' ? 'Coba Lagi'
+    : locale === 'ms' ? 'Cuba Lagi'
+    : 'Retry'
+  const labelDownload = t('cert_download')
+  const labelNote     = locale === 'id' ? 'Pratinjau Sertifikat (PDF)'
+    : locale === 'ms' ? 'Pratonton Sijil (PDF)'
+    : 'Certificate Preview (PDF)'
 
+  // ── Render ──────────────────────────────────────────────────────────────────
   return (
-    <div style={{ width:'100%', display:'flex', flexDirection:'column', alignItems:'center', overflowX:'hidden' }}>
-
-      {/* Google Fonts */}
+    <>
+      {/* Google Fonts — dimuat di head agar document.fonts.ready bisa deteksi */}
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@600;700&family=Cormorant+SC:wght@700&display=swap');
         @font-face {
@@ -159,108 +225,89 @@ export default function SertifikatClient({
         }
       `}</style>
 
-      <div ref={containerRef} style={{ width:'100%', maxWidth:'1122px', display:'flex', justifyContent:'center', marginBottom:'3rem' }}>
-        <div id="cert-parent" style={{
-          width:'1122px', height:'793px',
-          transform:`scale(${scale})`, transformOrigin:'top center',
-          marginBottom: scale < 1 ? `-${793*(1-scale)}px` : '0',
-          boxShadow:'0 8px 40px rgba(0,0,0,0.2)',
-          transition:'transform 0.2s ease-out',
-        }}>
-          {/* ── Canva template as background ── */}
-          <div ref={certRef} style={{
-            width:'1122px', height:'793px',
-            backgroundImage: "url('/cert_template.png')",
-            backgroundSize: '100% 100%',
-            backgroundRepeat: 'no-repeat',
-            position:'relative',
+      <div style={{ width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1.5rem' }}>
+
+        {/* ── Loading State ── */}
+        {isRendering && (
+          <div style={{
+            width: '100%', maxWidth: '1122px',
+            aspectRatio: '1122 / 793',
+            display: 'flex', flexDirection: 'column',
+            alignItems: 'center', justifyContent: 'center',
+            background: 'linear-gradient(135deg, #fdf8ee 0%, #f5edda 100%)',
+            borderRadius: '8px',
+            boxShadow: '0 8px 40px rgba(0,0,0,0.15)',
+            gap: '1rem',
           }}>
-
-            {/* ── Cert Number ── */}
             <div style={{
-              position:'absolute', top:'27%', left:0, right:0,
-              textAlign:'center',
-              fontFamily:"'Glacial Indifference', sans-serif",
-              fontSize:'0.62rem', fontWeight:400,
-              color: MUTED, letterSpacing:'0.28em',
-            }}>
-              NO. &nbsp;{certNo}
-            </div>
+              width: '56px', height: '56px',
+              border: '4px solid #e9d8a6',
+              borderTop: `4px solid ${GOLD}`,
+              borderRadius: '50%',
+              animation: 'cert-spin 0.9s linear infinite',
+            }} />
+            <p style={{ color: MUTED, fontFamily: 'Georgia, serif', fontSize: '1rem' }}>
+              {labelLoading}
+            </p>
+            <style>{`
+              @keyframes cert-spin { to { transform: rotate(360deg); } }
+            `}</style>
+          </div>
+        )}
 
-            {/* ── Participant Name — Poppins tegak, UPPERCASE ── */}
-            <div style={{
-              position:'absolute', top:'39%', left:'5%', right:'5%',
-              textAlign:'center',
-              fontFamily:"'Poppins', sans-serif",
-              fontSize: namaUpper.length > 32 ? '1.75rem'
-                      : namaUpper.length > 24 ? '2.1rem'
-                      : namaUpper.length > 16 ? '2.6rem'
-                      : '3rem',
-              fontWeight:700,
-              color: GOLD,
-              lineHeight: 1.1,
-              letterSpacing: '0.04em',
-              wordBreak: 'break-word',
-              zIndex: 10,
-              textTransform: 'uppercase',
-            }}>
-              {namaUpper}
-            </div>
+        {/* ── Error State ── */}
+        {renderError && !isRendering && (
+          <div style={{
+            width: '100%', maxWidth: '1122px',
+            aspectRatio: '1122 / 793',
+            display: 'flex', flexDirection: 'column',
+            alignItems: 'center', justifyContent: 'center',
+            background: '#fff5f5',
+            borderRadius: '8px', border: '1px solid #feb2b2',
+            gap: '1rem',
+          }}>
+            <p style={{ color: '#c53030', fontSize: '1rem' }}>⚠️ {renderError}</p>
+            <button onClick={generatePdf} className="btn btn--primary">
+              {labelRetry}
+            </button>
+          </div>
+        )}
 
-            {/* ── Category · Level ── */}
-            <div style={{
-              position:'absolute', top:'50%', left:0, right:0,
-              textAlign:'center',
-              fontFamily:"'Poppins', sans-serif",
-              fontSize:'0.95rem', fontWeight:700,
-              color: TEXT,
-              letterSpacing: '0.02em',
+        {/* ── Preview: iframe menampilkan PDF blob langsung ── */}
+        {pdfUrl && !isRendering && (
+          <>
+            <p style={{
+              color: MUTED, fontSize: '0.78rem', letterSpacing: '0.08em',
+              textTransform: 'uppercase', margin: 0,
             }}>
-              {categoryLine}
-            </div>
-
-            {/* ── Achievement — langsung bawah "as" ── */}
+              📄 {labelNote}
+            </p>
             <div style={{
-              position:'absolute', top:'58%', left:'5%', right:'5%',
-              textAlign:'center',
-              fontFamily:"'Cormorant SC', serif",
-              fontSize: achievement.length <= 12 ? '3rem'
-                      : achievement.length <= 18 ? '2rem'
-                      : '1.15rem',
-              fontWeight:700,
-              color: GOLD,
-              letterSpacing: achievement.length <= 12 ? '0.08em' : '0.04em',
-              lineHeight: 1.1,
+              width: '100%', maxWidth: '1122px',
+              aspectRatio: '1122 / 793',
+              boxShadow: '0 8px 40px rgba(0,0,0,0.2)',
+              borderRadius: '8px', overflow: 'hidden',
             }}>
-              {achievement}
-            </div>
-
-            {/* ── QR Code — nempel di atas tanda tangan Muhammad Amarjid ── */}
-            <div style={{
-              position:'absolute', bottom:'4%', left:'50%',
-              transform:'translateX(-50%)',
-              display:'flex', flexDirection:'column', alignItems:'center',
-            }}>
-              <QRCodeSVG
-                value={verifyUrl}
-                size={75}
-                fgColor="#3D2B00"
-                bgColor="#FAF7F0"
-                level="H"
+              <iframe
+                src={`${pdfUrl}#toolbar=0&navpanes=0&scrollbar=0`}
+                style={{ width: '100%', height: '100%', border: 'none', display: 'block' }}
+                title="Certificate Preview"
               />
             </div>
+          </>
+        )}
 
-          </div>
-        </div>
+        {/* ── Tombol Download ── */}
+        <button
+          onClick={downloadPdf}
+          disabled={isRendering || !pdfUrl}
+          className="btn btn--primary"
+          style={{ minWidth: '16rem', justifyContent: 'center' }}
+        >
+          {isRendering ? labelLoading : labelDownload}
+        </button>
+
       </div>
-
-      <button onClick={downloadPdf} disabled={isGenerating}
-        className="btn btn--primary" style={{ minWidth:'16rem', justifyContent:'center' }}>
-        {isGenerating ? t('cert_generating') : t('cert_download')}
-      </button>
-
-    </div>
+    </>
   )
 }
-
-
