@@ -17,8 +17,8 @@ export async function loginParticipant(formData: FormData) {
     return { error: 'Nomor peserta dan kata sandi wajib diisi.' }
   }
 
-  // Gunakan password "ISTC2026" untuk semua peserta
-  if (password !== 'ISTC2026') {
+  // Gunakan password "ISTC20261" untuk semua peserta
+  if (password !== 'ISTC20261') {
     return { error: 'Kata sandi salah.' }
   }
 
