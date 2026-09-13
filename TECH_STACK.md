@@ -384,14 +384,14 @@ Klik Download → save Blob yang SAMA (instan, 0 re-render)
 
 ### 📌 Arsitektur File — [`SertifikatClient.tsx`](src/app/%5Blang%5D/peserta/sertifikat/SertifikatClient.tsx)
 
-#### Single Source of Truth — `POS` Object
+#### Single Source of Truth — `POS` Object (FINAL ✅)
 ```ts
 const POS = {
   certNo     : 200,   // y — Nomor sertifikat
   name       : 309,   // y — Nama peserta
-  category   : 396,   // y — Kategori · Level
-  achievement: 415,   // y — 1st Place / penghargaan (bawah "as")
-  qr         : 0.795, // y sebagai fraksi H — di atas tanda tangan
+  category   : 400,   // y — Kategori · Level (centered antara "Category" & "as")
+  achievement: 445,   // y — 1st Place / penghargaan (di bawah "as" template)
+  qr         : 0.77,  // y fraksi H → y≈611, bottom≈696, nempel Muhammad
   qrSize     : 85,    // ukuran QR Code (px)
 }
 ```
