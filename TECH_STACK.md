@@ -350,3 +350,128 @@ bedafde  Optimize login performance, security, and fix TS errors
 
 *Dibuat: 28 Agustus 2026 — ISTC CBT Platform Development Session*
 *Update: QA Testing session ditambahkan pukul 17:35 WIB*
+
+---
+
+## 🎨 Sesi 6 — Certificate PDF-First Architecture (13 September 2026)
+
+### 🔴 Problem Lama (Root Cause)
+Sertifikat punya **dua engine render terpisah**:
+- **Preview** → HTML div + CSS (`top: 39%`, `rem`, `transform: scale()`)
+- **Download PDF** → HTML5 Canvas 2D (`y: 309`, piksel absolut)
+
+Setiap revisi harus ubah 2 tempat → selalu meleset → buang waktu berjam-jam.
+
+---
+
+### ✅ Solusi — PDF-First Architecture
+
+**Alur baru:**
+```
+Halaman dibuka
+    ↓
+Canvas render sekali di background (off-screen)
+    ↓
+Canvas → JPEG dataURL → <img> sebagai PREVIEW di layar
+Canvas → jsPDF Blob → disimpan di memory
+    ↓
+Klik Download → save Blob yang SAMA (instan, 0 re-render)
+```
+
+**Hasilnya: Preview = PDF = identik 100%, mustahil meleset.**
+
+---
+
+### 📌 Arsitektur File — [`SertifikatClient.tsx`](src/app/%5Blang%5D/peserta/sertifikat/SertifikatClient.tsx)
+
+#### Single Source of Truth — `POS` Object
+```ts
+const POS = {
+  certNo     : 200,   // y — Nomor sertifikat
+  name       : 309,   // y — Nama peserta
+  category   : 396,   // y — Kategori · Level
+  achievement: 415,   // y — 1st Place / penghargaan (bawah "as")
+  qr         : 0.795, // y sebagai fraksi H — di atas tanda tangan
+  qrSize     : 85,    // ukuran QR Code (px)
+}
+```
+> ✅ **Ubah 1 angka = preview DAN PDF berubah serentak. Tidak ada lagi dual-maintenance.**
+
+#### Canvas Dimensions
+- `W = 1122`, `H = 793` (landscape A4 px)
+- `SCALE = 2` (retina/print-ready, canvas aktual 2244×1586)
+
+#### Font Size Adaptif (Nama Panjang)
+```ts
+function nameFontSize(len: number): number {
+  if (len > 32) return 28
+  if (len > 24) return 34
+  if (len > 16) return 42
+  return 50
+}
+```
+
+#### State Management
+| State | Tipe | Keterangan |
+|---|---|---|
+| `previewUrl` | `string \| null` | JPEG `data:` URL untuk `<img>` preview |
+| `isRendering` | `boolean` | Loading spinner saat canvas render |
+| `renderError` | `string \| null` | Pesan error + tombol Retry |
+| `pdfBlobRef` | `useRef<Blob>` | Blob PDF disimpan di ref, tidak trigger re-render |
+
+---
+
+### 🔧 Perubahan Teknis
+
+#### Kenapa `<img>` bukan `<iframe>` untuk preview?
+`blob:` URL di `<iframe>` diblokir Content Security Policy (CSP) Vercel/browser modern.
+`data:` URL dari `canvas.toDataURL()` aman di semua browser (desktop & mobile).
+
+#### Kenapa `useRef` untuk PDF Blob?
+PDF Blob tidak perlu masuk ke React state karena tidak perlu trigger re-render.
+Cukup disimpan di `useRef`, diakses langsung saat tombol Download diklik.
+
+#### QR Code
+Menggunakan library `qrcode` (canvas-based) langsung, bukan `qrcode.react` (SVG React component).
+Alasan: canvas render tidak bisa menggunakan React component.
+
+---
+
+### 📦 Dependencies yang Ditambahkan
+```bash
+npm install   # fix UNMET DEPENDENCY:
+# qrcode@^1.5.4
+# @types/qrcode@^1.5.6
+# qrcode.react@^4.2.0
+# framer-motion@^13.2.0
+```
+
+---
+
+### 📊 Git Commits Sesi Ini
+
+```
+f83248f  fix: achievement naik ke 415, QR 85px turun ke 79.5% nempel Muhammad
+11bc6cd  fix: QR naik ke 77% height, achievement nempel as, QR 65px — fix overlap signature
+6691386  refactor: PDF-first architecture — canvas blob iframe preview
+```
+
+---
+
+### ⚙️ Cara Fine-tune Posisi Teks Sertifikat
+
+Karena Single Source of Truth, cukup edit **satu object** di baris 24–31 `SertifikatClient.tsx`:
+
+```ts
+const POS = {
+  achievement: 415,   // ← naik = angka kecil, turun = angka besar
+  qr         : 0.795, // ← naik = fraksi kecil, turun = fraksi besar
+  qrSize     : 85,    // ← besar = angka besar
+}
+```
+
+Simpan → preview & PDF langsung berubah serentak.
+
+---
+
+*Update: PDF-First Architecture — 13 September 2026 pukul 16:43 WIB*

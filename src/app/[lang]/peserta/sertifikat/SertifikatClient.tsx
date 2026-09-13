@@ -21,8 +21,8 @@ const POS = {
   certNo     : 200,   // y — Nomor sertifikat
   name       : 309,   // y — Nama peserta
   category   : 396,   // y — Kategori · Level
-  achievement: 415,   // y — Penghargaan (naik, nempel "as" + Level)
-  qr         : 0.795, // y sebagai fraksi H — turun nempel Muhammad
+  achievement: 450,   // y — Penghargaan (di bawah "as" template ~y435)
+  qr         : 0.74,  // y fraksi H — bottom QR ≈672, Muhammad ≈680
   qrSize     : 85,    // ukuran QR lebih besar
 }
 
