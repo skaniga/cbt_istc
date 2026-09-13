@@ -88,7 +88,7 @@ export default function SertifikatClient({
       // Turun dari 389→405
       ctx.font      = '700 17px "Poppins", sans-serif'
       ctx.fillStyle = TEXT
-      ctx.fillText(category, W / 2, 420)
+      ctx.fillText(category, W / 2, 412)
 
       // ── 5. Achievement ──────────────────────────────────────
       // y=484 = 61% of 793 (below "as" label)
@@ -202,7 +202,7 @@ export default function SertifikatClient({
 
             {/* ── Category value ── */}
             <div style={{
-              position:'absolute', top:'52%', left:0, right:0,
+              position:'absolute', top:'50%', left:0, right:0,
               textAlign:'center',
               fontFamily:"'Poppins', sans-serif",
               fontSize:'1.05rem', fontWeight:700,
