@@ -21,9 +21,9 @@ const POS = {
   certNo     : 200,   // y — Nomor sertifikat
   name       : 309,   // y — Nama peserta
   category   : 396,   // y — Kategori · Level
-  achievement: 460,   // y — Penghargaan (1st Place, dst.)
-  qr         : 0.865, // y sebagai fraksi H (H × 0.865)
-  qrSize     : 75,
+  achievement: 443,   // y — Penghargaan (nempel di bawah "as")
+  qr         : 0.77,  // y sebagai fraksi H — di atas tanda tangan
+  qrSize     : 65,    // ukuran QR (px)
 }
 
 // ── Font size adaptif berdasarkan panjang teks ───────────────────────────────
@@ -59,10 +59,10 @@ export default function SertifikatClient({
 }) {
   const { t, locale } = useLanguage()
 
-  const [pdfUrl,       setPdfUrl]       = useState<string | null>(null)
+  const [previewUrl,   setPreviewUrl]   = useState<string | null>(null)  // JPEG untuk <img>
   const [isRendering,  setIsRendering]  = useState(true)
   const [renderError,  setRenderError]  = useState<string | null>(null)
-  const pdfBlobRef                      = useRef<Blob | null>(null)
+  const pdfBlobRef    = useRef<Blob | null>(null)
 
   // ── Data sertifikat ────────────────────────────────────────────────────────
   const certNo      = participant.nomor_peserta ?? '—'
@@ -156,15 +156,15 @@ export default function SertifikatClient({
         0, 0, pageW, pageH,
       )
 
-      // 10. Simpan sebagai Blob → Blob URL (bukan download langsung)
+      // 10. Simpan PDF blob untuk download
       const pdfBlob  = pdf.output('blob')
       pdfBlobRef.current = pdfBlob
 
-      // Revoke URL lama jika ada
-      if (pdfUrl) URL.revokeObjectURL(pdfUrl)
-
-      const newUrl   = URL.createObjectURL(pdfBlob)
-      setPdfUrl(newUrl)
+      // 11. Preview: ambil JPEG langsung dari canvas — tidak ada CSP issue
+      //     canvas.toDataURL() menghasilkan data: URL, bukan blob:, aman di semua browser
+      if (previewUrl) URL.revokeObjectURL(previewUrl)
+      const jpegUrl  = canvas.toDataURL('image/jpeg', 0.97)
+      setPreviewUrl(jpegUrl)
 
     } catch (err) {
       console.error(err)
@@ -173,14 +173,12 @@ export default function SertifikatClient({
       setIsRendering(false)
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [certNo, namaUpper, categoryLine, achievement, verifyUrl])
+  }, [certNo, namaUpper, categoryLine, achievement, verifyUrl]) // previewUrl intentionally excluded
 
   // Generate PDF saat komponen mount
   useEffect(() => {
     generatePdf()
-    return () => {
-      if (pdfUrl) URL.revokeObjectURL(pdfUrl)
-    }
+    // cleanup: previewUrl adalah data: URL, tidak perlu revoke
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
@@ -203,9 +201,9 @@ export default function SertifikatClient({
     : locale === 'ms' ? 'Cuba Lagi'
     : 'Retry'
   const labelDownload = t('cert_download')
-  const labelNote     = locale === 'id' ? 'Pratinjau Sertifikat (PDF)'
-    : locale === 'ms' ? 'Pratonton Sijil (PDF)'
-    : 'Certificate Preview (PDF)'
+  const labelNote     = locale === 'id' ? 'Pratinjau Sertifikat'
+    : locale === 'ms' ? 'Pratonton Sijil'
+    : 'Certificate Preview'
 
   // ── Render ──────────────────────────────────────────────────────────────────
   return (
@@ -273,8 +271,8 @@ export default function SertifikatClient({
           </div>
         )}
 
-        {/* ── Preview: iframe menampilkan PDF blob langsung ── */}
-        {pdfUrl && !isRendering && (
+        {/* ── Preview: <img> dari JPEG canvas — aman di semua browser, tidak kena CSP ── */}
+        {previewUrl && !isRendering && (
           <>
             <p style={{
               color: MUTED, fontSize: '0.78rem', letterSpacing: '0.08em',
@@ -282,25 +280,24 @@ export default function SertifikatClient({
             }}>
               📄 {labelNote}
             </p>
-            <div style={{
-              width: '100%', maxWidth: '1122px',
-              aspectRatio: '1122 / 793',
-              boxShadow: '0 8px 40px rgba(0,0,0,0.2)',
-              borderRadius: '8px', overflow: 'hidden',
-            }}>
-              <iframe
-                src={`${pdfUrl}#toolbar=0&navpanes=0&scrollbar=0`}
-                style={{ width: '100%', height: '100%', border: 'none', display: 'block' }}
-                title="Certificate Preview"
-              />
-            </div>
+            <img
+              src={previewUrl}
+              alt="Certificate Preview"
+              style={{
+                width: '100%', maxWidth: '1122px',
+                display: 'block',
+                boxShadow: '0 8px 40px rgba(0,0,0,0.2)',
+                borderRadius: '8px',
+                objectFit: 'contain',
+              }}
+            />
           </>
         )}
 
         {/* ── Tombol Download ── */}
         <button
           onClick={downloadPdf}
-          disabled={isRendering || !pdfUrl}
+          disabled={isRendering || !pdfBlobRef.current}
           className="btn btn--primary"
           style={{ minWidth: '16rem', justifyContent: 'center' }}
         >
