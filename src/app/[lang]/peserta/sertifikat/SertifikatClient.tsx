@@ -69,14 +69,38 @@ export default function SertifikatClient({
   const verifyUrl   = `https://istcompetition.my/certificate/${certNo.replace(/\//g, '-')}`
   const namaUpper   = participant.nama_lengkap.toUpperCase()
   const isWinner    = !!winnerData
-  const achievement = isWinner
-    ? (winnerData!.apresiasi ?? '').toUpperCase()
-    : t('cert_achievement').toUpperCase()
   const category    = participant.kategori || 'International Science & Technology'
-  const level       = isWinner && winnerData?.apresiasi
-    ? winnerData.apresiasi.split(' - ')[1]?.toUpperCase() ?? ''
+
+  // Level: "INTERMEDIATE" → "Intermediate" (huruf awal kapital saja)
+  const level = isWinner && winnerData?.apresiasi
+    ? winnerData.apresiasi.split(' - ')[1]?.trim() ?? ''
     : ''
-  const categoryLine = level ? `${category}  ·  Level ${level}` : category
+  const levelDisplay = level
+    ? level.charAt(0).toUpperCase() + level.slice(1).toLowerCase()
+    : ''
+
+  // Kategori: hilangkan dot ·, pakai Level Intermediate
+  const categoryLine = levelDisplay
+    ? `${category}  Level ${levelDisplay}`
+    : category
+
+  // No. Sertifikat: IPE-2026-0030 → 030-ISTC-2026 (hilangkan IPE, balik urutan)
+  const certNoDisplay = (() => {
+    const parts = certNo.split('-')
+    if (parts.length >= 3 && parts[0] === 'IPE') {
+      const year = parts[1]
+      const num  = parseInt(parts[2], 10).toString().padStart(3, '0')
+      return `${num}-ISTC-${year}`
+    }
+    return certNo
+  })()
+
+  // Achievement: "1st Place" saja (hilangkan " - INTERMEDIATE")
+  const achievementText = isWinner
+    ? (winnerData!.apresiasi?.split(' - ')[0] ?? '').trim()  // "1st Place"
+    : t('cert_achievement')
+  const peringkat = winnerData?.peringkat ?? 0
+  const ordSuffix = peringkat === 1 ? 'st' : peringkat === 2 ? 'nd' : peringkat === 3 ? 'rd' : 'th'
 
   // ── Core: render canvas → jsPDF → blob URL ─────────────────────────────────
   const generatePdf = useCallback(async () => {
@@ -107,10 +131,10 @@ export default function SertifikatClient({
       ctx.textAlign    = 'center'
       ctx.textBaseline = 'top'
 
-      // 4. Nomor sertifikat
+      // 4. Nomor sertifikat — format: 030-ISTC-2026
       ctx.font      = `400 13px "Glacial Indifference", sans-serif`
       ctx.fillStyle = MUTED
-      ctx.fillText(`NO.  ${certNo}`, W / 2, POS.certNo)
+      ctx.fillText(`NO.  ${certNoDisplay}`, W / 2, POS.certNo)
 
       // 5. Nama peserta
       const namePx  = nameFontSize(namaUpper.length)
@@ -118,16 +142,49 @@ export default function SertifikatClient({
       ctx.fillStyle = GOLD
       ctx.fillText(namaUpper, W / 2, POS.name)
 
-      // 6. Kategori · Level
+      // 6. Kategori Level (tanpa dot ·)
       ctx.font      = '700 15px "Poppins", sans-serif'
       ctx.fillStyle = TEXT
       ctx.fillText(categoryLine, W / 2, POS.category)
 
-      // 7. Penghargaan
-      const achPx   = achFontSize(achievement.length)
-      ctx.font      = `700 ${achPx}px "Cormorant SC", serif`
-      ctx.fillStyle = GOLD
-      ctx.fillText(achievement, W / 2, POS.achievement)
+      // 7. Penghargaan — "1ˢᵗ Place" dengan superscript ordinal
+      if (isWinner && peringkat > 0) {
+        const mainPx = 42
+        const supPx  = Math.round(mainPx * 0.50)
+        const base   = `${peringkat}`
+        const rest   = ' Place'
+
+        ctx.fillStyle  = GOLD
+        ctx.textAlign  = 'left'
+
+        ctx.font = `700 ${mainPx}px "Cormorant SC", serif`
+        const baseW = ctx.measureText(base).width
+        const restW = ctx.measureText(rest).width
+        ctx.font = `700 ${supPx}px "Cormorant SC", serif`
+        const supW  = ctx.measureText(ordSuffix).width
+
+        const totalW = baseW + supW + restW
+        const startX = W / 2 - totalW / 2
+
+        // Gambar angka ("1")
+        ctx.font = `700 ${mainPx}px "Cormorant SC", serif`
+        ctx.fillText(base, startX, POS.achievement)
+
+        // Gambar suffix superscript ("st") — lebih kecil, naik 28%
+        ctx.font = `700 ${supPx}px "Cormorant SC", serif`
+        ctx.fillText(ordSuffix, startX + baseW, POS.achievement - mainPx * 0.28)
+
+        // Gambar " Place"
+        ctx.font = `700 ${mainPx}px "Cormorant SC", serif`
+        ctx.fillText(rest, startX + baseW + supW, POS.achievement)
+
+        ctx.textAlign = 'center'
+      } else {
+        const achPx = achFontSize(achievementText.length)
+        ctx.font      = `700 ${achPx}px "Cormorant SC", serif`
+        ctx.fillStyle = GOLD
+        ctx.fillText(achievementText.toUpperCase(), W / 2, POS.achievement)
+      }
 
       // 8. QR Code
       try {
@@ -173,7 +230,7 @@ export default function SertifikatClient({
       setIsRendering(false)
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [certNo, namaUpper, categoryLine, achievement, verifyUrl]) // previewUrl intentionally excluded
+  }, [certNo, namaUpper, categoryLine, achievementText, verifyUrl]) // previewUrl intentionally excluded
 
   // Generate PDF saat komponen mount
   useEffect(() => {
