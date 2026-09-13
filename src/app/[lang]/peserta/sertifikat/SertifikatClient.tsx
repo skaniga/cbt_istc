@@ -20,10 +20,10 @@ const MUTED  = '#7A7A7A'
 const POS = {
   certNo     : 200,   // y — Nomor sertifikat
   name       : 309,   // y — Nama peserta
-  category   : 396,   // y — Kategori · Level
+  category   : 405,   // y — Kategori · Level (turun dikit, lebih proporsional)
   achievement: 450,   // y — Penghargaan (di bawah "as" template ~y435)
-  qr         : 0.74,  // y fraksi H — bottom QR ≈672, Muhammad ≈680
-  qrSize     : 85,    // ukuran QR lebih besar
+  qr         : 0.755, // y fraksi H → y≈599, bottom≈684, nempel Muhammad
+  qrSize     : 85,    // ukuran QR
 }
 
 // ── Font size adaptif berdasarkan panjang teks ───────────────────────────────
