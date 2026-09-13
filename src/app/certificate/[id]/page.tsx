@@ -23,14 +23,14 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   if (!participant) {
     return {
-      title: 'Verifikasi Sertifikat — Tidak Ditemukan | ISTC 2026',
-      description: 'Hasil verifikasi keaslian sertifikat digital resmi International Science and Technology Competitions 2026.',
+      title: 'Certificate Verification — Not Found | ISTC 2026',
+      description: 'Official digital certificate verification for International Science and Technology Competitions 2026.',
     }
   }
 
   return {
-    title: `Verifikasi Sertifikat — ${participant.nama_lengkap} (${participant.nomor_peserta}) | ISTC 2026`,
-    description: `Sertifikat resmi atas nama ${participant.nama_lengkap} terverifikasi valid dan terdaftar dalam basis data ISTC 2026.`,
+    title: `Certificate Verified — ${participant.nama_lengkap} (${participant.nomor_peserta}) | ISTC 2026`,
+    description: `The official certificate for ${participant.nama_lengkap} has been verified and is registered in the ISTC 2026 database.`,
   }
 }
 
@@ -49,7 +49,7 @@ export default async function CertificateVerifyPage({ params }: Props) {
 
   const valid = !!participant
 
-  // Cek apakah peserta terdaftar di tabel pemenang
+  // Check if participant is a winner
   let winnerData: { peringkat: number; apresiasi: string } | null = null
   if (participant) {
     const { data: winner } = await supabase
@@ -60,8 +60,7 @@ export default async function CertificateVerifyPage({ params }: Props) {
     if (winner) winnerData = winner
   }
 
-  // Format tanggal terbit sertifikat
-  const eventDate = '10 September 2026'
+  const eventDate = 'September 10, 2026'
 
   return (
     <main
@@ -114,7 +113,7 @@ export default async function CertificateVerifyPage({ params }: Props) {
                 marginBottom: '1rem',
               }}
             >
-              ✓ &nbsp;SERTIFIKAT RESMI TERVERIFIKASI
+              ✓ &nbsp;OFFICIAL CERTIFICATE VERIFIED
             </div>
 
             <h1
@@ -129,10 +128,10 @@ export default async function CertificateVerifyPage({ params }: Props) {
               Valid Official Certificate
             </h1>
             <p style={{ color: '#7A7A7A', fontSize: '0.85rem', marginBottom: '1.75rem' }}>
-              Dokumen ini resmi diterbitkan oleh panitia International Science and Technology Competitions (ISTC).
+              This document is officially issued by the International Science and Technology Competitions (ISTC) committee.
             </p>
 
-            {/* Informasi Peserta & Sertifikat */}
+            {/* Participant & Certificate Information */}
             <div
               style={{
                 background: '#FAF8F5',
@@ -153,7 +152,7 @@ export default async function CertificateVerifyPage({ params }: Props) {
                 }}
               >
                 <span style={{ fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.06em', color: '#8C7B65', fontWeight: 600 }}>
-                  Nama Peserta
+                  Participant Name
                 </span>
                 <span style={{ fontSize: '0.95rem', color: '#C8941A', fontWeight: 700, textAlign: 'right' }}>
                   {participant!.nama_lengkap}
@@ -170,7 +169,7 @@ export default async function CertificateVerifyPage({ params }: Props) {
                 }}
               >
                 <span style={{ fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.06em', color: '#8C7B65', fontWeight: 600 }}>
-                  Nomor Sertifikat
+                  Certificate No.
                 </span>
                 <span style={{ fontSize: '0.9rem', color: '#2C2C2C', fontWeight: 600, textAlign: 'right', fontFamily: 'monospace' }}>
                   {participant!.nomor_peserta}
@@ -187,10 +186,10 @@ export default async function CertificateVerifyPage({ params }: Props) {
                 }}
               >
                 <span style={{ fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.06em', color: '#8C7B65', fontWeight: 600 }}>
-                  Bidang Kompetisi
+                  Competition Category
                 </span>
                 <span style={{ fontSize: '0.9rem', color: '#2C2C2C', fontWeight: 600, textAlign: 'right' }}>
-                  {participant!.kategori || 'Sains & Teknologi Internasional'}
+                  {participant!.kategori || 'International Science & Technology'}
                 </span>
               </div>
 
@@ -199,21 +198,19 @@ export default async function CertificateVerifyPage({ params }: Props) {
                   style={{
                     display: 'flex',
                     justifyContent: 'space-between',
-                    padding: '0.6rem 0',
+                    padding: '0.6rem 0.5rem',
                     borderBottom: '1px solid #EFEAE1',
                     gap: '1rem',
                     background: 'rgba(200, 148, 26, 0.08)',
                     margin: '0.35rem -0.5rem',
-                    paddingLeft: '0.5rem',
-                    paddingRight: '0.5rem',
                     borderRadius: '6px',
                   }}
                 >
                   <span style={{ fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.06em', color: '#92400E', fontWeight: 700 }}>
-                    Penghargaan
+                    Achievement
                   </span>
                   <span style={{ fontSize: '0.9rem', color: '#B45309', fontWeight: 700, textAlign: 'right' }}>
-                    🏆 {winnerData.apresiasi} (Peringkat #{winnerData.peringkat})
+                    🏆 {winnerData.apresiasi}
                   </span>
                 </div>
               )}
@@ -228,7 +225,7 @@ export default async function CertificateVerifyPage({ params }: Props) {
                 }}
               >
                 <span style={{ fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.06em', color: '#8C7B65', fontWeight: 600 }}>
-                  Ajang / Event
+                  Event
                 </span>
                 <span style={{ fontSize: '0.9rem', color: '#2C2C2C', fontWeight: 600, textAlign: 'right' }}>
                   ISTC 2026 — Kuala Lumpur
@@ -244,7 +241,7 @@ export default async function CertificateVerifyPage({ params }: Props) {
                 }}
               >
                 <span style={{ fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.06em', color: '#8C7B65', fontWeight: 600 }}>
-                  Tanggal Terbit
+                  Issue Date
                 </span>
                 <span style={{ fontSize: '0.9rem', color: '#2C2C2C', fontWeight: 600, textAlign: 'right' }}>
                   {eventDate}
@@ -269,7 +266,7 @@ export default async function CertificateVerifyPage({ params }: Props) {
                 marginBottom: '1rem',
               }}
             >
-              ✗ &nbsp;SERTIFIKAT TIDAK DITEMUKAN
+              ✗ &nbsp;CERTIFICATE NOT FOUND
             </div>
 
             <h1
@@ -283,10 +280,10 @@ export default async function CertificateVerifyPage({ params }: Props) {
               Certificate Not Found
             </h1>
             <p style={{ color: '#7A7A7A', fontSize: '0.9rem', lineHeight: 1.5, marginBottom: '1.5rem' }}>
-              Tidak ditemukan data sertifikat untuk ID: <br />
+              No certificate data found for ID: <br />
               <strong style={{ color: '#C8941A', fontFamily: 'monospace', fontSize: '1rem' }}>{rawId}</strong>
               <br />
-              Pastikan nomor sertifikat diketik dengan benar atau hubungi panitia resmi ISTC.
+              Please check the certificate number or contact the official ISTC committee.
             </p>
           </>
         )}
@@ -306,7 +303,7 @@ export default async function CertificateVerifyPage({ params }: Props) {
               transition: 'background 0.2s',
             }}
           >
-            ← Kembali ke Beranda ISTC
+            ← Back to ISTC Homepage
           </Link>
         </div>
 

@@ -41,13 +41,23 @@ export default function SertifikatClient({
     window.addEventListener('resize', updateScale)
     return () => window.removeEventListener('resize', updateScale)
   }, [])
-  const isWinner  = !!winnerData
-  const certNo    = participant.nomor_peserta ?? '—'
-  const verifyUrl = `https://istcompetition.my/certificate/${certNo.replace(/\//g, '-')}`
+
+  const isWinner   = !!winnerData
+  const certNo     = participant.nomor_peserta ?? '—'
+  const verifyUrl  = `https://istcompetition.my/certificate/${certNo.replace(/\//g, '-')}`
+  const namaUpper  = participant.nama_lengkap.toUpperCase()
   const achievement = isWinner
     ? (winnerData!.apresiasi ?? '').toUpperCase()
     : t('cert_achievement').toUpperCase()
-  const category  = participant.kategori || 'International Science & Technology'
+  const category   = participant.kategori || 'International Science & Technology'
+
+  // Extract level dari apresiasi: "1st Place - Advance" → "ADVANCE"
+  const level = isWinner && winnerData?.apresiasi
+    ? winnerData.apresiasi.split(' - ')[1]?.toUpperCase() ?? ''
+    : ''
+
+  // Teks kategori + level untuk sertifikat
+  const categoryLine = level ? `${category}  ·  Level ${level}` : category
 
   const downloadPdf = async () => {
     setIsGenerating(true)
@@ -71,35 +81,30 @@ export default function SertifikatClient({
       ctx.textBaseline = 'top'
 
       // ── 2. Certificate Number ───────────────────────────────
-      // Naik dari 214→200, font 10→13px (lebih dekat ke CERTIFICATE, lebih besar)
       ctx.font      = '400 13px "Glacial Indifference", sans-serif'
       ctx.fillStyle = MUTED
       ctx.fillText(`NO.  ${certNo}`, W / 2, 200)
 
-      // ── 3. Participant Name ─────────────────────────────────
-      // Turun dari 286→305
-      const nameLen = participant.nama_lengkap.length
-      const namePx  = nameLen > 28 ? 32 : nameLen > 20 ? 41 : nameLen > 14 ? 48 : 56
-      ctx.font      = `700 ${namePx}px "Dancing Script", cursive`
+      // ── 3. Participant Name — Poppins tegak, UPPERCASE ──────
+      const nameLen = namaUpper.length
+      const namePx  = nameLen > 32 ? 28 : nameLen > 24 ? 34 : nameLen > 16 ? 42 : 50
+      ctx.font      = `700 ${namePx}px "Poppins", sans-serif`
       ctx.fillStyle = GOLD
-      ctx.fillText(participant.nama_lengkap, W / 2, 310)
+      ctx.fillText(namaUpper, W / 2, 309)
 
-      // ── 4. Category ─────────────────────────────────────────
-      // Turun dari 389→405
-      ctx.font      = '700 17px "Poppins", sans-serif'
+      // ── 4. Category · Level ─────────────────────────────────
+      ctx.font      = '700 15px "Poppins", sans-serif'
       ctx.fillStyle = TEXT
-      ctx.fillText(category, W / 2, 412)
+      ctx.fillText(categoryLine, W / 2, 396)
 
-      // ── 5. Achievement ──────────────────────────────────────
-      // y=484 = 61% of 793 (below "as" label)
+      // ── 5. Achievement — langsung bawah "as" ───────────────
       const achLen = achievement.length
       const achPx  = achLen <= 12 ? 48 : achLen <= 18 ? 32 : 18
       ctx.font      = `700 ${achPx}px "Cormorant SC", serif`
       ctx.fillStyle = GOLD
-      ctx.fillText(achievement, W / 2, 484)
+      ctx.fillText(achievement, W / 2, 460)
 
-      // ── 6. QR Code ──────────────────────────────────────────
-      // Centered, 80×80px, bottom 16% area (above Muhammad Amarjid signature)
+      // ── 6. QR Code — nempel di atas tanda tangan ───────────
       try {
         const QRLib    = (await import('qrcode')).default
         const qrDataUrl = await QRLib.toDataURL(verifyUrl, {
@@ -109,7 +114,7 @@ export default function SertifikatClient({
         })
         const qrImg = new Image()
         await new Promise<void>(res => { qrImg.onload = () => res(); qrImg.src = qrDataUrl })
-        ctx.drawImage(qrImg, W / 2 - 40, H * 0.74, 80, 80)
+        ctx.drawImage(qrImg, W / 2 - 38, H * 0.865, 75, 75)
       } catch { /* skip QR if unavailable */ }
 
       // ── 7. Export as PDF ────────────────────────────────────
@@ -141,7 +146,7 @@ export default function SertifikatClient({
 
       {/* Google Fonts */}
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Poppins:wght@600;700&family=Cormorant+SC:wght@700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@600;700&family=Cormorant+SC:wght@700&display=swap');
         @font-face {
           font-family: 'Glacial Indifference';
           src: url('/fonts/GlacialIndifference-Regular.woff') format('woff');
@@ -182,38 +187,41 @@ export default function SertifikatClient({
               NO. &nbsp;{certNo}
             </div>
 
-            {/* ── Participant Name ── */}
+            {/* ── Participant Name — Poppins tegak, UPPERCASE ── */}
             <div style={{
-              position:'absolute', top:'39%', left:'8%', right:'8%',
+              position:'absolute', top:'39%', left:'5%', right:'5%',
               textAlign:'center',
-              fontFamily:"'Dancing Script', cursive",
-              fontSize: participant.nama_lengkap.length > 28 ? '2rem'
-                      : participant.nama_lengkap.length > 20 ? '2.6rem'
-                      : participant.nama_lengkap.length > 14 ? '3rem'
-                      : '3.5rem',
+              fontFamily:"'Poppins', sans-serif",
+              fontSize: namaUpper.length > 32 ? '1.75rem'
+                      : namaUpper.length > 24 ? '2.1rem'
+                      : namaUpper.length > 16 ? '2.6rem'
+                      : '3rem',
               fontWeight:700,
               color: GOLD,
               lineHeight: 1.1,
+              letterSpacing: '0.04em',
               wordBreak: 'break-word',
               zIndex: 10,
+              textTransform: 'uppercase',
             }}>
-              {participant.nama_lengkap}
+              {namaUpper}
             </div>
 
-            {/* ── Category value ── */}
+            {/* ── Category · Level ── */}
             <div style={{
               position:'absolute', top:'50%', left:0, right:0,
               textAlign:'center',
               fontFamily:"'Poppins', sans-serif",
-              fontSize:'1.05rem', fontWeight:700,
+              fontSize:'0.95rem', fontWeight:700,
               color: TEXT,
+              letterSpacing: '0.02em',
             }}>
-              {category}
+              {categoryLine}
             </div>
 
-            {/* ── Achievement text ── */}
+            {/* ── Achievement — langsung bawah "as" ── */}
             <div style={{
-              position:'absolute', top:'61%', left:'5%', right:'5%',
+              position:'absolute', top:'58%', left:'5%', right:'5%',
               textAlign:'center',
               fontFamily:"'Cormorant SC', serif",
               fontSize: achievement.length <= 12 ? '3rem'
@@ -227,15 +235,15 @@ export default function SertifikatClient({
               {achievement}
             </div>
 
-            {/* ── QR Code — di atas tanda tangan Muhammad Amarjid ── */}
+            {/* ── QR Code — nempel di atas tanda tangan Muhammad Amarjid ── */}
             <div style={{
-              position:'absolute', bottom:'16%', left:'50%',
+              position:'absolute', bottom:'4%', left:'50%',
               transform:'translateX(-50%)',
               display:'flex', flexDirection:'column', alignItems:'center',
             }}>
               <QRCodeSVG
                 value={verifyUrl}
-                size={80}
+                size={75}
                 fgColor="#3D2B00"
                 bgColor="#FAF7F0"
                 level="H"
