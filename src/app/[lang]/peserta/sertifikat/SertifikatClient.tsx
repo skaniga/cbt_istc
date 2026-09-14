@@ -239,13 +239,36 @@ export default function SertifikatClient({
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  // ── Download: langsung save blob yang sama (0 re-render) ──────────────────
-  const downloadPdf = () => {
+  // ── Deteksi iOS (iPhone / iPad) ────────────────────────────────────────────
+  const isIOS = () =>
+    typeof navigator !== 'undefined' &&
+    /iP(hone|ad|od)/i.test(navigator.userAgent)
+
+  // ── Download: Web Share API di iOS, blob download di browser lain ─────────
+  const downloadPdf = async () => {
     if (!pdfBlobRef.current) return
-    const safeCertNo = (participant.nomor_peserta || 'document').replace(/[/\\?%*:|"<>]/g, '-')
-    const a          = document.createElement('a')
-    a.href           = URL.createObjectURL(pdfBlobRef.current)
-    a.download       = `Certificate_ISTC_${safeCertNo}.pdf`
+    const safeCertNo = (participant.nomor_peserta || 'document').replace(/[/\\?%*:|"><]/g, '-')
+    const fileName   = `Certificate_ISTC_${safeCertNo}.pdf`
+
+    // iOS Safari: gunakan Web Share API agar muncul share sheet native
+    // → user bisa pilih "Save to Files", AirDrop, dll
+    if (isIOS() && navigator.canShare) {
+      const file = new File([pdfBlobRef.current], fileName, { type: 'application/pdf' })
+      if (navigator.canShare({ files: [file] })) {
+        try {
+          await navigator.share({ files: [file], title: fileName })
+          return
+        } catch (err) {
+          // User membatalkan share sheet — tidak perlu fallback
+          if ((err as DOMException)?.name === 'AbortError') return
+        }
+      }
+    }
+
+    // Desktop / Android / browser lain: download biasa
+    const a  = document.createElement('a')
+    a.href   = URL.createObjectURL(pdfBlobRef.current)
+    a.download = fileName
     a.click()
     setTimeout(() => URL.revokeObjectURL(a.href), 10_000)
   }
